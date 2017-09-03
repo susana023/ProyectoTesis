@@ -153,6 +153,23 @@
     </Compile>
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Distributor.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductSupplier.cs" />
+    <Compile Include="Models\ReferralGuide.cs" />
+    <Compile Include="Models\ReferralGuideDetail.cs" />
+    <Compile Include="Models\Return.cs" />
+    <Compile Include="Models\ReturnDetail.cs" />
+    <Compile Include="Models\SaleDocument.cs" />
+    <Compile Include="Models\SaleDocumentDetail.cs" />
+    <Compile Include="Models\SalesMargin.cs" />
+    <Compile Include="Models\StockroomZoneProduct.cs" />
+    <Compile Include="Models\Store.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\Stockroom.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Zone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
