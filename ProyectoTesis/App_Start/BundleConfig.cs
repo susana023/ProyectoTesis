@@ -26,6 +26,8 @@ namespace ProyectoTesis
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap_yeti.css",
                       "~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/fontawesome").Include(
+                      "~/Content/font-awesome.css"));
         }
     }
 }
