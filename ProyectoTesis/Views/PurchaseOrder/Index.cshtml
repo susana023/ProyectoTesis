@@ -4,34 +4,18 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Órdenes de Compra</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Nueva", "Create")
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Supplier.BusinessName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BillCorrelative)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BillSerialNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ActiveFlag)
-        </th>
+        <th>Proveedor</th>
         <th>
             @Html.DisplayNameFor(model => model.Date)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Igv)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Subtotal)
-        </th>
+        <th>Total</th>
         <th></th>
     </tr>
 
@@ -41,27 +25,16 @@
             @Html.DisplayFor(modelItem => item.Supplier.BusinessName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.BillCorrelative)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BillSerialNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ActiveFlag)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Date)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Igv)
+            @Html.DisplayFor(modelItem => item.Total)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Subtotal)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            <a href="#"><i class="fa fa-list"></i></a> |
+            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
         </td>
     </tr>
 }

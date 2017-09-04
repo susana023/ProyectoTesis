@@ -1,10 +1,10 @@
-﻿@model IEnumerable<ProyectoTesis.Models.Product>
+﻿@model IEnumerable<ProyectoTesis.Models.PurchaseOrderDetail>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Mantenimiento de Productos</h2>
+<h2 >Detalle de Orden de Compra</h2>
 
 <p>
     @Html.ActionLink("Nuevo", "Create")
@@ -12,13 +12,16 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Product.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.BoxPrice)
+            @Html.DisplayNameFor(model => model.BoxUnits)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FractionPrice)
+            @Html.DisplayNameFor(model => model.FractionUnits)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subtotal)
         </th>
         <th></th>
     </tr>
@@ -26,13 +29,16 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Description)
+            @Html.DisplayFor(modelItem => item.Product.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.BoxPrice)
+            @Html.DisplayFor(modelItem => item.BoxUnits)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FractionPrice)
+            @Html.DisplayFor(modelItem => item.FractionUnits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Subtotal)
         </td>
         <td>
             <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |

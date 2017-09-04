@@ -1,10 +1,10 @@
-﻿@model ProyectoTesis.Models.Movement
+﻿@model ProyectoTesis.Models.PurchaseOrderDetail
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Detalle de Movimiento de Almacén</h2>
+<h2>Detalle de Orden de Compra</h2>
 
 <div>
     <hr />
@@ -18,27 +18,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Zone.Description)
+            @Html.DisplayNameFor(model => model.PurchaseOrder.BillSerialNumber)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Zone.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ExpirationDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ExpirationDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MovementType)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MovementType)
+            @Html.DisplayFor(model => model.PurchaseOrder.BillSerialNumber)
         </dd>
 
         <dt>
@@ -58,11 +42,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DocumentID)
+            @Html.DisplayNameFor(model => model.Subtotal)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DocumentID)
+            @Html.DisplayFor(model => model.Subtotal)
         </dd>
 
     </dl>

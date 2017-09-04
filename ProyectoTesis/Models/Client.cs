@@ -16,7 +16,7 @@ namespace ProyectoTesis.Models
         [Display(Name = "DNI")]
         public int Dni { get; set; }
         [Display(Name = "RUC")]
-        public int Ruc { get; set; }
+        public long Ruc { get; set; }
         [Display(Name = "Nombre")]
         public string Name { get; set; }
         [Display(Name = "Apellido")]
