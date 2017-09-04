@@ -17,41 +17,30 @@
                 <li>
                     <a href="#"><i class="fa fa-shopping-bag fa-fw"></i> Compras<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li>
-                            <a href="flot.html"> Mantenimiento de Proveedores</a>
-                        </li>
-                        <li>
-                            <a href="morris.html"> Orden de Compra</a>
-                        </li>
+                        <li>@Html.ActionLink("Mantenimiento de Proveedores", "Index", "Supplier")</li>
+                        <li>@Html.ActionLink("Orden de Compra", "Index", "PurchaseOrder")</li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-gears fa-fw"></i> Gestión Interna<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li>
-                            <a href="flot.html"> Mantenimiento de Almacenes</a>
-                        </li>
-                        <li>
-                            <a href="morris.html"> Movimientos de Almacén</a>
-                        </li>
-                        <li>
-                            <a href="buttons.html"> Planeamiento de Compra</a>
-                        </li>
+                        <li>@Html.ActionLink("Mantenimiento de Tiendas", "Index", "Store")</li>
+                        <li>@Html.ActionLink("Mantenimiento de Almacenes", "Index", "Stockroom")</li>
+                        <li>@Html.ActionLink("Mantenimiento de Productos", "Index", "Product")</li>
+                        <li>@Html.ActionLink("Movimientos de Almacén", "Index", "Product")</li>
+                        <li>@Html.ActionLink("Planeamiento de Compra", "Index", "PurchasePlan")</li>
+                        <li>@Html.ActionLink("Mantenimiento de Usuarios", "Index", "User")</li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-money fa-fw"></i> Ventas<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
+                        <li>@Html.ActionLink("Mantenimiento de Clientes", "Index", "Client")</li>
+                        <li>@Html.ActionLink("Pedidos", "Index", "Order")</li>
                         <li>
-                            <a href="panels-wells.html">Mantenimiento de Clientes</a>
-                        </li>
-                        <li>
-                            <a href="buttons.html"> Pedidos</a>
-                        </li>
-                        <li>
-                            <a href="#">Documentos de Venta <span class="fa arrow"></span></a>
+                            <a href="@Url.Action("Index", "SaleDocument")">Documentos de Venta <span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level">
                                 <li>
                                     <a href="#">Facturas</a>
@@ -72,11 +61,9 @@
                     <a href="#"><i class="fa fa-line-chart fa-fw"></i> Reportes<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="panels-wells.html">Kardex</a>
+                            <a href="#">Kardex</a>
                         </li>
-                        <li>
-                            <a href="buttons.html"> Guía de Remisión</a>
-                        </li>
+                        <li>@Html.ActionLink("Guía de Remisión", "Index", "ReferralGuide")</li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>

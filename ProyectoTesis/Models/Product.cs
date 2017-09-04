@@ -15,11 +15,13 @@ namespace ProyectoTesis.Models
         public double FractionPrice { get; set; }
         public bool ActiveFlag { get; set; }
 
-        public virtual ReferralGuideDetail ReferralGuideDetail { get; set; }
-        public virtual ProductSupplier ProductSupplier { get; set; }
-        public virtual StockroomZoneProduct StockroomProduct { get; set; }
-        public virtual SaleDocumentDetail SaleDocumentDetail { get; set; }
-        public virtual ReturnDetail ReturnDetail { get; set; }
-        public virtual OrderDetail OrderDetail { get; set; }
+        public virtual ICollection<ReferralGuideDetail> ReferralGuideDetails { get; set; }
+        public virtual ICollection<Movement> StockroomProducts { get; set; }
+        public virtual ICollection<SaleDocumentDetail> SaleDocumentDetails { get; set; }
+        public virtual ICollection<ReturnDetail> ReturnDetails { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<ProductSupplier> ProductSuppliers { get; set; }
+
+        public virtual SalesMargin SalesMargin { get; set; }
     }
 }

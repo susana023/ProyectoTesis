@@ -17,6 +17,7 @@ namespace ProyectoTesis.Models
         public string Password { get; set; }
         public bool ActiveFlag { get; set; }
         public int StoreID { get; set; }
+        public string Type { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
 

@@ -13,6 +13,6 @@ namespace ProyectoTesis.Models
 
         public virtual Stockroom Stockroom { get; set; }
 
-        public virtual ICollection<StockroomZoneProduct> StockroomZoneProducts { get; set; }
+        public virtual ICollection<Movement> StockroomZoneProducts { get; set; }
     }
 }

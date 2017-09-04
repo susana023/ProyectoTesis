@@ -7,6 +7,7 @@ namespace ProyectoTesis.Models
 {
     public class SaleDocumentDetail
     {
+        public int ID { get; set; }
         public int SaleDocumentID { get; set; }
         public int ProductID { get; set; }
         public int BoxUnits { get; set; }

@@ -12,6 +12,7 @@ namespace ProyectoTesis.Models
         public string Name { get; set; }
         public string LastName { get; set; }
         public string LicensePlate { get; set; }
+        public bool ActiveFlag { get; set; }
 
         public virtual ICollection<ReferralGuide> ReferralGuides { get; set; }
     }

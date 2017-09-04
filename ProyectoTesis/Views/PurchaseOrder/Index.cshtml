@@ -1,0 +1,69 @@
+﻿@model IEnumerable<ProyectoTesis.Models.PurchaseOrder>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Supplier.BusinessName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BillCorrelative)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BillSerialNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ActiveFlag)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Igv)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subtotal)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Supplier.BusinessName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BillCorrelative)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BillSerialNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ActiveFlag)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Igv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Subtotal)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
