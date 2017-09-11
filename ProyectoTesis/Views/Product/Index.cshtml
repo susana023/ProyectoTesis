@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ProyectoTesis.Models.Product>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Mantenimiento de Productos</h2>
+
+<p>
+    @Html.ActionLink("Nuevo", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BoxPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FractionPrice)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BoxPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FractionPrice)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+}
+
+</table>

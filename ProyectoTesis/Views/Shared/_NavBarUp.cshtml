@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="navbar sidebar navbar-right" role="navigation">
+        <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+                <li>
+                    <a href="@Url.Action("Index", "Home")"><i class="fa-fw"></i> Inicio</a>
+                </li>
+                <li>
+                    <a data-toggle="collapse" data-target="#compras"><i class="fa fa-shopping-bag fa-fw" ></i> Compras <span class="fa arrow"></span></a>
+                    <ul id="compras" class="nav nav-second-level collapse in">
+                        <li>@Html.ActionLink("Mantenimiento de Proveedores", "Index", "Supplier")</li>
+                        <li>@Html.ActionLink("Orden de Compra", "Index", "PurchaseOrder")</li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a data-toggle="collapse" data-target="#gestioninterna"><i class="fa fa-gears fa-fw"></i> Gestión Interna<span class="fa arrow"></span></a>
+                    <ul id="gestioninterna" class="nav nav-second-level collapse in">
+                        <li>@Html.ActionLink("Mantenimiento de Tiendas", "Index", "Store")</li>
+                        <li>@Html.ActionLink("Mantenimiento de Almacenes", "Index", "Stockroom")</li>
+                        <li>@Html.ActionLink("Mantenimiento de Productos", "Index", "Product")</li>
+                        <li>@Html.ActionLink("Movimientos de Almacén", "Index", "Movement")</li>
+                        <li>@Html.ActionLink("Planeamiento de Compra", "Index", "PurchasePlan")</li>
+                        <li>@Html.ActionLink("Mantenimiento de Usuarios", "Index", "User")</li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a data-toggle="collapse" data-target="#ventas"><i class="fa fa-money fa-fw"></i> Ventas<span class="fa arrow"></span></a>
+                    <ul id="ventas" class="nav nav-second-level collapse in">
+                        <li>@Html.ActionLink("Mantenimiento de Clientes", "Index", "Client")</li>
+                        <li>@Html.ActionLink("Pedidos", "Index", "Order")</li>
+                        <li>
+                            <a data-toggle="collapse" data-target="#documentos" href="@Url.Action("Index", "SaleDocument")">Documentos de Venta <span class="fa arrow"></span></a>
+                            <ul id="documentos" class="nav nav-third-level  collapse in">
+                                <li>
+                                    <a href="#">Facturas</a>
+                                </li>
+                                <li>
+                                    <a href="#">Boletas</a>
+                                </li>
+                                <li>
+                                    <a href="#">Nota de crédito</a>
+                                </li>                                
+                            </ul>
+
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a data-toggle="collapse" data-target="#reportes"><i class="fa fa-line-chart fa-fw"></i> Reportes<span class="fa arrow"></span></a>
+                    <ul id="reportes" class="nav nav-second-level collapse in">
+                        <li>
+                            <a href="#">Kardex</a>
+                        </li>
+                        <li>@Html.ActionLink("Guía de Remisión", "Index", "ReferralGuide")</li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+            </ul>
+        </div>
+        <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->
+    <script>
+    $('#side-menu').click(function () {
+        $(this).next('ul').slideToggle('500');
+        $(this).find('span').toggleClass('fa-arrow-right fa-arrow-down')
+    });
+    </script>
+</body>
+
+</html>
+
+

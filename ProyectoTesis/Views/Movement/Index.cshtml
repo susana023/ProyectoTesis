@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ProyectoTesis.Models.Movement>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Movimientos de Almacén</h2>
+
+<p>
+    @Html.ActionLink("Nuevo", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.Description)
+        </th>
+        <th>Zona</th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExpirationDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MovementType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BoxUnits)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FractionUnits)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExpirationDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MovementType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BoxUnits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FractionUnits)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+}
+
+</table>

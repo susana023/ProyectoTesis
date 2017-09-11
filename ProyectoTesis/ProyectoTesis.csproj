@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -141,16 +147,74 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MovementController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
+    <Compile Include="Controllers\PurchaseOrderDetailController.cs" />
+    <Compile Include="Controllers\PurchasePlanController.cs" />
+    <Compile Include="Controllers\StockroomController.cs" />
+    <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\ZoneController.cs" />
+    <Compile Include="DAL\StoreContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709030710256_InitialCreate.cs" />
+    <Compile Include="Migrations\201709030710256_InitialCreate.Designer.cs">
+      <DependentUpon>201709030710256_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709040139019_addPurchaseOrderandPlan.cs" />
+    <Compile Include="Migrations\201709040139019_addPurchaseOrderandPlan.Designer.cs">
+      <DependentUpon>201709040139019_addPurchaseOrderandPlan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709040404415_changeRUCType.cs" />
+    <Compile Include="Migrations\201709040404415_changeRUCType.Designer.cs">
+      <DependentUpon>201709040404415_changeRUCType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709110231316_validations.cs" />
+    <Compile Include="Migrations\201709110231316_validations.Designer.cs">
+      <DependentUpon>201709110231316_validations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\Distributor.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductSupplier.cs" />
+    <Compile Include="Models\PurchaseOrder.cs" />
+    <Compile Include="Models\PurchaseOrderDetail.cs" />
+    <Compile Include="Models\PurchasePlan.cs" />
+    <Compile Include="Models\PurchasePlanDetail.cs" />
+    <Compile Include="Models\ReferralGuide.cs" />
+    <Compile Include="Models\ReferralGuideDetail.cs" />
+    <Compile Include="Models\Return.cs" />
+    <Compile Include="Models\ReturnDetail.cs" />
+    <Compile Include="Models\SaleDocument.cs" />
+    <Compile Include="Models\SaleDocumentDetail.cs" />
+    <Compile Include="Models\SalesMargin.cs" />
+    <Compile Include="Models\Movement.cs" />
+    <Compile Include="Models\Store.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\Stockroom.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Zone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap_simplex.css" />
+    <Content Include="Content\bootstrap_yeti.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -159,6 +223,11 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -184,10 +253,72 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_NavBarUp.cshtml" />
+    <Content Include="Views\Client\Create.cshtml" />
+    <Content Include="Views\Client\Delete.cshtml" />
+    <Content Include="Views\Client\Details.cshtml" />
+    <Content Include="Views\Client\Edit.cshtml" />
+    <Content Include="Views\Client\Index.cshtml" />
+    <Content Include="Views\Product\Create.cshtml" />
+    <Content Include="Views\Product\Delete.cshtml" />
+    <Content Include="Views\Product\Details.cshtml" />
+    <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Supplier\Create.cshtml" />
+    <Content Include="Views\Supplier\Delete.cshtml" />
+    <Content Include="Views\Supplier\Details.cshtml" />
+    <Content Include="Views\Supplier\Edit.cshtml" />
+    <Content Include="Views\Supplier\Index.cshtml" />
+    <Content Include="Views\Stockroom\Create.cshtml" />
+    <Content Include="Views\Stockroom\Delete.cshtml" />
+    <Content Include="Views\Stockroom\Details.cshtml" />
+    <Content Include="Views\Stockroom\Edit.cshtml" />
+    <Content Include="Views\Stockroom\Index.cshtml" />
+    <Content Include="Views\Zone\Create.cshtml" />
+    <Content Include="Views\Zone\Delete.cshtml" />
+    <Content Include="Views\Zone\Details.cshtml" />
+    <Content Include="Views\Zone\Edit.cshtml" />
+    <Content Include="Views\Zone\Index.cshtml" />
+    <Content Include="Views\Store\Create.cshtml" />
+    <Content Include="Views\Store\Delete.cshtml" />
+    <Content Include="Views\Store\Details.cshtml" />
+    <Content Include="Views\Store\Edit.cshtml" />
+    <Content Include="Views\Store\Index.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Order\Create.cshtml" />
+    <Content Include="Views\Order\Delete.cshtml" />
+    <Content Include="Views\Order\Details.cshtml" />
+    <Content Include="Views\Order\Edit.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\PurchaseOrder\Create.cshtml" />
+    <Content Include="Views\PurchaseOrder\Delete.cshtml" />
+    <Content Include="Views\PurchaseOrder\Details.cshtml" />
+    <Content Include="Views\PurchaseOrder\Edit.cshtml" />
+    <Content Include="Views\PurchaseOrder\Index.cshtml" />
+    <Content Include="Views\PurchasePlan\Create.cshtml" />
+    <Content Include="Views\PurchasePlan\Delete.cshtml" />
+    <Content Include="Views\PurchasePlan\Details.cshtml" />
+    <Content Include="Views\PurchasePlan\Edit.cshtml" />
+    <Content Include="Views\PurchasePlan\Index.cshtml" />
+    <Content Include="Views\Movement\Create.cshtml" />
+    <Content Include="Views\Movement\Delete.cshtml" />
+    <Content Include="Views\Movement\Details.cshtml" />
+    <Content Include="Views\Movement\Edit.cshtml" />
+    <Content Include="Views\Movement\Index.cshtml" />
+    <Content Include="Views\Home\Login_.cshtml" />
+    <Content Include="Views\PurchaseOrderDetail\Create.cshtml" />
+    <Content Include="Views\PurchaseOrderDetail\Delete.cshtml" />
+    <Content Include="Views\PurchaseOrderDetail\Details.cshtml" />
+    <Content Include="Views\PurchaseOrderDetail\Edit.cshtml" />
+    <Content Include="Views\PurchaseOrderDetail\Index.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -203,6 +334,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201709030710256_InitialCreate.resx">
+      <DependentUpon>201709030710256_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709040139019_addPurchaseOrderandPlan.resx">
+      <DependentUpon>201709040139019_addPurchaseOrderandPlan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709040404415_changeRUCType.resx">
+      <DependentUpon>201709040404415_changeRUCType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709110231316_validations.resx">
+      <DependentUpon>201709110231316_validations.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

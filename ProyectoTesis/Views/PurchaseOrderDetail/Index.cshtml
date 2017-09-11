@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ProyectoTesis.Models.PurchaseOrderDetail>
+
+@{
+    ViewBag.Title = "Detalle de Orden de Compra";
+}
+
+<h2 >Detalle de Orden de Compra</h2>
+
+<p>
+    @Html.ActionLink("Nuevo", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BoxUnits)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FractionUnits)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subtotal)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BoxUnits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FractionUnits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Subtotal)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+}
+
+</table>

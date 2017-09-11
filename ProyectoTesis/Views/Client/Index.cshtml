@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ProyectoTesis.Models.Client>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientType)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        
+        @if(item.Dni.Equals(null))
+        {        
+        <td>
+            @Html.DisplayFor(modelItem => item.Ruc)
+        </td>
+        }
+        else
+        {
+        <td>
+            @Html.DisplayFor(modelItem => item.Dni)
+        </td>
+        }
+        <td>              
+            @Html.DisplayFor(modelItem => item.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClientType)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+}
+
+</table>
