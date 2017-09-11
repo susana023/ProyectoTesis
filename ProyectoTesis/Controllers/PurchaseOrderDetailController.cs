@@ -24,6 +24,7 @@ namespace ProyectoTesis.Controllers
             {
                 purchaseOrderDetails = db.PurchaseOrderDetails.Include(p => p.Product).Include(p => p.PurchaseOrder).Where(
                                            p => p.PurchaseOrderID == PurchaseOrderID);
+                ViewBag.PurchaseOrder = PurchaseOrderID;
             } 
             return View(purchaseOrderDetails.ToList());
         }
@@ -47,7 +48,15 @@ namespace ProyectoTesis.Controllers
         public ActionResult Create(int? PurchaseOrderID)
         {
             ViewBag.productID = new SelectList(db.Products, "ID", "Description");
-            //ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber");
+            if (PurchaseOrderID != null)
+            {
+                ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders.Where(p => p.ID == PurchaseOrderID), "ID", "BillSerialNumber");
+                ViewBag.PurchaseOrder = PurchaseOrderID;
+            }
+            else
+            {
+                ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber");
+            }
             return View();
         }
 
@@ -62,11 +71,16 @@ namespace ProyectoTesis.Controllers
             {
                 db.PurchaseOrderDetails.Add(purchaseOrderDetail);
                 db.SaveChanges();
+
+                var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
+                controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
+                controller.ActualizarTotal(purchaseOrderDetail.PurchaseOrderID);
+
                 return RedirectToAction("Index");
             }
 
             ViewBag.productID = new SelectList(db.Products, "ID", "Description", purchaseOrderDetail.productID);
-            //ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber", purchaseOrderDetail.PurchaseOrderID);
+            ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber", purchaseOrderDetail.PurchaseOrderID);
             return View(purchaseOrderDetail);
         }
 
@@ -83,7 +97,15 @@ namespace ProyectoTesis.Controllers
                 return HttpNotFound();
             }
             ViewBag.productID = new SelectList(db.Products, "ID", "Description", purchaseOrderDetail.productID);
-            //ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber", purchaseOrderDetail.PurchaseOrderID);
+            if (PurchaseOrderID != null)
+            {
+                ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders.Where(p => p.ID == PurchaseOrderID), "ID", "BillSerialNumber");
+                ViewBag.PurchaseOrder = PurchaseOrderID;
+            }
+            else
+            {
+                ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber", purchaseOrderDetail.PurchaseOrderID);
+            }
             return View(purchaseOrderDetail);
         }
 
@@ -98,10 +120,15 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(purchaseOrderDetail).State = EntityState.Modified;
                 db.SaveChanges();
+
+                var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
+                controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
+                controller.ActualizarTotal(purchaseOrderDetail.PurchaseOrderID);
+
                 return RedirectToAction("Index");
             }
             ViewBag.productID = new SelectList(db.Products, "ID", "Description", purchaseOrderDetail.productID);
-            //ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber", purchaseOrderDetail.PurchaseOrderID);
+            ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber", purchaseOrderDetail.PurchaseOrderID);
             return View(purchaseOrderDetail);
         }
 
@@ -126,8 +153,14 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             PurchaseOrderDetail purchaseOrderDetail = db.PurchaseOrderDetails.Find(id);
+            int purchaseOrderID = purchaseOrderDetail.PurchaseOrderID;
             db.PurchaseOrderDetails.Remove(purchaseOrderDetail);
             db.SaveChanges();
+
+            var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
+            controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
+            controller.ActualizarTotal(purchaseOrderID);
+            
             return RedirectToAction("Index");
         }
 

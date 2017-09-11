@@ -10,6 +10,8 @@ namespace ProyectoTesis.Models
     {
 
         public int ID { get; set; }
+        [Display(Name = "Proveedor")]
+        [Required(ErrorMessage = "Debe ingresar un proveedor")]
         public int SupplierID { get; set; }
         [Display(Name = "Correlativo de la Factura")]
         public int BillCorrelative { get; set; }

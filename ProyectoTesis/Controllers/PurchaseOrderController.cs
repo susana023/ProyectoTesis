@@ -13,12 +13,14 @@ namespace ProyectoTesis.Controllers
 {
     public class PurchaseOrderController : Controller
     {
+        private double IGV = 0.18;
         private StoreContext db = new StoreContext();
 
         // GET: PurchaseOrder
         public ActionResult Index()
         {
             var purchaseOrders = db.PurchaseOrders.Include(p => p.Supplier);
+            ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "BusinessName");
             return View(purchaseOrders.ToList());
         }
 
@@ -110,6 +112,11 @@ namespace ProyectoTesis.Controllers
             return View(purchaseOrder);
         }
 
+        public ActionResult NewPurchaseOrder()
+        {
+            return View();
+        }
+
         // POST: PurchaseOrder/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -119,6 +126,23 @@ namespace ProyectoTesis.Controllers
             db.PurchaseOrders.Remove(purchaseOrder);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public void ActualizarTotal(int id)
+        {
+            PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(id);
+            double subtotal = 0;
+            List<PurchaseOrderDetail> detalles = db.PurchaseOrderDetails.Where(p => p.PurchaseOrderID == id).ToList();
+            if(detalles != null)
+            {
+                foreach (PurchaseOrderDetail detalle in detalles)
+                {
+                    subtotal += detalle.Subtotal;
+                }
+                purchaseOrder.Subtotal = subtotal;
+                purchaseOrder.Igv = subtotal * IGV;
+                db.SaveChanges();
+            }            
         }
 
         protected override void Dispose(bool disposing)

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ProyectoTesis.Models.PurchaseOrderDetail>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Detalle de Orden de Compra";
 }
 
 <h2 >Detalle de Orden de Compra</h2>
@@ -41,8 +41,8 @@
             @Html.DisplayFor(modelItem => item.Subtotal)
         </td>
         <td>
-            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
-            <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Edit", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-eye"></i></a> |
             <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
         </td>
     </tr>

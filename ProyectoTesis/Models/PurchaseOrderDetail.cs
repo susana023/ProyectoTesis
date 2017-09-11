@@ -9,8 +9,9 @@ namespace ProyectoTesis.Models
     public class PurchaseOrderDetail
     {
         public int ID { get; set; }
+        [Display(Name = "Orden de Compra")]
         public int PurchaseOrderID { get; set; }
-
+        [Display(Name = "Producto")]
         public int productID { get; set; }
         [Display(Name = "Cantidad de Cajas")]
         public int BoxUnits { get; set; }

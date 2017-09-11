@@ -176,6 +176,10 @@
     <Compile Include="Migrations\201709040404415_changeRUCType.Designer.cs">
       <DependentUpon>201709040404415_changeRUCType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709110231316_validations.cs" />
+    <Compile Include="Migrations\201709110231316_validations.Designer.cs">
+      <DependentUpon>201709110231316_validations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Distributor.cs" />
@@ -305,12 +309,13 @@
     <Content Include="Views\Movement\Details.cshtml" />
     <Content Include="Views\Movement\Edit.cshtml" />
     <Content Include="Views\Movement\Index.cshtml" />
-    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Home\Login_.cshtml" />
     <Content Include="Views\PurchaseOrderDetail\Create.cshtml" />
     <Content Include="Views\PurchaseOrderDetail\Delete.cshtml" />
     <Content Include="Views\PurchaseOrderDetail\Details.cshtml" />
     <Content Include="Views\PurchaseOrderDetail\Edit.cshtml" />
     <Content Include="Views\PurchaseOrderDetail\Index.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -339,6 +344,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709040404415_changeRUCType.resx">
       <DependentUpon>201709040404415_changeRUCType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709110231316_validations.resx">
+      <DependentUpon>201709110231316_validations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
