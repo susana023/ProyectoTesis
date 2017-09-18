@@ -7,7 +7,7 @@
 <h2 >Detalle de Orden de Compra</h2>
 
 <p>
-    @Html.ActionLink("Nuevo", "Create")
+    @Html.ActionLink("Nuevo", "Create", new { PurchaseOrderID = ViewBag.PurchaseOrder })
 </p>
 <table class="table">
     <tr>
@@ -41,9 +41,9 @@
             @Html.DisplayFor(modelItem => item.Subtotal)
         </td>
         <td>
-            <a href="@Url.Action("Edit", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-pencil"></i></a> |
-            <a href="@Url.Action("Details", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-eye"></i></a> |
-            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+            <a href="@Url.Action("Edit", "PurchaseOrderDetail", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder })"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", "PurchaseOrderDetail", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", "PurchaseOrderDetail", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-trash"></i></a>
         </td>
     </tr>
 }

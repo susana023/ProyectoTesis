@@ -180,6 +180,26 @@
     <Compile Include="Migrations\201709110231316_validations.Designer.cs">
       <DependentUpon>201709110231316_validations.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709180259294_subtotal.cs" />
+    <Compile Include="Migrations\201709180259294_subtotal.Designer.cs">
+      <DependentUpon>201709180259294_subtotal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709180643303_expiration day to order.cs" />
+    <Compile Include="Migrations\201709180643303_expiration day to order.Designer.cs">
+      <DependentUpon>201709180643303_expiration day to order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709180709416_expiration day to order out.cs" />
+    <Compile Include="Migrations\201709180709416_expiration day to order out.Designer.cs">
+      <DependentUpon>201709180709416_expiration day to order out.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709180711304_expiration day to order detail.cs" />
+    <Compile Include="Migrations\201709180711304_expiration day to order detail.Designer.cs">
+      <DependentUpon>201709180711304_expiration day to order detail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709180721503_nullables.cs" />
+    <Compile Include="Migrations\201709180721503_nullables.Designer.cs">
+      <DependentUpon>201709180721503_nullables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Distributor.cs" />
@@ -347,6 +367,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709110231316_validations.resx">
       <DependentUpon>201709110231316_validations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709180259294_subtotal.resx">
+      <DependentUpon>201709180259294_subtotal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709180643303_expiration day to order.resx">
+      <DependentUpon>201709180643303_expiration day to order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709180709416_expiration day to order out.resx">
+      <DependentUpon>201709180709416_expiration day to order out.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709180711304_expiration day to order detail.resx">
+      <DependentUpon>201709180711304_expiration day to order detail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709180721503_nullables.resx">
+      <DependentUpon>201709180721503_nullables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

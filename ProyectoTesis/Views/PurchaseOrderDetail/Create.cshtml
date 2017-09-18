@@ -15,42 +15,65 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.PurchaseOrderID, "PurchaseOrderID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PurchaseOrderID, "Nro de Orden de Compra", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("PurchaseOrderID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.EditorFor(model => model.PurchaseOrderID, new { htmlAttributes = new { @class = "form-control", @value = ViewBag.PurchaseOrder, @readonly = "readonly" } })
                 @Html.ValidationMessageFor(model => model.PurchaseOrderID, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.productID, "productID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.productID, "Producto", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("productID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("productID", (IEnumerable<SelectListItem>)ViewData["Menu"],
+                      string.Empty, htmlAttributes: new { @class = "form-control", @id = "product"})
                 @Html.ValidationMessageFor(model => model.productID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+       <div class="form-group">
+            @Html.LabelFor(model => model.Product.BoxPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <label class="control-label" id="bPrice"></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product.FractionPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <label class = "control-label" id="fPrice"></label>
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.BoxUnits, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.BoxUnits, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.BoxUnits, new { htmlAttributes = new { @class = "form-control", @id = "boxes"} })
                 @Html.ValidationMessageFor(model => model.BoxUnits, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FractionUnits, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.FractionUnits, htmlAttributes: new { @class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FractionUnits, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.FractionUnits, new { htmlAttributes = new { @class = "form-control", @id = "fractions"} })
                 @Html.ValidationMessageFor(model => model.FractionUnits, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Subtotal, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">      
+                @*<label class="control-label" id="subtotal"></label>*@
+                @*@Html.HiddenFor(model => model.Subtotal, new { htmlAttributes = new { @class = "form-control", @id = "subt" } })*@
+                @Html.EditorFor(model => model.Subtotal, new { htmlAttributes = new { @class = "form-control", @id = "subtotal"} })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BatchExpirationDay, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Subtotal, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Subtotal, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.BatchExpirationDay, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.BatchExpirationDay, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -62,10 +85,73 @@
     </div>
 }
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    jQuery(function ($) {
+
+        $(":text[id*=_QTY],:text[id*=_UNIT_COST]").blur(function () {
+
+            var row = $(this).closest("tr");
+
+            var qty = $(":text[id*=_QTY]", row).val();
+            var cost = $(":text[id*=_UNIT]", row).val();
+            var total = (qty * cost).toFixed(2);
+
+            $(":text[id*=TOTAL_COST]", row).val(total);
+
+        });
+    });
+
+</script>
+
 <div>
-    @Html.ActionLink("Regresar", "Index")
+    @Html.ActionLink("Regresar", "Index", new { PurchaseOrderID = ViewBag.PurchaseOrder })
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#product").change(function (evt) {
+                var id = $("#product").val();
+                var url = "/PurchaseOrderDetail/getBoxPrice";
+                $.get(url, { productID: id }, function (data) {
+                    $("#bPrice").text(data)
+                    $("#bPrice").val(data)
+                });
+                url = "/PurchaseOrderDetail/getFractionPrice";
+                var fPrice = $.get(url, { productID: id }, function (data) {
+                    $("#fPrice").text(data)
+                    $("#fPrice").val(data)
+                });
+
+            })
+        })
+
+        $(document).ready(function () {
+            $("#boxes").change(calculate);
+            $("#fractions").change(calculate);
+            $("#product").change(calculate);
+        });
+
+       function calculate(evt) {
+            var boxUnits = $("#boxes").val();
+            var fractionUnits = $("#fractions").val();
+            var boxPrice = $("#bPrice").val();
+            var fractionPrice = $("#fPrice").val();
+
+            if (boxUnits == "") boxUnits = 0;
+            if (fractionUnits == "") fractionUnits = 0;
+
+            var subtotal = parseFloat(boxUnits) * parseFloat(boxPrice) + parseFloat(fractionUnits) * parseFloat(fractionPrice);
+            if (isNaN(subtotal)) {
+                $("#subtotal").text(" ");
+            } else {
+                $("#subtotal").val((subtotal).toFixed(2));
+                $('#subtotal').attr('readonly', 'readonly');
+                //$("#subt").text("S/. " + (subtotal).toFixed(2));
+            }            
+        }
+    </script>
 }

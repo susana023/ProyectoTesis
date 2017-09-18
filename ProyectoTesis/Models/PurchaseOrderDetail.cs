@@ -14,10 +14,13 @@ namespace ProyectoTesis.Models
         [Display(Name = "Producto")]
         public int productID { get; set; }
         [Display(Name = "Cantidad de Cajas")]
-        public int BoxUnits { get; set; }
+        public int? BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
-        public int FractionUnits { get; set; }
-        public double Subtotal { get; set; }
+        public int? FractionUnits { get; set; }
+        public double Subtotal { get; set; }        
+        [Display(Name = "Fecha de vencimiento del lote")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? BatchExpirationDay { get; set; }
 
         [Display(Name = "Producto")]
         public virtual Product Product { get; set; }

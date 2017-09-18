@@ -20,7 +20,7 @@ namespace ProyectoTesis.Models
         [Display(Name = "Flag Activo")]
         public bool ActiveFlag { get; set; }
         [Display(Name = "Fecha")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
         [Display(Name = "IGV")]
         public double Igv { get; set; }

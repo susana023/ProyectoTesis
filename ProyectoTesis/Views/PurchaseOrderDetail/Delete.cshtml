@@ -56,8 +56,10 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Eliminar" class="btn btn-default" /> |
-            @Html.ActionLink("Regresar", "Index")
+            @*<input type="submit" value="Eliminar" onclick="location.href='@Url.Action("Index", new { PurchaseOrderID = ViewBag.PurchaseOrder })" />
+            <input type="hidden" name="PurchaseOrderID" value="@ViewBag.PurchaseOrder" />*@
+            <input type="submit" value="Eliminar" class="btn btn-default" />
         </div>
     }
+    @Html.ActionLink("Regresar", "Index", new { PurchaseOrderID = ViewBag.PurchaseOrder })
 </div>
