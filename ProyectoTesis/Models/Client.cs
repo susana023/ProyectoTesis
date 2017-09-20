@@ -14,9 +14,9 @@ namespace ProyectoTesis.Models
     {
         public int ID { get; set; }
         [Display(Name = "DNI")]
-        public int Dni { get; set; }
+        public int? Dni { get; set; }
         [Display(Name = "RUC")]
-        public long Ruc { get; set; }
+        public long? Ruc { get; set; }
         [Display(Name = "Nombre")]
         public string Name { get; set; }
         [Display(Name = "Apellido")]
@@ -28,7 +28,7 @@ namespace ProyectoTesis.Models
         public string Email { get; set; }
         public bool ActiveFlag { get; set; }
         [Display(Name = "Tipo de Cliente")]
-        public ClientType? ClientType { get; set; }
+        public ClientType ClientType { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
 

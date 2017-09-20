@@ -12,7 +12,7 @@ namespace ProyectoTesis.Models
         public string Description { get; set; }
 
         public virtual Stockroom Stockroom { get; set; }
-
+        public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public virtual ICollection<Movement> StockroomZoneProducts { get; set; }
     }
 }
