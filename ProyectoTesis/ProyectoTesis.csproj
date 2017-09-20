@@ -204,6 +204,10 @@
     <Compile Include="Migrations\201709200432108_zone.Designer.cs">
       <DependentUpon>201709200432108_zone.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709200651202_stock.cs" />
+    <Compile Include="Migrations\201709200651202_stock.Designer.cs">
+      <DependentUpon>201709200651202_stock.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Distributor.cs" />
@@ -389,6 +393,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709200432108_zone.resx">
       <DependentUpon>201709200432108_zone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709200651202_stock.resx">
+      <DependentUpon>201709200651202_stock.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

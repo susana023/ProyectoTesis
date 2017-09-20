@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,9 @@ namespace ProyectoTesis.Models
     {
         [ForeignKey("Manager")]
         public int ID { get; set; }
+        [Display(Name = "Teléfono")]
         public string Phone { get; set; }
+        [Display(Name = "Activo?")]
         public bool ActiveFlag { get; set; }
 
         public virtual ICollection<ProductSupplier> ProductSuppliers { get; set; }

@@ -14,8 +14,9 @@ namespace ProyectoTesis.Models
     public class Movement
     {
         public int ID { get; set; }
+        [Display(Name = "Producto")]
         public int ProductID { get; set; }
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de Vencimiento")]
         public DateTime ExpirationDate { get; set; }
         [Display(Name = "Zona")]
@@ -26,6 +27,7 @@ namespace ProyectoTesis.Models
         public int BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
         public int FractionUnits { get; set; }
+        [Display(Name = "Documento de Referencia")]
         public int DocumentID { get; set; }
 
         [Display(Name = "Producto")]

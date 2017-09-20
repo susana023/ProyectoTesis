@@ -21,7 +21,8 @@ namespace ProyectoTesis.Models
         [Display(Name = "Fecha de vencimiento del lote")]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? BatchExpirationDay { get; set; }
-        public int ZoneID { get; set; }
+        [Display(Name = "Zona")]
+        public int? ZoneID { get; set; }
 
         [Display(Name = "Producto")]
         public virtual Product Product { get; set; }

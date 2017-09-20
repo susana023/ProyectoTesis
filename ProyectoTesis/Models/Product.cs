@@ -19,7 +19,13 @@ namespace ProyectoTesis.Models
         public double BoxPrice { get; set; }
         [Display(Name = "Precio de Fracción")]
         public double FractionPrice { get; set; }
-        [Display(Name = "Flag Activo")]
+        [Display(Name = "Cantidad de Fracciones")]
+        public int FractionUnits { get; set; }
+        [Display(Name = "Stock Lógico")]
+        public double LogicalStock { get; set; }
+        [Display(Name = "Stock Físico")]
+        public int PhysicalStock { get; set; }
+        [Display(Name = "Activo?")]
         public bool ActiveFlag { get; set; }
 
         public virtual ICollection<ReferralGuideDetail> ReferralGuideDetails { get; set; }
