@@ -40,6 +40,7 @@ namespace ProyectoTesis.Controllers
         // GET: Movement/Create
         public ActionResult Create()
         {
+            ViewBag.DocumentID = new SelectList(db.Documents, "ID", "ID");
             ViewBag.ProductID = new SelectList(db.Products, "ID", "Description");
             ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description");
             return View();
@@ -55,10 +56,21 @@ namespace ProyectoTesis.Controllers
             if (ModelState.IsValid)
             {
                 db.Movements.Add(movement);
+                Product product = db.Products.Find(movement.ProductID);
+                double quantity = movement.BoxUnits + (movement.FractionUnits / product.FractionUnits);
+                if(movement.MovementType == MovementType.Compra || movement.MovementType == MovementType.Hallazgo)
+                {
+                    product.PhysicalStock += quantity;
+                    product.LogicalStock += quantity;
+                }else if(movement.MovementType == MovementType.Despacho || movement.MovementType == MovementType.Pérdida){
+                    product.PhysicalStock -= quantity;
+                    product.LogicalStock -= quantity;
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
+            ViewBag.DocumentID = new SelectList(db.Documents, "ID", "ID", movement.DocumentID);
             ViewBag.ProductID = new SelectList(db.Products, "ID", "Description", movement.ProductID);
             ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description", movement.ZoneID);
             return View(movement);
@@ -76,6 +88,7 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.DocumentID = new SelectList(db.Documents, "ID", "ID", movement.DocumentID);
             ViewBag.ProductID = new SelectList(db.Products, "ID", "Description", movement.ProductID);
             ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description", movement.ZoneID);
             return View(movement);
@@ -94,6 +107,7 @@ namespace ProyectoTesis.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.DocumentID = new SelectList(db.Documents, "ID", "ID", movement.DocumentID);
             ViewBag.ProductID = new SelectList(db.Products, "ID", "Description", movement.ProductID);
             ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description", movement.ZoneID);
             return View(movement);

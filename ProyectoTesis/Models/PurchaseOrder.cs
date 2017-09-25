@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace ProyectoTesis.Models
 {
-    public class PurchaseOrder
+    [Table("PurchaseOrder")]
+    public class PurchaseOrder: Document
     {
-
-        public int ID { get; set; }
+        
         [Display(Name = "Proveedor")]
         [Required(ErrorMessage = "Debe ingresar un proveedor")]
         public int SupplierID { get; set; }

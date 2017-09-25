@@ -1,14 +1,23 @@
 ﻿@model ProyectoTesis.Models.Movement
 
 @{
-    ViewBag.Title = "Detalle de Movimiento de Almacén";
+    ViewBag.Title = "Details";
 }
 
-<h2>Detalle de Movimiento de Almacén</h2>
+<h2>Details</h2>
 
 <div>
+    <h4>Movement</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Document.ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Document.ID)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Product.Description)
         </dt>
@@ -57,17 +66,9 @@
             @Html.DisplayFor(model => model.FractionUnits)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DocumentID)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DocumentID)
-        </dd>
-
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Regresar", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>

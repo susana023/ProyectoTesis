@@ -6,6 +6,10 @@ using System.Web;
 
 namespace ProyectoTesis.Models
 {
+    public enum ProductType
+    {
+        Caramelo, Chupete, Chocolate, Galleta, Panetón, Chicle
+    }
     public class Product
     {
         public int ID { get; set; }
@@ -24,9 +28,17 @@ namespace ProyectoTesis.Models
         [Display(Name = "Stock Lógico")]
         public double LogicalStock { get; set; }
         [Display(Name = "Stock Físico")]
-        public int PhysicalStock { get; set; }
+        public double PhysicalStock { get; set; }
         [Display(Name = "Activo?")]
         public bool ActiveFlag { get; set; }
+        [Display(Name = "Stock Mínimo")]
+        public double MinStock { get; set; }
+        [Display(Name = "Stock Máximo")]
+        public double MaxStock { get; set; }
+        [Display(Name = "Tipo de Producto")]
+        public ProductType ProductType { get; set; }
+            
+        
 
         public virtual ICollection<ReferralGuideDetail> ReferralGuideDetails { get; set; }
         public virtual ICollection<Movement> StockroomProducts { get; set; }

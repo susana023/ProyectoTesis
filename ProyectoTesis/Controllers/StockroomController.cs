@@ -40,7 +40,8 @@ namespace ProyectoTesis.Controllers
         // GET: Stockroom/Create
         public ActionResult Create()
         {
-            ViewBag.ID = new SelectList(db.Users, "ID", "Name");
+            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View();
         }
 
@@ -49,7 +50,7 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Phone,ActiveFlag")] Stockroom stockroom)
+        public ActionResult Create([Bind(Include = "ID, Name,Phone,ActiveFlag,StoreID")] Stockroom stockroom)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +59,8 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ID = new SelectList(db.Users, "ID", "Name", stockroom.ID);
+            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(stockroom);
         }
 
@@ -74,7 +76,8 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ID = new SelectList(db.Users, "ID", "Name", stockroom.ID);
+            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(stockroom);
         }
 
@@ -91,7 +94,8 @@ namespace ProyectoTesis.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ID = new SelectList(db.Users, "ID", "Name", stockroom.ID);
+            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(stockroom);
         }
 

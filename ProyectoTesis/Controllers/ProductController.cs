@@ -18,7 +18,7 @@ namespace ProyectoTesis.Controllers
         // GET: Product
         public ActionResult Index()
         {
-            return View(db.Products.ToList());
+            return View(db.Products.Where(p => p.ActiveFlag == true).ToList());
         }
 
         // GET: Product/Details/5
@@ -51,6 +51,7 @@ namespace ProyectoTesis.Controllers
         {
             if (ModelState.IsValid)
             {
+                product.ActiveFlag = true;
                 db.Products.Add(product);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -111,7 +112,7 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Product product = db.Products.Find(id);
-            db.Products.Remove(product);
+            product.ActiveFlag = false;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

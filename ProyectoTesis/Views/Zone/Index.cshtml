@@ -1,18 +1,18 @@
 ﻿@model IEnumerable<ProyectoTesis.Models.Zone>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Zona";
 }
 
 <h2>Zona de Almacén</h2>
 
 <p>
-    @Html.ActionLink("Crear Zona", "Create")
+    @Html.ActionLink("Nueva", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Stockroom.Phone)
+            Almacén
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Description)
@@ -23,7 +23,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Stockroom.Phone)
+            @Html.DisplayFor(modelItem => item.Stockroom.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Description)

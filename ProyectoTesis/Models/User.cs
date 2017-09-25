@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace ProyectoTesis.Models
 {
+
+    public enum EmployeeType
+    {
+        Vendedor_Tienda, Distribuidor, Vendedor_Distribución, Encargado_Almacén, Encargardo_Tienda, Gerente
+    }
+
     public class User
     {
         public int ID { get; set; }
@@ -26,13 +33,23 @@ namespace ProyectoTesis.Models
         [Display(Name = "Activo?")]
         public bool? ActiveFlag { get; set; }
         [Display(Name = "Tienda")]
+        [ForeignKey("Store")]
         public int? StoreID { get; set; }
         [Display(Name = "Tipo")]
-        public string Type { get; set; }
+        public EmployeeType Type { get; set; }
+        
 
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual Store Store { get; set; }
         public virtual Stockroom Stockroom { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return Name + " " + LastName;
+            }
+        }
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace ProyectoTesis.Models
 {
-    public class Return
+    [Table("Return")]
+    public class Return : Document
     {
-        public int ID { get; set; }
         [Display(Name = "Documento de Venta")]
         public int SaleDocumentID { get; set; }
         [Display(Name = "Fecha")]

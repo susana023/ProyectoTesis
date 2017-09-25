@@ -50,22 +50,15 @@ namespace ProyectoTesis.Controllers
         {
             
             List<int> products = new List<int>();
-
-            if (PurchaseOrderID != null)
+            
+            foreach (PurchaseOrderDetail p in db.PurchaseOrders.Find(PurchaseOrderID).PurchaseOrderDetails)
             {
-                foreach (PurchaseOrderDetail p in db.PurchaseOrders.Find(PurchaseOrderID).PurchaseOrderDetails)
-                {
-                    products.Add(p.productID);
-                }
-                ViewBag.productID = new SelectList(db.Products.Where(p => p.ActiveFlag == true && !products.Contains(p.ID)), "ID", "Description");
-                ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders.Where(p => p.ID == PurchaseOrderID), "ID", "BillSerialNumber");
-                ViewBag.PurchaseOrder = PurchaseOrderID;
+                products.Add(p.productID);
             }
-            else
-            {
-                ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber");
-                ViewBag.productID = new SelectList(db.Products.Where(p => p.ActiveFlag == true), "ID", "Description");
-            }
+            ViewBag.productID = new SelectList(db.Products.Where(p => p.ActiveFlag == true && !products.Contains(p.ID)), "ID", "Description");
+            ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders.Where(p => p.ID == PurchaseOrderID), "ID", "BillSerialNumber");
+            ViewBag.PurchaseOrder = PurchaseOrderID;
+            
             return View();
         }
 
@@ -79,6 +72,27 @@ namespace ProyectoTesis.Controllers
             if (ModelState.IsValid)
             {
                 db.PurchaseOrderDetails.Add(purchaseOrderDetail);
+                int boxes = 0, fractions = 0;
+
+                if (purchaseOrderDetail.BoxUnits != null) boxes = purchaseOrderDetail.BoxUnits.Value;
+                if (purchaseOrderDetail.FractionUnits != null) fractions = purchaseOrderDetail.FractionUnits.Value;
+
+                db.Movements.Add(new Movement
+                {
+                    MovementType = MovementType.Compra,
+                    DocumentID = purchaseOrderDetail.PurchaseOrderID,
+                    ExpirationDate = purchaseOrderDetail.BatchExpirationDay,
+                    BoxUnits = boxes,
+                    FractionUnits = fractions,
+                    ZoneID = purchaseOrderDetail.ZoneID.Value,
+                    ProductID = purchaseOrderDetail.productID
+                });
+
+                Product product = db.Products.Find(purchaseOrderDetail.productID);
+                double quantity = boxes + (fractions / product.FractionUnits);
+                product.PhysicalStock += quantity;
+                product.LogicalStock += quantity;
+
                 db.SaveChanges();
 
                 var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();

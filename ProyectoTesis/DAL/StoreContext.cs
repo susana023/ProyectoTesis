@@ -36,6 +36,7 @@ namespace ProyectoTesis.DAL
         public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public DbSet<PurchasePlan> PurchasePlans { get; set; }
         public DbSet<PurchasePlanDetail> PurchasePlanDetails { get; set; }
+        public DbSet<Document> Documents { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

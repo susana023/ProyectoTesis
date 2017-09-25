@@ -1,7 +1,7 @@
 ﻿@model ProyectoTesis.Models.Zone
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Zona - Detalle";
 }
 
 <h2>Details</h2>
@@ -11,11 +11,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Stockroom.Phone)
+            Almacén
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Stockroom.Phone)
+            @Html.DisplayFor(model => model.Stockroom.Name)
         </dd>
 
         <dt>
@@ -29,6 +29,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Regresar", "Index")
 </p>

@@ -1,11 +1,10 @@
 ﻿@model ProyectoTesis.Models.Movement
 
 @{
-    ViewBag.Title = "Movimiento de Almacén - Creación";
+    ViewBag.Title = "Movimiento - Creación";
 }
 
-<h2>Crear Movimiento de Almacén</h2>
-
+<h2>Creación de Movimiento</h2>
 
 @using (Html.BeginForm()) 
 {
@@ -14,58 +13,60 @@
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductID, "ProductID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ProductID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ProductID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ExpirationDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ExpirationDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ZoneID, "ZoneID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ZoneID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ZoneID, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.MovementType, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.MovementType, htmlAttributes: new { @class = "form-control" })
+                @Html.EnumDropDownListFor(model => model.MovementType,
+                                          "Seleccionar Tipo de Movimiento", htmlAttributes: new { @class = "form-control", @id = "tipomovimiento" })
                 @Html.ValidationMessageFor(model => model.MovementType, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.BoxUnits, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ProductID, "Producto", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "productlabel" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.BoxUnits, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownList("ProductID", null, "Seleccionar Producto", htmlAttributes: new { @class = "form-control hidden", @id = "product" })
+                @Html.ValidationMessageFor(model => model.ProductID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ExpirationDate, htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "expdatelabel" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ExpirationDate, new { htmlAttributes = new { @class = "form-control hidden", @id = "expdate", Value = DateTime.Now } })
+                @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ZoneID, "Zona", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "zonelabel" })
+            <div class="col-md-10">
+                @Html.DropDownList("ZoneID", null, "Seleccionar Zona", htmlAttributes: new { @class = "form-control hidden", @id = "zone" })
+                @Html.ValidationMessageFor(model => model.ZoneID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BoxUnits, htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "boxunitslabel" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BoxUnits, new { htmlAttributes = new { @class = "form-control hidden", @id = "boxunits" } })
                 @Html.ValidationMessageFor(model => model.BoxUnits, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FractionUnits, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.FractionUnits, htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "fractionunitslabel" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FractionUnits, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.FractionUnits, new { htmlAttributes = new { @class = "form-control hidden", @id = "fractionunits" } })
                 @Html.ValidationMessageFor(model => model.FractionUnits, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.DocumentID, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.DocumentID, "Documento", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "documentlabel" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DocumentID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownList("DocumentID", null, "Seleccionar Documento", htmlAttributes: new { @class = "form-control hidden", @id = "document" })
                 @Html.ValidationMessageFor(model => model.DocumentID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -76,12 +77,60 @@
             </div>
         </div>
     </div>
+    @Html.ActionLink("Regresar", "Index")
 }
 
 <div>
-    @Html.ActionLink("Regresar", "Index")
 </div>
+    
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <script src="~/Scripts/moment.js"></script>        
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+        <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#tipomovimiento").change(function (evt) {
+                    var id = $("#tipomovimiento").val();
+
+                    if ($("#expdatelabel").hasClass("hidden") == false) $("#expdatelabel").addClass("hidden");
+                    if ($("#expdate").hasClass("hidden") == false) $("#expdate").addClass("hidden");
+                    if ($("#documentlabel").hasClass("hidden") == false) $("#documentlabel").addClass("hidden");
+                    if ($("#document").hasClass("hidden") == false) $("#document").addClass("hidden");
+
+                    $("#productlabel").removeClass("hidden");
+                    $("#product").removeClass("hidden");
+                    $("#boxunitslabel").removeClass("hidden");
+                    $("#boxunits").removeClass("hidden");
+                    $("#fractionunitslabel").removeClass("hidden");
+                    $("#fractionunits").removeClass("hidden");
+                    $("#zonelabel").removeClass("hidden");
+                    $("#zone").removeClass("hidden");
+
+                    if (id == 1) {                   
+                        $("#expdatelabel").removeClass("hidden");
+                        $("#expdate").removeClass("hidden"); 
+                        $("#documentlabel").removeClass("hidden");
+                        $("#document").removeClass("hidden");
+                    } else if (id == 4) {
+                        $("#documentlabel").removeClass("hidden");
+                        $("#document").removeClass("hidden");
+                    }
+                })
+            })
+
+            $(function () {
+                $("#expdate").datetimepicker({
+                    format: "DD-MM-YYYY"                    
+                });
+            });
+        
+        </script>
+
 }

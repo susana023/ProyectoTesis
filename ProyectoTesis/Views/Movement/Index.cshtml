@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ProyectoTesis.Models.Movement>
 
 @{
-    ViewBag.Title = "Movimiento de Almacén";
+    ViewBag.Title = "Movimientos";
 }
 
 <h2>Movimientos de Almacén</h2>
@@ -12,11 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Product.Description)
+            Documento
         </th>
-        <th>Zona</th>
         <th>
-            @Html.DisplayNameFor(model => model.ExpirationDate)
+            @Html.DisplayNameFor(model => model.Product.Description)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.MovementType)
@@ -33,10 +32,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Product.Description)
+            @Html.DisplayFor(modelItem => item.Document.ID)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ExpirationDate)
+            @Html.DisplayFor(modelItem => item.Product.Description)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.MovementType)

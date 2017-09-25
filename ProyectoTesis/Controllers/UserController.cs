@@ -18,7 +18,7 @@ namespace ProyectoTesis.Controllers
         // GET: User
         public ActionResult Index()
         {
-            var users = db.Users.Include(u => u.Stockroom).Include(u => u.Store);
+            var users = db.Users.Include(u => u.Store);
             return View(users.ToList());
         }
 
@@ -40,8 +40,8 @@ namespace ProyectoTesis.Controllers
         // GET: User/Create
         public ActionResult Create()
         {
-            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Phone");
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Address");
+            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Name");
+            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View();
         }
 
@@ -59,8 +59,8 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Phone", user.ID);
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Address", user.StoreID);
+            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Name");
+            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(user);
         }
 
@@ -76,8 +76,8 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Phone", user.ID);
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Address", user.StoreID);
+            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Name");
+            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(user);
         }
 
@@ -94,8 +94,8 @@ namespace ProyectoTesis.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Phone", user.ID);
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Address", user.StoreID);
+            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Name");
+            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(user);
         }
 

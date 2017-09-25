@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace ProyectoTesis.Models
 {
-    public class ReferralGuide
+    [Table("ReferralGuide")]
+    public class ReferralGuide: Document
     {
-        public int ID { get; set; }
         [Display(Name = "Distribuidor")]
         public int DistributorID { get; set; }
         [Display(Name = "Fecha")]

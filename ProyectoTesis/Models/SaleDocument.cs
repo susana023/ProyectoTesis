@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -11,9 +12,9 @@ namespace ProyectoTesis.Models
     {
         Factura, Boleta, NotaCrédito
     }
-    public class SaleDocument
+    [Table("SaleDocument")]
+    public class SaleDocument : Document
     {
-        public int ID { get; set; }
         [Display(Name = "Correlativo")]
         public int Correlative { get; set; }
         [Display(Name = "Número de Serie")]
