@@ -18,9 +18,7 @@ namespace ProyectoTesis.Controllers
         // GET: PurchaseOrderDetail
         public ActionResult Index(int PurchaseOrderID)
         {
-            var purchaseOrderDetails = db.PurchaseOrderDetails.Include(p => p.Product).Include(p => p.PurchaseOrder);
-            
-            purchaseOrderDetails = db.PurchaseOrderDetails.Include(p => p.Product).Include(p => p.PurchaseOrder).Where(
+            var purchaseOrderDetails = db.PurchaseOrderDetails.Include(p => p.Product).Include(p => p.PurchaseOrder).Where(
                                         p => p.PurchaseOrderID == PurchaseOrderID);
             ViewBag.PurchaseOrder = PurchaseOrderID;
 
@@ -173,9 +171,8 @@ namespace ProyectoTesis.Controllers
             if (purchaseOrderDetail != null)
             {
                 int purchaseOrderID = purchaseOrderDetail.PurchaseOrderID;
-                
-                MovementController movementController = new MovementController();
-                movementController.EliminarMovimiento(purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.productID);
+
+                deletePurchaseOrderDetail(id);
 
                 db.PurchaseOrderDetails.Remove(purchaseOrderDetail);
                 
@@ -206,6 +203,17 @@ namespace ProyectoTesis.Controllers
         public double getFractionPrice(int productID)
         {
             return db.Products.Where(p => p.ID == productID).ToList().FirstOrDefault().FractionPrice;
+        }
+
+        public void deletePurchaseOrderDetail(int purchaseOrderDetailID)
+        {
+            PurchaseOrderDetail purchaseOrderDetail = db.PurchaseOrderDetails.Find(purchaseOrderDetailID);
+            if (purchaseOrderDetail != null)
+            {
+                MovementController movementController = new MovementController();
+                movementController.EliminarMovimiento(purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.productID);
+            }
+            db.SaveChanges();
         }
     }
 }

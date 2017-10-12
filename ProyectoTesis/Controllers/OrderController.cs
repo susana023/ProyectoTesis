@@ -13,11 +13,14 @@ namespace ProyectoTesis.Controllers
 {
     public class OrderController : Controller
     {
+        private double IGV = DAL.GlobalVariables.Igv;
+
         private StoreContext db = new StoreContext();
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        string user = "";
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: Order
         public ActionResult Index()
         {
@@ -43,8 +46,8 @@ namespace ProyectoTesis.Controllers
         // GET: Order/Create
         public ActionResult Create()
         {
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Name");
-            ViewBag.UserID = new SelectList(db.Users, "ID", "Name");
+            ViewBag.ClientID = new SelectList(db.Clients, "ID", "FullName");
+            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
             return View();
         }
 
@@ -59,12 +62,12 @@ namespace ProyectoTesis.Controllers
             {
                 db.Orders.Add(order);
                 db.SaveChanges();
-                //log.Info("El usuario " + user + " creó una orden de compra para el cliente: " + order.Client.Name);
-                return RedirectToAction("Index");
+                log.Info("El usuario " + user + " creó un pedido para el cliente: " + db.Clients.Find(order.ClientID));
+                return RedirectToAction("Index", "OrderDetail", new { OrderID = order.ID });
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Name", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users, "ID", "Name", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName", order.UserID);
             return View(order);
         }
 
@@ -124,9 +127,31 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Order order = db.Orders.Find(id);
+            OrderDetailController controller = new OrderDetailController();
+            foreach (OrderDetail orderDetail in order.OrderDetails)
+            {
+                controller.deleteOrderDetail(orderDetail.ID);
+            }
             db.Orders.Remove(order);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public void ActualizarTotal(int id)
+        {
+            Order order = db.Orders.Find(id);
+            double subtotal = 0;
+            List<OrderDetail> detalles = db.OrderDetails.Where(p => p.OrderID == id).ToList();
+            if (detalles != null)
+            {
+                foreach (OrderDetail detalle in detalles)
+                {
+                    subtotal += detalle.Subtotal;
+                }
+                //order.Subtotal = subtotal;
+                //order.Igv = subtotal * IGV;
+                db.SaveChanges();
+            }
         }
 
         protected override void Dispose(bool disposing)

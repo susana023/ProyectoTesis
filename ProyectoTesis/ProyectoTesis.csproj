@@ -166,6 +166,7 @@
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ZoneController.cs" />
+    <Compile Include="DAL\GlobalVariables.cs" />
     <Compile Include="DAL\StoreContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -289,6 +290,10 @@
     <Compile Include="Migrations\201710112144305_stockroomAdd.cs" />
     <Compile Include="Migrations\201710112144305_stockroomAdd.Designer.cs">
       <DependentUpon>201710112144305_stockroomAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710121823286_orderdetails.cs" />
+    <Compile Include="Migrations\201710121823286_orderdetails.Designer.cs">
+      <DependentUpon>201710121823286_orderdetails.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
@@ -627,6 +632,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710112144305_stockroomAdd.resx">
       <DependentUpon>201710112144305_stockroomAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710121823286_orderdetails.resx">
+      <DependentUpon>201710121823286_orderdetails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

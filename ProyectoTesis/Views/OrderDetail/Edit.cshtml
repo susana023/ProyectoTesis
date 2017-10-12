@@ -1,49 +1,52 @@
 ﻿@model ProyectoTesis.Models.OrderDetail
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Detalle de Pedido - Edición";
 }
 
-<h2>Edit</h2>
+<h2>Edición de detalle de Pedido</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>OrderDetail</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
-
-        <div class="form-group">
+        @Html.HiddenFor(model => model.ProductID, new { @id = "product" })
+        @*<div class="form-group">
             @Html.LabelFor(model => model.OrderID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.OrderID, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.OrderID, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.ProductID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.ProductID, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ProductID, "", new { @class = "text-danger" })
             </div>
-        </div>
-
+        </div>*@
         <div class="form-group">
-            @Html.LabelFor(model => model.Subtotal, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Product.BoxPrice, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Subtotal, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Subtotal, "", new { @class = "text-danger" })
+                <label class="control-label" id="bPrice">@Html.DisplayFor(model => model.Product.BoxPrice)</label>
             </div>
         </div>
-
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product.FractionPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <label class="control-label" id="fPrice">@Html.DisplayFor(model => model.Product.FractionPrice)</label>
+            </div>
+        </div>
+        
         <div class="form-group">
             @Html.LabelFor(model => model.BoxUnits, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.BoxUnits, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.BoxUnits, new { htmlAttributes = new { @class = "form-control", @id = "boxes" } })
                 @Html.ValidationMessageFor(model => model.BoxUnits, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -51,19 +54,68 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FractionUnits, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FractionUnits, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.FractionUnits, new { htmlAttributes = new { @class = "form-control", @id = "fractions" } })
                 @Html.ValidationMessageFor(model => model.FractionUnits, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Subtotal, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Subtotal, new { htmlAttributes = new { @class = "form-control", @id = "subtotal" } })
+                @Html.ValidationMessageFor(model => model.Subtotal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Guardar" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Regresar", "Index", new { OrderID = ViewBag.Order })
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    @Scripts.Render("~/Scripts/jquery-3.1.1.js")
+    @Scripts.Render("~/Scripts/jquery.validate.min.js")
+    @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.min.js")
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#boxes").change(calculate);
+            $("#fractions").change(calculate);
+        });
+
+        function calculate(evt) {
+            var boxUnits = $("#boxes").val();
+            var fractionUnits = $("#fractions").val();
+            var boxPrice = @ViewBag.boxPrice;
+            var fractionPrice = @ViewBag.fractionPrice;
+
+            if (boxUnits == "") boxUnits = 0;
+            if (fractionUnits == "") fractionUnits = 0;
+
+            var subtotal = parseFloat(boxUnits) * parseFloat(boxPrice) + parseFloat(fractionUnits) * parseFloat(fractionPrice);
+            if (isNaN(subtotal)) {
+                $("#subtotal").text(" ");
+            } else {
+                $("#subtotal").val((subtotal).toFixed(2));
+                $('#subtotal').attr('readonly', 'readonly');
+            }
+        }
+    </script>
+}
+
+

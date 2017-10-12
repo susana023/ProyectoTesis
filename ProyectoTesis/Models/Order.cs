@@ -13,6 +13,8 @@ namespace ProyectoTesis.Models
         public int ClientID { get; set; }
         [Display(Name = "Usuario")]
         public int UserID { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha")]
         public DateTime Date { get; set; }
         [Display(Name = "Entregado?")]

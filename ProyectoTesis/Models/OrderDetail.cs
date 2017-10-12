@@ -19,5 +19,10 @@ namespace ProyectoTesis.Models
         public int? BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
         public int? FractionUnits { get; set; }
-    }
+
+        [Display(Name = "Producto")]
+        public virtual Product Product { get; set; }
+        [Display(Name = "Orden de Compra")]
+        public virtual Order Order { get; set; }
+        }
 }

@@ -1,30 +1,29 @@
 ﻿@model ProyectoTesis.Models.Order
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Pedido - Eliminación";
 }
 
-<h2>Delete</h2>
+<h2>Eliminación de Pedido</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>¿Está seguro de que desea eliminar este pedido?</h3>
 <div>
-    <h4>Order</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Client.Name)
+            Cliente
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Client.Name)
+            @Html.DisplayFor(model => model.Client.FullName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.User.Name)
+            Usuario que registró el pedido
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.User.Name)
+            @Html.DisplayFor(model => model.User.FullName)
         </dd>
 
         <dt>
@@ -57,8 +56,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Eliminar" class="btn btn-default" /> |
+            @Html.ActionLink("Regresar", "Index")
         </div>
     }
 </div>

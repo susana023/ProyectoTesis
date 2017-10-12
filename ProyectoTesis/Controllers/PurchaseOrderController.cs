@@ -13,7 +13,7 @@ namespace ProyectoTesis.Controllers
 {
     public class PurchaseOrderController : Controller
     {
-        private double IGV = 0.18;
+        private double IGV = DAL.GlobalVariables.Igv;
         private StoreContext db = new StoreContext();
 
         // GET: PurchaseOrder
@@ -123,6 +123,11 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(id);
+            PurchaseOrderDetailController controller = new PurchaseOrderDetailController();
+            foreach (PurchaseOrderDetail purchaseOrderDetail in purchaseOrder.PurchaseOrderDetails)
+            {                
+                controller.deletePurchaseOrderDetail(purchaseOrderDetail.ID);
+            }
             db.PurchaseOrders.Remove(purchaseOrder);
             db.SaveChanges();
             return RedirectToAction("Index");

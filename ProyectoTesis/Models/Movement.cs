@@ -18,7 +18,7 @@ namespace ProyectoTesis.Models
         [Required(ErrorMessage = "Debe seleccionar un producto")]
         [Display(Name = "Producto")]
         public int ProductID { get; set; }
-        [DisplayFormat(DataFormatString = "{DD-MM-YYYY}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0: DD-MM-YYYY}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de Vencimiento")]
         public DateTime? ExpirationDate { get; set; }
         [Display(Name = "Zona")]

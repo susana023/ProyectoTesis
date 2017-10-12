@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<ProyectoTesis.Models.Order>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Pedidos";
 }
 
-<h2>Index</h2>
+<h2>Pedidos</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Nuevo", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Client.Name)
+            Cliente
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.User.Name)
+            Usuario que registró el pedido
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Date)
@@ -32,19 +32,33 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Client.Name)
+            @Html.DisplayFor(modelItem => item.Client.FullName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.User.Name)
+            @Html.DisplayFor(modelItem => item.User.FullName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Date)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.DeliveredFlag)
+            @if (item.DeliveredFlag == true)
+            {
+                <label>Sí</label>
+            }
+            else
+            {
+                <label>No</label>
+            }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ActiveFlag)
+            @if (item.ActiveFlag == true)
+            {
+                <label>Sí</label>
+            }
+            else
+            {
+                <label>No</label>
+            }
         </td>
         <td>
             <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
