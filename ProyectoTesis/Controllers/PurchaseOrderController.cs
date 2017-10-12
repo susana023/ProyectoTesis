@@ -51,13 +51,13 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,SupplierID,BillCorrelative,BillSerialNumber,ActiveFlag,Date,Igv,Subtotal")] PurchaseOrder purchaseOrder)
+        public ActionResult Create([Bind(Include = "SupplierID,BillCorrelative,BillSerialNumber,ActiveFlag,Date,Igv,Subtotal")] PurchaseOrder purchaseOrder)
         {
             if (ModelState.IsValid)
             {
                 db.PurchaseOrders.Add(purchaseOrder);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "PurchaseOrderDetail", new { PurchaseOrderID = purchaseOrder.ID });
             }
 
             ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "BusinessName", purchaseOrder.SupplierID);

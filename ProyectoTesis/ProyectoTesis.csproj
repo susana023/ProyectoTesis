@@ -51,6 +51,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -58,6 +61,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -151,6 +156,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MovementController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\OrderDetailController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseOrderDetailController.cs" />
@@ -240,6 +246,50 @@
     <Compile Include="Migrations\201709250240296_manager stockroom.Designer.cs">
       <DependentUpon>201709250240296_manager stockroom.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709250259559_stockroom manager.cs" />
+    <Compile Include="Migrations\201709250259559_stockroom manager.Designer.cs">
+      <DependentUpon>201709250259559_stockroom manager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710090559382_changes.cs" />
+    <Compile Include="Migrations\201710090559382_changes.Designer.cs">
+      <DependentUpon>201710090559382_changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710090613391_changes2.cs" />
+    <Compile Include="Migrations\201710090613391_changes2.Designer.cs">
+      <DependentUpon>201710090613391_changes2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710090620233_Inheritance.cs" />
+    <Compile Include="Migrations\201710090620233_Inheritance.Designer.cs">
+      <DependentUpon>201710090620233_Inheritance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710110215115_Documents2.cs" />
+    <Compile Include="Migrations\201710110215115_Documents2.Designer.cs">
+      <DependentUpon>201710110215115_Documents2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710110228587_Documents3.cs" />
+    <Compile Include="Migrations\201710110228587_Documents3.Designer.cs">
+      <DependentUpon>201710110228587_Documents3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710110357355_Documents4.cs" />
+    <Compile Include="Migrations\201710110357355_Documents4.Designer.cs">
+      <DependentUpon>201710110357355_Documents4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710112032261_StockroomManager2.cs" />
+    <Compile Include="Migrations\201710112032261_StockroomManager2.Designer.cs">
+      <DependentUpon>201710112032261_StockroomManager2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710112105114_almacen.cs" />
+    <Compile Include="Migrations\201710112105114_almacen.Designer.cs">
+      <DependentUpon>201710112105114_almacen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710112139561_stockroomDelete.cs" />
+    <Compile Include="Migrations\201710112139561_stockroomDelete.Designer.cs">
+      <DependentUpon>201710112139561_stockroomDelete.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710112144305_stockroomAdd.cs" />
+    <Compile Include="Migrations\201710112144305_stockroomAdd.Designer.cs">
+      <DependentUpon>201710112144305_stockroomAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Distributor.cs" />
@@ -260,9 +310,9 @@
     <Compile Include="Models\SaleDocumentDetail.cs" />
     <Compile Include="Models\SalesMargin.cs" />
     <Compile Include="Models\Movement.cs" />
+    <Compile Include="Models\Stockroom.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\Supplier.cs" />
-    <Compile Include="Models\Stockroom.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Zone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -378,6 +428,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="log4net.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -424,11 +475,6 @@
     <Content Include="Views\Supplier\Details.cshtml" />
     <Content Include="Views\Supplier\Edit.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
-    <Content Include="Views\Stockroom\Create.cshtml" />
-    <Content Include="Views\Stockroom\Delete.cshtml" />
-    <Content Include="Views\Stockroom\Details.cshtml" />
-    <Content Include="Views\Stockroom\Edit.cshtml" />
-    <Content Include="Views\Stockroom\Index.cshtml" />
     <Content Include="Views\Zone\Create.cshtml" />
     <Content Include="Views\Zone\Delete.cshtml" />
     <Content Include="Views\Zone\Details.cshtml" />
@@ -471,6 +517,16 @@
     <Content Include="Views\PurchaseOrderDetail\Edit.cshtml" />
     <Content Include="Views\PurchaseOrderDetail\Index.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Stockroom\Create.cshtml" />
+    <Content Include="Views\Stockroom\Delete.cshtml" />
+    <Content Include="Views\Stockroom\Details.cshtml" />
+    <Content Include="Views\Stockroom\Edit.cshtml" />
+    <Content Include="Views\Stockroom\Index.cshtml" />
+    <Content Include="Views\OrderDetail\Create.cshtml" />
+    <Content Include="Views\OrderDetail\Delete.cshtml" />
+    <Content Include="Views\OrderDetail\Details.cshtml" />
+    <Content Include="Views\OrderDetail\Edit.cshtml" />
+    <Content Include="Views\OrderDetail\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -538,6 +594,39 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709250240296_manager stockroom.resx">
       <DependentUpon>201709250240296_manager stockroom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709250259559_stockroom manager.resx">
+      <DependentUpon>201709250259559_stockroom manager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710090559382_changes.resx">
+      <DependentUpon>201710090559382_changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710090613391_changes2.resx">
+      <DependentUpon>201710090613391_changes2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710090620233_Inheritance.resx">
+      <DependentUpon>201710090620233_Inheritance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710110215115_Documents2.resx">
+      <DependentUpon>201710110215115_Documents2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710110228587_Documents3.resx">
+      <DependentUpon>201710110228587_Documents3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710110357355_Documents4.resx">
+      <DependentUpon>201710110357355_Documents4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710112032261_StockroomManager2.resx">
+      <DependentUpon>201710112032261_StockroomManager2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710112105114_almacen.resx">
+      <DependentUpon>201710112105114_almacen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710112139561_stockroomDelete.resx">
+      <DependentUpon>201710112139561_stockroomDelete.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710112144305_stockroomAdd.resx">
+      <DependentUpon>201710112144305_stockroomAdd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

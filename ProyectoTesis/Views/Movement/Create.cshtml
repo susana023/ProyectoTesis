@@ -126,8 +126,10 @@
             })
 
             $(function () {
-                $("#expdate").datetimepicker({
-                    format: "DD-MM-YYYY"                    
+                $("#expdate").datetimepicker({ 
+                    viewMode: 'days',
+                    format: 'DD/MM/YYYY',
+                    defaultDate: new Date(),
                 });
             });
         

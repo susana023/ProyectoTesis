@@ -7,7 +7,7 @@
 <h2>Zona de Almacén</h2>
 
 <p>
-    @Html.ActionLink("Nueva", "Create")
+    @Html.ActionLink("Nueva", "Create", new { StockroomID = ViewBag.Stockroom })
 </p>
 <table class="table">
     <tr>
@@ -28,10 +28,10 @@
         <td>
             @Html.DisplayFor(modelItem => item.Description)
         </td>
-        <td>
-            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
-            <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
-            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+        <td>            
+            <a href="@Url.Action("Edit", new { id = item.ID, StockroomID = ViewBag.Stockroom })"><i class="fa fa-pencil"></i></a> |
+            @*<a href="@Url.Action("Details", new { id = item.ID, StockroomID = ViewBag.Stockroom  })"><i class="fa fa-eye"></i></a> |*@
+            <a href="@Url.Action("Delete", new { id = item.ID, StockroomID = ViewBag.Stockroom  })"><i class="fa fa-trash"></i></a>
         </td>
     </tr>
 }

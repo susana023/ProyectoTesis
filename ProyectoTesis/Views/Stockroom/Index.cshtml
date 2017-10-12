@@ -14,9 +14,9 @@
         <th>
             Tienda
         </th>
-        <th>
+        @*<th>
             Encargado
-        </th>
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.Phone)
         </th>
@@ -28,13 +28,14 @@
         <td>
             @Html.DisplayFor(modelItem => item.Store.Description)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.Manager.FullName)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.Phone)
         </td>
         <td>
+            <a href="@Url.Action("Index", "Zone", new { StockroomID = item.ID })"><i class="fa fa-list"></i></a> |
             <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
             <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
             <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>

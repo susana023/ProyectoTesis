@@ -12,7 +12,7 @@ namespace ProyectoTesis.Models
     {
         Factura, Boleta, NotaCrédito
     }
-    [Table("SaleDocument")]
+    //[Table("SaleDocument")]
     public class SaleDocument : Document
     {
         [Display(Name = "Correlativo")]
@@ -25,8 +25,6 @@ namespace ProyectoTesis.Models
         public double Igv { get; set; }
         [Display(Name = "Subtotal")]
         public double Subtotal { get; set; }
-        [Display(Name = "Anulado?")]
-        public bool ActiveFlag { get; set; }
         [Display(Name = "Tipo de Documento")]
         public DocumentType DocumentType { get; set; }
 

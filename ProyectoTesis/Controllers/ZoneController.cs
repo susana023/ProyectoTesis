@@ -16,14 +16,16 @@ namespace ProyectoTesis.Controllers
         private StoreContext db = new StoreContext();
 
         // GET: Zone
-        public ActionResult Index()
+        public ActionResult Index(int StockroomID)
         {
             var zones = db.Zones.Include(z => z.Stockroom);
+            //var zones = db.Zones;
+            ViewBag.Stockroom = StockroomID;
             return View(zones.ToList());
         }
 
         // GET: Zone/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, int StockroomID)
         {
             if (id == null)
             {
@@ -34,13 +36,15 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Stockroom = StockroomID;
             return View(zone);
         }
 
         // GET: Zone/Create
-        public ActionResult Create()
+        public ActionResult Create(int StockroomID)
         {
-            ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Phone");
+            ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Name");
+            ViewBag.Stockroom = StockroomID;
             return View();
         }
 
@@ -55,15 +59,15 @@ namespace ProyectoTesis.Controllers
             {
                 db.Zones.Add(zone);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { StockroomID = zone.StockroomID });
             }
 
-            ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Phone", zone.StockroomID);
+            ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Name", zone.StockroomID);
             return View(zone);
         }
 
         // GET: Zone/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, int StockroomID)
         {
             if (id == null)
             {
@@ -74,7 +78,8 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Phone", zone.StockroomID);
+            ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Name", zone.StockroomID);
+            ViewBag.Stockroom = StockroomID;
             return View(zone);
         }
 
@@ -89,14 +94,14 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(zone).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { StockroomID = zone.StockroomID });
             }
-            ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Phone", zone.StockroomID);
+            ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Name", zone.StockroomID);
             return View(zone);
         }
 
         // GET: Zone/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, int StockroomID)
         {
             if (id == null)
             {
@@ -107,6 +112,7 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Stockroom = StockroomID;
             return View(zone);
         }
 
@@ -118,7 +124,7 @@ namespace ProyectoTesis.Controllers
             Zone zone = db.Zones.Find(id);
             db.Zones.Remove(zone);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { StockroomID = zone.StockroomID });
         }
 
         protected override void Dispose(bool disposing)

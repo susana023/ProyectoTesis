@@ -19,13 +19,11 @@ namespace ProyectoTesis.Controllers
         public ActionResult Index(int PurchaseOrderID)
         {
             var purchaseOrderDetails = db.PurchaseOrderDetails.Include(p => p.Product).Include(p => p.PurchaseOrder);
+            
+            purchaseOrderDetails = db.PurchaseOrderDetails.Include(p => p.Product).Include(p => p.PurchaseOrder).Where(
+                                        p => p.PurchaseOrderID == PurchaseOrderID);
+            ViewBag.PurchaseOrder = PurchaseOrderID;
 
-            if (PurchaseOrderID != null)
-            {
-                purchaseOrderDetails = db.PurchaseOrderDetails.Include(p => p.Product).Include(p => p.PurchaseOrder).Where(
-                                           p => p.PurchaseOrderID == PurchaseOrderID);
-                ViewBag.PurchaseOrder = PurchaseOrderID;
-            } 
             return View(purchaseOrderDetails.ToList());
         }
 
@@ -57,6 +55,7 @@ namespace ProyectoTesis.Controllers
             }
             ViewBag.productID = new SelectList(db.Products.Where(p => p.ActiveFlag == true && !products.Contains(p.ID)), "ID", "Description");
             ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders.Where(p => p.ID == PurchaseOrderID), "ID", "BillSerialNumber");
+            ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description");
             ViewBag.PurchaseOrder = PurchaseOrderID;
             
             return View();
@@ -67,32 +66,19 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,PurchaseOrderID,productID,BoxUnits,FractionUnits,Subtotal")] PurchaseOrderDetail purchaseOrderDetail)
+        public ActionResult Create([Bind(Include = "ID,PurchaseOrderID,productID,BoxUnits,FractionUnits,ZoneID,Subtotal,BatchExpirationDay")] PurchaseOrderDetail purchaseOrderDetail)
         {
             if (ModelState.IsValid)
             {
                 db.PurchaseOrderDetails.Add(purchaseOrderDetail);
                 int boxes = 0, fractions = 0;
-
+                if (purchaseOrderDetail.BatchExpirationDay == null) purchaseOrderDetail.BatchExpirationDay = DateTime.Today;
                 if (purchaseOrderDetail.BoxUnits != null) boxes = purchaseOrderDetail.BoxUnits.Value;
                 if (purchaseOrderDetail.FractionUnits != null) fractions = purchaseOrderDetail.FractionUnits.Value;
 
-                db.Movements.Add(new Movement
-                {
-                    MovementType = MovementType.Compra,
-                    DocumentID = purchaseOrderDetail.PurchaseOrderID,
-                    ExpirationDate = purchaseOrderDetail.BatchExpirationDay,
-                    BoxUnits = boxes,
-                    FractionUnits = fractions,
-                    ZoneID = purchaseOrderDetail.ZoneID.Value,
-                    ProductID = purchaseOrderDetail.productID
-                });
-
-                Product product = db.Products.Find(purchaseOrderDetail.productID);
-                double quantity = boxes + (fractions / product.FractionUnits);
-                product.PhysicalStock += quantity;
-                product.LogicalStock += quantity;
-
+                MovementController movementController = new MovementController();
+                movementController.CrearMovimiento(MovementType.Compra, purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.BatchExpirationDay.Value, boxes, fractions, purchaseOrderDetail.ZoneID.Value, purchaseOrderDetail.productID);
+                
                 db.SaveChanges();
 
                 var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
@@ -101,9 +87,9 @@ namespace ProyectoTesis.Controllers
 
                 return RedirectToAction("Index", new { PurchaseOrderID = purchaseOrderDetail.PurchaseOrderID });
             }
-
+            ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description");
             ViewBag.productID = new SelectList(db.Products, "ID", "Description", purchaseOrderDetail.productID);
-            ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber", purchaseOrderDetail.PurchaseOrderID);
+            ViewBag.PurchaseOrderID = purchaseOrderDetail.PurchaseOrderID;
             return View(purchaseOrderDetail);
         }
 
@@ -119,10 +105,12 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.productID = new SelectList(db.Products, "ID", "Description", purchaseOrderDetail.productID);
-
-            ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders.Where(p => p.ID == PurchaseOrderID), "ID", "BillSerialNumber");
-            ViewBag.PurchaseOrder = PurchaseOrderID;
+            ViewBag.productID = purchaseOrderDetail.productID;
+            ViewBag.ZoneID = purchaseOrderDetail.ZoneID;
+            ViewBag.Zone = new SelectList(db.Zones, "ID", "Description");
+            ViewBag.fractionPrice = purchaseOrderDetail.Product.FractionPrice;
+            ViewBag.boxPrice = purchaseOrderDetail.Product.BoxPrice;
+            ViewBag.PurchaseOrderID = PurchaseOrderID;
             return View(purchaseOrderDetail);
         }
 
@@ -131,11 +119,21 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,PurchaseOrderID,productID,BoxUnits,FractionUnits,Subtotal")] PurchaseOrderDetail purchaseOrderDetail)
+        public ActionResult Edit([Bind(Include = "ID,PurchaseOrderID,productID,BoxUnits,FractionUnits,ZoneID,Subtotal,BatchExpirationDay")] PurchaseOrderDetail purchaseOrderDetail)
         {
             if (ModelState.IsValid)
-            {
+            {                
                 db.Entry(purchaseOrderDetail).State = EntityState.Modified;
+                db.SaveChanges();
+
+                int boxes = 0, fractions = 0;
+                if (purchaseOrderDetail.BoxUnits != null) boxes = purchaseOrderDetail.BoxUnits.Value;
+                if (purchaseOrderDetail.FractionUnits != null) fractions = purchaseOrderDetail.FractionUnits.Value;
+
+                MovementController movementController = new MovementController();
+                purchaseOrderDetail = db.PurchaseOrderDetails.Find(purchaseOrderDetail.ID);
+                movementController.EditarMovimiento(MovementType.Compra, purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.productID, boxes, fractions, purchaseOrderDetail.ZoneID.Value, purchaseOrderDetail.BatchExpirationDay.Value);
+
                 db.SaveChanges();
 
                 var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
@@ -144,8 +142,9 @@ namespace ProyectoTesis.Controllers
 
                 return RedirectToAction("Index", new { PurchaseOrderID = purchaseOrderDetail.PurchaseOrderID });
             }
+            ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description");
             ViewBag.productID = new SelectList(db.Products, "ID", "Description", purchaseOrderDetail.productID);
-            ViewBag.PurchaseOrderID = new SelectList(db.PurchaseOrders, "ID", "BillSerialNumber", purchaseOrderDetail.PurchaseOrderID);
+            ViewBag.PurchaseOrderID = purchaseOrderDetail.PurchaseOrderID;
             return View(purchaseOrderDetail);
         }
 
@@ -174,13 +173,17 @@ namespace ProyectoTesis.Controllers
             if (purchaseOrderDetail != null)
             {
                 int purchaseOrderID = purchaseOrderDetail.PurchaseOrderID;
+                
+                MovementController movementController = new MovementController();
+                movementController.EliminarMovimiento(purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.productID);
+
                 db.PurchaseOrderDetails.Remove(purchaseOrderDetail);
+                
                 db.SaveChanges();
             
-
-            var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
-            controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
-            controller.ActualizarTotal(purchaseOrderID);
+                var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
+                controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
+                controller.ActualizarTotal(purchaseOrderID);
             }
 
             return RedirectToAction("Index", new { PurchaseOrderID = purchaseOrderDetail.PurchaseOrderID });

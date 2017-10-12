@@ -1,4 +1,4 @@
-﻿@model ProyectoTesis.Models.Zone
+﻿ @model ProyectoTesis.Models.Zone
 
 @{
     ViewBag.Title = "Zona - Creación";
@@ -39,7 +39,7 @@
 }
 
 <div>
-    @Html.ActionLink("Regresar", "Index")
+    @Html.ActionLink("Regresar", "Index", new { StockroomID = ViewBag.Stockroom })
 </div>
 
 @section Scripts {

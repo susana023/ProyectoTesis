@@ -17,9 +17,10 @@ namespace ProyectoTesis.Models
         public int? BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
         public int? FractionUnits { get; set; }
-        public double Subtotal { get; set; }        
+        public double Subtotal { get; set; }    
+        [DataType(DataType.Date)]
         [Display(Name = "Fecha de vencimiento del lote")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? BatchExpirationDay { get; set; }
         [Display(Name = "Zona")]
         public int? ZoneID { get; set; }

@@ -7,13 +7,11 @@ using System.Web;
 
 namespace ProyectoTesis.Models
 {
-    [Table("Return")]
+    //[Table("Return")]
     public class Return : Document
     {
         [Display(Name = "Documento de Venta")]
         public int SaleDocumentID { get; set; }
-        [Display(Name = "Fecha")]
-        public DateTime Date { get; set; }
 
         public virtual ICollection<ReturnDetail> ReturnDetails { get; set; }
 

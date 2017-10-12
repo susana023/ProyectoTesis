@@ -7,13 +7,11 @@ using System.Web;
 
 namespace ProyectoTesis.Models
 {
-    [Table("ReferralGuide")]
+    //[Table("ReferralGuide")]
     public class ReferralGuide: Document
     {
         [Display(Name = "Distribuidor")]
         public int DistributorID { get; set; }
-        [Display(Name = "Fecha")]
-        public DateTime Date { get; set; }
         [Display(Name = "Documento de Venta")]
         public int SaleDocumentID { get; set; }
         [Display(Name = "Cliente")]

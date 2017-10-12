@@ -18,7 +18,7 @@ namespace ProyectoTesis.Controllers
         // GET: Stockroom
         public ActionResult Index()
         {
-            var stockrooms = db.Stockrooms.Include(s => s.Manager);
+            var stockrooms = db.Stockrooms;
             return View(stockrooms.ToList());
         }
 
@@ -40,7 +40,7 @@ namespace ProyectoTesis.Controllers
         // GET: Stockroom/Create
         public ActionResult Create()
         {
-            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.ManagerID = new SelectList(db.Users, "ID", "FullName");
             ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View();
         }
@@ -50,7 +50,7 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID, Name,Phone,ActiveFlag,StoreID")] Stockroom stockroom)
+        public ActionResult Create([Bind(Include = "ID, Name,Phone,ActiveFlag,StoreID, ManagerID")] Stockroom stockroom)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.ManagerID = new SelectList(db.Users, "ID", "FullName");
             ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(stockroom);
         }
@@ -76,7 +76,7 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.ManagerID = new SelectList(db.Users, "ID", "FullName");
             ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(stockroom);
         }
@@ -94,7 +94,7 @@ namespace ProyectoTesis.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.ManagerID = new SelectList(db.Users, "ID", "FullName");
             ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
             return View(stockroom);
         }

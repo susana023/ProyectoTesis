@@ -15,6 +15,7 @@ namespace ProyectoTesis.Models
 
     public class User
     {
+        //[Key, ForeignKey("Stockroom")]
         public int ID { get; set; }
         [Display(Name = "DNI")]
         public int Dni { get; set; }
@@ -37,12 +38,12 @@ namespace ProyectoTesis.Models
         public int? StoreID { get; set; }
         [Display(Name = "Tipo")]
         public EmployeeType Type { get; set; }
-        
+        public int StockroomID { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual Store Store { get; set; }
-        public virtual Stockroom Stockroom { get; set; }
+       // public virtual Stockroom Stockroom { get; set; }
 
         public string FullName
         {

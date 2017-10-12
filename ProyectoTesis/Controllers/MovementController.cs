@@ -147,5 +147,88 @@ namespace ProyectoTesis.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public void CrearMovimiento(MovementType type, int purchaseOrderID, DateTime expirationDate, int boxes, int fractions, int zoneID, int productID)
+        {
+            db.Movements.Add(new Movement
+            {
+                MovementType = type,
+                DocumentID = purchaseOrderID,
+                ExpirationDate = expirationDate,
+                BoxUnits = boxes,
+                FractionUnits = fractions,
+                ZoneID = zoneID,
+                ProductID = productID
+            });
+
+            Product product = db.Products.Find(productID);
+            double quantity = boxes + ((double)fractions / (double)product.FractionUnits);
+
+            if (type == MovementType.Compra || type == MovementType.Hallazgo)
+            {
+                product.PhysicalStock += quantity;
+                product.LogicalStock += quantity;
+            }
+            else
+            {
+                product.PhysicalStock -= quantity;
+                product.LogicalStock -= quantity;
+            }
+            db.SaveChanges();
+        }
+        public void EditarMovimiento(MovementType type, int documentID, int productID, int boxes, int fractions, int zoneID, DateTime expirationDate)
+        {
+            Movement movement = db.Movements.Where(m => m.DocumentID == documentID && m.ProductID == productID).FirstOrDefault();
+            if (movement != null)
+            {
+                int oldBoxes = 0, oldFractions = 0;
+                oldBoxes = movement.BoxUnits;
+                oldFractions = movement.FractionUnits;
+                
+                movement.ExpirationDate = expirationDate;
+                movement.BoxUnits = boxes;
+                movement.FractionUnits = fractions;
+                movement.ZoneID = zoneID;
+
+                Product product = db.Products.Find(productID);
+                double quantity = (boxes - oldBoxes) + ((double)(fractions - oldFractions) / (double)product.FractionUnits);
+
+                if (type == MovementType.Compra || type == MovementType.Hallazgo)
+                {
+                    product.PhysicalStock += quantity;
+                    product.LogicalStock += quantity;
+                }
+                else
+                {
+                    product.PhysicalStock -= quantity;
+                    product.LogicalStock -= quantity;
+                }
+                db.SaveChanges();
+            }
+        }
+        public void EliminarMovimiento(int documentID, int productID)
+        {
+            Movement movement = db.Movements.Where(m => m.DocumentID == documentID && m.ProductID == productID).FirstOrDefault();
+
+            if (movement != null)
+            {
+                Product product = db.Products.Find(productID);
+                int boxes = movement.BoxUnits;
+                int fractions = movement.FractionUnits;
+                double quantity = boxes + ((double)fractions / (double)product.FractionUnits);
+
+                if (movement.MovementType == MovementType.Compra || movement.MovementType == MovementType.Hallazgo)
+                {
+                    product.PhysicalStock -= quantity;
+                    product.LogicalStock -= quantity;
+                }
+                else
+                {
+                    product.PhysicalStock += quantity;
+                    product.LogicalStock += quantity;
+                }
+                db.SaveChanges();
+            }
+        }
     }
 }

@@ -15,6 +15,9 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = "";
         // GET: Order
         public ActionResult Index()
         {
@@ -56,6 +59,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Orders.Add(order);
                 db.SaveChanges();
+                //log.Info("El usuario " + user + " creó una orden de compra para el cliente: " + order.Client.Name);
                 return RedirectToAction("Index");
             }
 

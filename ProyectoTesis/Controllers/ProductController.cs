@@ -15,6 +15,10 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = "";
+
         // GET: Product
         public ActionResult Index()
         {
@@ -47,13 +51,14 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Description,BoxDescription,FractionDescription,BoxPrice,FractionPrice,ActiveFlag")] Product product)
+        public ActionResult Create([Bind(Include = "ID,Description,BoxDescription,FractionDescription,BoxPrice,FractionPrice,ActiveFlag,FractionUnits")] Product product)
         {
             if (ModelState.IsValid)
             {
                 product.ActiveFlag = true;
                 db.Products.Add(product);
                 db.SaveChanges();
+                log.Info("El usuario " + user + " creó un producto con la descripción: " + product.Description);
                 return RedirectToAction("Index");
             }
 
@@ -80,7 +85,7 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Description,BoxDescription,FractionDescription,BoxPrice,FractionPrice,ActiveFlag")] Product product)
+        public ActionResult Edit([Bind(Include = "ID,Description,BoxDescription,FractionDescription,BoxPrice,FractionPrice,ActiveFlag,FractionUnits")] Product product)
         {
             if (ModelState.IsValid)
             {

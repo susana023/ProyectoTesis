@@ -1,13 +1,12 @@
 ﻿@model ProyectoTesis.Models.Movement
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Movimientos - Detalles";
 }
 
-<h2>Details</h2>
+<h2>Detalle de Movimiento</h2>
 
 <div>
-    <h4>Movement</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -39,7 +38,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ExpirationDate)
+            @Html.DisplayFor(model => model.ExpirationDate, "{0:dd/MM/yyyy}")
         </dd>
 
         <dt>
@@ -69,6 +68,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Regresar", "Index")
 </p>

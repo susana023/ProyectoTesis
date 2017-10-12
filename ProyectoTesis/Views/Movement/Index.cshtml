@@ -47,9 +47,16 @@
             @Html.DisplayFor(modelItem => item.FractionUnits)
         </td>
         <td>
-            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
-            <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
-            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+            @if (item.MovementType == ProyectoTesis.Models.MovementType.Compra || item.MovementType == ProyectoTesis.Models.MovementType.Despacho)
+                {
+                <a href = "@Url.Action("Details", new { id = item.ID })" ><i class="fa fa-eye"></i></a>
+                }
+                else
+                {            
+                <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> 
+                <a href="@Url.Action("Details", new { id = item.ID })"> | <i class="fa fa-eye"></i></a>
+                <a href="@Url.Action("Delete", new { id = item.ID })"> | <i class="fa fa-trash"></i></a>
+                }
         </td>
     </tr>
 }

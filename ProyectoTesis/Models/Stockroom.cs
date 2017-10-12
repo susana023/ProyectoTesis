@@ -9,7 +9,7 @@ namespace ProyectoTesis.Models
 {
     public class Stockroom
     {
-        [ForeignKey("Manager")]
+        [Key]
         public int ID { get; set; }
         [Display(Name = "Teléfono")]
         public string Phone { get; set; }
@@ -25,6 +25,6 @@ namespace ProyectoTesis.Models
         [ForeignKey("StoreID")]
         public virtual Store Store { get; set; }
         
-        public virtual User Manager { get; set; }
+       // public virtual User Manager { get; set; }
     }
 }
