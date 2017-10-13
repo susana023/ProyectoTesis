@@ -6,19 +6,28 @@
 
 <h2>Pedidos</h2>
 
-<p>
-    @Html.ActionLink("Nuevo", "Create")
-</p>
+<div>
+    <div class="pull-left">
+        <p>
+            @Html.ActionLink("Nuevo", "Create")
+        </p>
+    </div>
+    <div class="pull-right">
+        <input value="Generar Boletas" class="btn btn-link" id="ticket" />
+        <input value="Generar Facturas" class="btn btn-link" id="bill" />
+    </div>
+</div>
 <table class="table">
     <tr>
+        <th><input type="checkbox" id="checkAll" /></th>
         <th>
             Cliente
         </th>
         <th>
-            Usuario que registró el pedido
+            @Html.DisplayNameFor(model => model.Date)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Date)
+            Total
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DeliveredFlag)
@@ -32,14 +41,24 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Client.FullName)
+            @if (item.DeliveredFlag != true)
+            {
+                <input type="checkbox" class="checkBox" value="@item.ID" />
+            }
+            else
+            {
+                <input type="checkbox" class="checkBox" value="@item.ID" disabled="disabled"/>
+            }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.User.FullName)
+            @Html.DisplayFor(modelItem => item.Client.FullName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Date)
         </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Total)
+        </td>        
         <td>
             @if (item.DeliveredFlag == true)
             {
@@ -69,3 +88,72 @@
 }
 
 </table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval");
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#checkAll").click(function () {
+                $(".checkBox").prop('checked',
+                    $(this).prop('checked'));
+            });
+
+            $("#ticket").click(function () {
+                var selectedIDs = new Array();
+                $('input:checkbox.checkBox').each(function () {
+                    if ($(this).prop('checked')) {
+                        selectedIDs.push($(this).val());
+                    }
+                });
+
+                var options = {};
+                options.url = "/home/delete";
+                options.type = "POST";
+                options.data = JSON.stringify(selectedIDs);
+                options.contentType = "application/json";
+                options.dataType = "json";
+                options.success = function (msg) {
+                    alert(msg);
+                };
+                options.error = function () {
+                  alert("Error while deleting the records!");
+                };
+                $.ajax(options);
+
+            });
+
+            $("#bill").click(function () {
+                var selectedIDs = new Array();
+                $('input:checkbox.checkBox').each(function () {
+                    if ($(this).prop('checked')) {
+                        selectedIDs.push($(this).val());
+                    }
+                });
+
+                var options = {};
+                options.url = "/home/delete";
+                options.type = "POST";
+                options.data = JSON.stringify(selectedIDs);
+                options.contentType = "application/json";
+                options.dataType = "json";
+                options.success = function (msg) {
+                    alert(msg);
+                };
+                options.error = function () {
+                    alert("Error while deleting the records!");
+                };
+                $.ajax(options);
+
+            });
+        });
+    </script>
+}
+

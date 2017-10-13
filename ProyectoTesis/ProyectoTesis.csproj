@@ -161,6 +161,7 @@
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseOrderDetailController.cs" />
     <Compile Include="Controllers\PurchasePlanController.cs" />
+    <Compile Include="Controllers\SaleDocumentController.cs" />
     <Compile Include="Controllers\StockroomController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
@@ -294,6 +295,10 @@
     <Compile Include="Migrations\201710121823286_orderdetails.cs" />
     <Compile Include="Migrations\201710121823286_orderdetails.Designer.cs">
       <DependentUpon>201710121823286_orderdetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710130053501_ordertotal.cs" />
+    <Compile Include="Migrations\201710130053501_ordertotal.Designer.cs">
+      <DependentUpon>201710130053501_ordertotal.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
@@ -532,6 +537,9 @@
     <Content Include="Views\OrderDetail\Details.cshtml" />
     <Content Include="Views\OrderDetail\Edit.cshtml" />
     <Content Include="Views\OrderDetail\Index.cshtml" />
+    <Content Include="Views\SaleDocument\Ticket.cshtml" />
+    <Content Include="Views\SaleDocument\CreditNote.cshtml" />
+    <Content Include="Views\SaleDocument\Bill.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -635,6 +643,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710121823286_orderdetails.resx">
       <DependentUpon>201710121823286_orderdetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710130053501_ordertotal.resx">
+      <DependentUpon>201710130053501_ordertotal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

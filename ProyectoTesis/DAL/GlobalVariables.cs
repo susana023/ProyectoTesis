@@ -28,6 +28,25 @@ namespace ProyectoTesis.DAL
                 HttpContext.Current.Application["CurrentUserID"] = value;
             }
         }
+
+        public static string Correlative
+        {
+            get
+            {
+                int correlative = 0;
+                if (HttpContext.Current.Application["Correlative"] != null)
+                {                    
+                    int.TryParse(HttpContext.Current.Application["Correlative"] as string, out correlative);  
+                }
+                Correlative = (correlative + 1).ToString();
+                return (correlative + 1).ToString();
+            }
+            set
+            {
+                HttpContext.Current.Application["Correlative"] = value;
+            }
+        }
+
         public static string CurrentUser
         {
             get
@@ -38,6 +57,19 @@ namespace ProyectoTesis.DAL
             set
             {
                 HttpContext.Current.Application["CurrentUser"] = value;
+            }
+        }
+
+        public static string SerialNumber
+        {
+            get
+            {
+                if (HttpContext.Current.Application["SerialNumber"] == null) return "01";
+                else return HttpContext.Current.Application["SerialNumber"] as string;
+            }
+            set
+            {
+                HttpContext.Current.Application["SerialNumber"] = value;
             }
         }
     }

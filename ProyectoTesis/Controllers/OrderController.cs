@@ -148,8 +148,8 @@ namespace ProyectoTesis.Controllers
                 {
                     subtotal += detalle.Subtotal;
                 }
-                //order.Subtotal = subtotal;
-                //order.Igv = subtotal * IGV;
+                order.Subtotal = subtotal;
+                order.Igv = subtotal * IGV;
                 db.SaveChanges();
             }
         }
@@ -161,6 +161,94 @@ namespace ProyectoTesis.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public void createTickets(int[] tickets)
+        {
+            Order order;
+            foreach(int id in tickets)
+            {
+                order = db.Orders.Find(id);
+                if(order != null)
+                {
+                    SaleDocument saleDocument = new SaleDocument
+                    {
+                        Correlative = int.Parse(DAL.GlobalVariables.Correlative),
+                        Date = DateTime.Today,
+                        DocumentType = DocumentType.Boleta,
+                        OrderID = id,
+                        SerialNumber = int.Parse(DAL.GlobalVariables.SerialNumber),
+                        Subtotal = order.Subtotal,
+                        Igv = order.Igv
+                    };
+                    db.SaleDocuments.Add(saleDocument);
+                    db.SaveChanges();
+
+                    int saleDocumentID = db.SaleDocuments.Where(s => s.OrderID == id).FirstOrDefault().ID;
+                    foreach (OrderDetail orderDetail in order.OrderDetails)
+                    {
+                        int boxes = 0, fractions = 0;
+
+                        if (orderDetail.BoxUnits != null) boxes = orderDetail.BoxUnits.Value;
+                        if (orderDetail.FractionUnits != null) fractions = orderDetail.FractionUnits.Value;
+
+                        SaleDocumentDetail detail = new SaleDocumentDetail
+                        {
+                            SaleDocumentID = saleDocumentID,
+                            FractionUnits = fractions,
+                            BoxUnits = boxes,
+                            ProductID = orderDetail.ProductID,
+                            Subtotal = orderDetail.Subtotal
+                        };
+                        db.SaleDocumentDetails.Add(detail);
+                    }
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public void createBills(int[] bills)
+        {
+            Order order;
+            foreach (int id in bills)
+            {
+                order = db.Orders.Find(id);
+                if (order != null)
+                {
+                    SaleDocument saleDocument = new SaleDocument
+                    {
+                        Correlative = int.Parse(DAL.GlobalVariables.Correlative),
+                        Date = DateTime.Today,
+                        DocumentType = DocumentType.Factura,
+                        OrderID = id,
+                        SerialNumber = int.Parse(DAL.GlobalVariables.SerialNumber),
+                        Subtotal = order.Subtotal,
+                        Igv = order.Igv
+                    };
+                    db.SaleDocuments.Add(saleDocument);
+                    db.SaveChanges();
+
+                    int saleDocumentID = db.SaleDocuments.Where(s => s.OrderID == id).FirstOrDefault().ID;
+                    foreach (OrderDetail orderDetail in order.OrderDetails)
+                    {
+                        int boxes = 0, fractions = 0;
+
+                        if (orderDetail.BoxUnits != null) boxes = orderDetail.BoxUnits.Value;
+                        if (orderDetail.FractionUnits != null) fractions = orderDetail.FractionUnits.Value;
+
+                        SaleDocumentDetail detail = new SaleDocumentDetail
+                        {
+                            SaleDocumentID = saleDocumentID,
+                            FractionUnits = fractions,
+                            BoxUnits = boxes,
+                            ProductID = orderDetail.ProductID,
+                            Subtotal = orderDetail.Subtotal
+                        };
+                        db.SaleDocumentDetails.Add(detail);
+                    }
+                    db.SaveChanges();
+                }
+            }
         }
     }
 }

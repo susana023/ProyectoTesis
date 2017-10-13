@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ProyectoTesis.Models.SaleDocument>
+
+@{
+    ViewBag.Title = "Facturas de Venta";
+}
+
+<h2>Facturas de Venta</h2>
+
+<table class="table">
+    <tr>
+        <th>Boleta</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>IGV</th>
+        <th>Total</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Correlative) - 
+            @Html.DisplayFor(modelItem => item.SerialNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order.Client.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Igv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Total)
+        </td>
+    </tr>
+}
+
+</table>

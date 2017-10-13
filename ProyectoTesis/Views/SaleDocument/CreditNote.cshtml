@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ProyectoTesis.Models.SaleDocument>
+
+@{
+    ViewBag.Title = "Notas de Crédito";
+}
+
+<h2>Notas de Crédito</h2>
+
+<table class="table">
+    <tr>
+        <th>Nota de Crédito</th>
+        <th>Factura</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Total</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Correlative) - 
+            @Html.DisplayFor(modelItem => item.SerialNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order.SaleDocuments.Where(s => s.DocumentType == ProyectoTesis.Models.DocumentType.Factura).First().ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order.Client.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.Total)
+        </td>
+    </tr>
+}
+
+</table>

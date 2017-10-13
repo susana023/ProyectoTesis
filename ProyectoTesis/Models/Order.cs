@@ -17,6 +17,9 @@ namespace ProyectoTesis.Models
         [DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha")]
         public DateTime Date { get; set; }
+        public double Subtotal { get; set; }
+        [Display(Name = "IGV")]
+        public double Igv { get; set; }
         [Display(Name = "Entregado?")]
         public bool? DeliveredFlag { get; set; }
         [Display(Name = "Anulado?")]
@@ -27,5 +30,13 @@ namespace ProyectoTesis.Models
 
         public virtual Client Client { get; set; }
         public virtual User User { get; set; }
+
+        public double Total
+        {
+            get
+            {
+                return Subtotal + Igv;
+            }
+        }
     }
 }

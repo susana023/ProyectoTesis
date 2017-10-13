@@ -33,5 +33,13 @@ namespace ProyectoTesis.Models
         public virtual ICollection<SaleDocumentDetail> SaleDocumentDetails { get; set; }
         public virtual ICollection<Return> Returns { get; set; }
         public virtual ICollection<ReferralGuide> ReferralGuides { get; set; }
+
+        public double Total
+        {
+            get
+            {
+                return Subtotal + Igv;
+            }
+        }
     }
 }

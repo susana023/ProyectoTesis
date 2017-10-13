@@ -40,17 +40,11 @@
                         <li>@Html.ActionLink("Mantenimiento de Clientes", "Index", "Client")</li>
                         <li>@Html.ActionLink("Pedidos", "Index", "Order")</li>
                         <li>
-                            <a data-toggle="collapse" data-target="#documentos" href="@Url.Action("Index", "SaleDocument")">Documentos de Venta <span class="fa arrow"></span></a>
+                            <a data-toggle="collapse" data-target="#documentos">Documentos de Venta <span class="fa arrow"></span></a>
                             <ul id="documentos" class="nav nav-third-level  collapse in">
-                                <li>
-                                    <a href="#">Facturas</a>
-                                </li>
-                                <li>
-                                    <a href="#">Boletas</a>
-                                </li>
-                                <li>
-                                    <a href="#">Nota de crédito</a>
-                                </li>                                
+                                <li>@Html.ActionLink("Facturas", "Bill", "SaleDocument")</li>
+                                <li>@Html.ActionLink("Boletas", "Ticket", "SaleDocument")</li>
+                                <li>@Html.ActionLink("Notas de Crédito", "CreditNote", "SaleDocument")</li>                                
                             </ul>
 
                         </li>
