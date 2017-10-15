@@ -62,7 +62,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Orders.Add(order);
                 db.SaveChanges();
-                log.Info("El usuario " + user + " creó un pedido para el cliente: " + db.Clients.Find(order.ClientID));
+                log.Info("El usuario " + user + " creó un pedido para el cliente: " + db.Clients.Find(order.ClientID).FullName);
                 return RedirectToAction("Index", "OrderDetail", new { OrderID = order.ID });
             }
 
@@ -83,8 +83,8 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Name", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users, "ID", "Name", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName", order.UserID);
             return View(order);
         }
 
@@ -97,12 +97,13 @@ namespace ProyectoTesis.Controllers
         {
             if (ModelState.IsValid)
             {
+                log.Info("El usuario " + user + " editó el pedido de código: " + order.ID);
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Name", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users, "ID", "Name", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName", order.UserID);
             return View(order);
         }
 
@@ -132,6 +133,7 @@ namespace ProyectoTesis.Controllers
             {
                 controller.deleteOrderDetail(orderDetail.ID);
             }
+            log.Info("El usuario " + user + " eliminó el pedido de código: " + order.ID); 
             db.Orders.Remove(order);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -148,7 +150,6 @@ namespace ProyectoTesis.Controllers
                 {
                     subtotal += detalle.Subtotal;
                 }
-                order.Subtotal = subtotal;
                 order.Igv = subtotal * IGV;
                 db.SaveChanges();
             }
@@ -166,89 +167,122 @@ namespace ProyectoTesis.Controllers
         public void createTickets(int[] tickets)
         {
             Order order;
-            foreach(int id in tickets)
+            if (tickets != null)
             {
-                order = db.Orders.Find(id);
-                if(order != null)
+                foreach (int id in tickets)
                 {
-                    SaleDocument saleDocument = new SaleDocument
+                    order = db.Orders.Find(id);
+                    if (order != null)
                     {
-                        Correlative = int.Parse(DAL.GlobalVariables.Correlative),
-                        Date = DateTime.Today,
-                        DocumentType = DocumentType.Boleta,
-                        OrderID = id,
-                        SerialNumber = int.Parse(DAL.GlobalVariables.SerialNumber),
-                        Subtotal = order.Subtotal,
-                        Igv = order.Igv
-                    };
-                    db.SaleDocuments.Add(saleDocument);
-                    db.SaveChanges();
-
-                    int saleDocumentID = db.SaleDocuments.Where(s => s.OrderID == id).FirstOrDefault().ID;
-                    foreach (OrderDetail orderDetail in order.OrderDetails)
-                    {
-                        int boxes = 0, fractions = 0;
-
-                        if (orderDetail.BoxUnits != null) boxes = orderDetail.BoxUnits.Value;
-                        if (orderDetail.FractionUnits != null) fractions = orderDetail.FractionUnits.Value;
-
-                        SaleDocumentDetail detail = new SaleDocumentDetail
+                        int storeID = db.Stores.FirstOrDefault().ID;
+                        Correlative correlative = db.Correlatives.Where(c => c.StoreID == storeID && c.DocumentType == DocumentType.Boleta && c.ActiveFlag == true).FirstOrDefault();
+                        if (correlative != null)
                         {
-                            SaleDocumentID = saleDocumentID,
-                            FractionUnits = fractions,
-                            BoxUnits = boxes,
-                            ProductID = orderDetail.ProductID,
-                            Subtotal = orderDetail.Subtotal
-                        };
-                        db.SaleDocumentDetails.Add(detail);
+                            string serialNumber = correlative.SerialNumber;
+                            int correlativeNumber = getCorrelative(correlative);                            
+                            SaleDocument saleDocument = new SaleDocument
+                            {
+                                Correlative = correlativeNumber,
+                                Date = DateTime.Today,
+                                DocumentType = DocumentType.Boleta,
+                                OrderID = id,
+                                SerialNumber = serialNumber,
+                                Subtotal = order.Subtotal,
+                                Igv = order.Igv
+                            };
+                            db.SaleDocuments.Add(saleDocument);
+                            db.SaveChanges();
+                            log.Info("El usuario " + user + " generó la boleta del pedido de código: " + order.ID);
+                            int saleDocumentID = db.SaleDocuments.Where(s => s.OrderID == id).FirstOrDefault().ID;
+                            foreach (OrderDetail orderDetail in order.OrderDetails)
+                            {
+                                int boxes = 0, fractions = 0;
+
+                                if (orderDetail.BoxUnits != null) boxes = orderDetail.BoxUnits.Value;
+                                if (orderDetail.FractionUnits != null) fractions = orderDetail.FractionUnits.Value;
+
+                                SaleDocumentDetail detail = new SaleDocumentDetail
+                                {
+                                    SaleDocumentID = saleDocumentID,
+                                    FractionUnits = fractions,
+                                    BoxUnits = boxes,
+                                    ProductID = orderDetail.ProductID,
+                                    Subtotal = orderDetail.Subtotal
+                                };
+                                db.SaleDocumentDetails.Add(detail);
+                            }
+                            order.DeliveredFlag = true;
+                            db.SaveChanges();
+                        }
                     }
-                    db.SaveChanges();
                 }
             }
+            RedirectToAction("Index", "Order");
         }
 
         public void createBills(int[] bills)
         {
             Order order;
-            foreach (int id in bills)
+            if (bills != null)
             {
-                order = db.Orders.Find(id);
-                if (order != null)
+                foreach (int id in bills)
                 {
-                    SaleDocument saleDocument = new SaleDocument
+                    order = db.Orders.Find(id);
+                    if (order != null)
                     {
-                        Correlative = int.Parse(DAL.GlobalVariables.Correlative),
-                        Date = DateTime.Today,
-                        DocumentType = DocumentType.Factura,
-                        OrderID = id,
-                        SerialNumber = int.Parse(DAL.GlobalVariables.SerialNumber),
-                        Subtotal = order.Subtotal,
-                        Igv = order.Igv
-                    };
-                    db.SaleDocuments.Add(saleDocument);
-                    db.SaveChanges();
-
-                    int saleDocumentID = db.SaleDocuments.Where(s => s.OrderID == id).FirstOrDefault().ID;
-                    foreach (OrderDetail orderDetail in order.OrderDetails)
-                    {
-                        int boxes = 0, fractions = 0;
-
-                        if (orderDetail.BoxUnits != null) boxes = orderDetail.BoxUnits.Value;
-                        if (orderDetail.FractionUnits != null) fractions = orderDetail.FractionUnits.Value;
-
-                        SaleDocumentDetail detail = new SaleDocumentDetail
+                        int storeID = db.Stores.FirstOrDefault().ID;
+                        Correlative correlative = db.Correlatives.Where(c => c.StoreID == storeID && c.DocumentType == DocumentType.Factura && c.ActiveFlag == true).FirstOrDefault();
+                        if (correlative != null)
                         {
-                            SaleDocumentID = saleDocumentID,
-                            FractionUnits = fractions,
-                            BoxUnits = boxes,
-                            ProductID = orderDetail.ProductID,
-                            Subtotal = orderDetail.Subtotal
-                        };
-                        db.SaleDocumentDetails.Add(detail);
+                            string serialNumber = correlative.SerialNumber;
+                            int correlativeNumber = getCorrelative(correlative);
+                            SaleDocument saleDocument = new SaleDocument
+                            {
+                                Correlative = correlativeNumber,
+                                Date = DateTime.Today,
+                                DocumentType = DocumentType.Factura,
+                                OrderID = id,
+                                SerialNumber = serialNumber,
+                                Subtotal = order.Subtotal,
+                                Igv = order.Igv
+                            };
+                            db.SaleDocuments.Add(saleDocument);
+                            db.SaveChanges();
+                            log.Info("El usuario " + user + " generó la factura del pedido de código: " + order.ID);
+                            int saleDocumentID = db.SaleDocuments.Where(s => s.OrderID == id).FirstOrDefault().ID;
+                            foreach (OrderDetail orderDetail in order.OrderDetails)
+                            {
+                                int boxes = 0, fractions = 0;
+
+                                if (orderDetail.BoxUnits != null) boxes = orderDetail.BoxUnits.Value;
+                                if (orderDetail.FractionUnits != null) fractions = orderDetail.FractionUnits.Value;
+
+                                SaleDocumentDetail detail = new SaleDocumentDetail
+                                {
+                                    SaleDocumentID = saleDocumentID,
+                                    FractionUnits = fractions,
+                                    BoxUnits = boxes,
+                                    ProductID = orderDetail.ProductID,
+                                    Subtotal = orderDetail.Subtotal
+                                };
+                                db.SaleDocumentDetails.Add(detail);
+                            }
+                            order.DeliveredFlag = true;
+                            db.SaveChanges();
+                        }
                     }
-                    db.SaveChanges();
                 }
             }
+            RedirectToAction("Index", "Order");
         }
-    }
+
+        public int getCorrelative(Correlative correlative)
+        {
+            int correlativeNumber = 0;
+            correlativeNumber = correlative.CorrelativeNumber + 1;
+            correlative.CorrelativeNumber = correlativeNumber;
+            db.SaveChanges();
+            return correlativeNumber;
+        }
+    }    
 }

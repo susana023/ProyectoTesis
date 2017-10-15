@@ -17,7 +17,7 @@ namespace ProyectoTesis.Controllers
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        string user = "";
+        string user = DAL.GlobalVariables.CurrentUser;
 
         // GET: Product
         public ActionResult Index()
@@ -91,6 +91,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
+                log.Info("El usuario " + user + " realizó cambios al producto con la descripción: " + product.Description);
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -118,6 +119,7 @@ namespace ProyectoTesis.Controllers
         {
             Product product = db.Products.Find(id);
             product.ActiveFlag = false;
+            log.Info("El usuario " + user + " eliminó el producto con la descripción: " + product.Description);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

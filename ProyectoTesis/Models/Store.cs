@@ -18,5 +18,6 @@ namespace ProyectoTesis.Models
 
         public virtual ICollection<Stockroom> Stockrooms { get; set; }
         public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<Correlative> Correlatives { get; set; }
     }
 }

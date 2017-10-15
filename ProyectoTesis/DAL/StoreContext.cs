@@ -42,5 +42,7 @@ namespace ProyectoTesis.DAL
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
+
+        public System.Data.Entity.DbSet<ProyectoTesis.Models.Correlative> Correlatives { get; set; }
     }
 }

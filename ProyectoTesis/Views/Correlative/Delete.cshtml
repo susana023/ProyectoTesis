@@ -1,0 +1,56 @@
+﻿@model ProyectoTesis.Models.Correlative
+
+@{
+    ViewBag.Title = "Correlativo - Eliminación";
+}
+
+<h2>Delete</h2>
+
+<h3>¿Está seguro de que desea eliminar este correlativo?</h3>
+<div>
+    <h4>Correlative</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Tienda
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Store.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CorrelativeNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CorrelativeNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SerialNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SerialNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DocumentType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DocumentType)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

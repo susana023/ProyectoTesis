@@ -18,7 +18,7 @@ namespace ProyectoTesis.Models
         [Display(Name = "Correlativo")]
         public int Correlative { get; set; }
         [Display(Name = "Número de Serie")]
-        public int SerialNumber { get; set; }
+        public string SerialNumber { get; set; }
         [Display(Name = "Pedido")]
         public int OrderID { get; set; }
         [Display(Name = "IGV")]
@@ -39,6 +39,14 @@ namespace ProyectoTesis.Models
             get
             {
                 return Subtotal + Igv;
+            }
+        }
+
+        public string CorrelativeToShow
+        {
+            get
+            {
+                return Correlative.ToString("D5");
             }
         }
     }

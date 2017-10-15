@@ -17,8 +17,8 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Correlative) - 
-            @Html.DisplayFor(modelItem => item.SerialNumber)
+            @Html.DisplayFor(modelItem => item.SerialNumber) -
+            @Html.DisplayFor(modelItem => item.CorrelativeToShow)            
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Order.Client.FullName)

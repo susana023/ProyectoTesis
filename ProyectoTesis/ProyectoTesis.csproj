@@ -153,6 +153,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ClientController.cs" />
+    <Compile Include="Controllers\CorrelativeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MovementController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -300,8 +301,21 @@
     <Compile Include="Migrations\201710130053501_ordertotal.Designer.cs">
       <DependentUpon>201710130053501_ordertotal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710142247542_correlative.cs" />
+    <Compile Include="Migrations\201710142247542_correlative.Designer.cs">
+      <DependentUpon>201710142247542_correlative.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710150147321_correlative2.cs" />
+    <Compile Include="Migrations\201710150147321_correlative2.Designer.cs">
+      <DependentUpon>201710150147321_correlative2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710150405316_correlative3.cs" />
+    <Compile Include="Migrations\201710150405316_correlative3.Designer.cs">
+      <DependentUpon>201710150405316_correlative3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\Correlative.cs" />
     <Compile Include="Models\Distributor.cs" />
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Order.cs" />
@@ -540,6 +554,11 @@
     <Content Include="Views\SaleDocument\Ticket.cshtml" />
     <Content Include="Views\SaleDocument\CreditNote.cshtml" />
     <Content Include="Views\SaleDocument\Bill.cshtml" />
+    <Content Include="Views\Correlative\Create.cshtml" />
+    <Content Include="Views\Correlative\Delete.cshtml" />
+    <Content Include="Views\Correlative\Details.cshtml" />
+    <Content Include="Views\Correlative\Edit.cshtml" />
+    <Content Include="Views\Correlative\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -646,6 +665,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710130053501_ordertotal.resx">
       <DependentUpon>201710130053501_ordertotal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710142247542_correlative.resx">
+      <DependentUpon>201710142247542_correlative.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710150147321_correlative2.resx">
+      <DependentUpon>201710150147321_correlative2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710150405316_correlative3.resx">
+      <DependentUpon>201710150405316_correlative3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

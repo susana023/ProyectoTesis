@@ -1,0 +1,49 @@
+﻿@model ProyectoTesis.Models.Correlative
+
+@{
+    ViewBag.Title = "Correlativo - Detalle";
+}
+
+<h2>Detalles de Correlativo</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Store.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Store.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CorrelativeNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CorrelativeNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SerialNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SerialNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DocumentType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DocumentType)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Regresar", "Index")
+</p>

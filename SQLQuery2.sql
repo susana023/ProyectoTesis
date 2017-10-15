@@ -1,6 +1,5 @@
-select * from OrderDetail
+select * from correlative 
 
+update correlative set activeflag = 1
 
-delete INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_NAME = 'FK_dbo.Stockroom_dbo.User_ID'
-
-
+delete Document where Discriminator = 'SaleDocument'

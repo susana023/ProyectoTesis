@@ -17,6 +17,7 @@ namespace ProyectoTesis.Controllers
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private string user = DAL.GlobalVariables.CurrentUser;
 
         // GET: OrderDetail
         public ActionResult Index(int OrderID)
@@ -24,7 +25,7 @@ namespace ProyectoTesis.Controllers
             var orderDetails = db.OrderDetails.Include(p => p.Product).Include(p => p.Order).Where(
                                         p => p.OrderID == OrderID);
             ViewBag.Order = OrderID;
-            return View(db.OrderDetails.ToList());
+            return View(orderDetails.ToList());
         }
 
         // GET: OrderDetail/Details/5
@@ -81,7 +82,7 @@ namespace ProyectoTesis.Controllers
                 }
 
                 db.SaveChanges();
-
+                log.Info("El usuario " + user + " creó agregó el producto : "+ orderDetail.Product.Description +" al pedido de código: " + orderDetail.ID);
                 var controller = DependencyResolver.Current.GetService<OrderController>();
                 controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
                 controller.ActualizarTotal(orderDetail.OrderID);
@@ -132,6 +133,7 @@ namespace ProyectoTesis.Controllers
                 //Edición
 
                 db.SaveChanges();
+                log.Info("El usuario " + user + " modificó la cantidad del producto : " + orderDetail.Product.Description + " en el pedido de código: " + orderDetail.ID);
 
                 var controller = DependencyResolver.Current.GetService<OrderController>();
                 controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
@@ -170,6 +172,7 @@ namespace ProyectoTesis.Controllers
             if (orderDetail != null)
             {
                 int orderID = orderDetail.OrderID;
+                log.Info("El usuario " + user + " eliminó el producto : " + orderDetail.Product.Description + " del pedido de código: " + orderDetail.ID);
                 var controller = DependencyResolver.Current.GetService<OrderController>();
                 controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
                 controller.ActualizarTotal(orderID);

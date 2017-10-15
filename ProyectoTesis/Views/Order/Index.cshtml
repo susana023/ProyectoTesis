@@ -45,10 +45,10 @@
             {
                 <input type="checkbox" class="checkBox" value="@item.ID" />
             }
-            else
+            @*else
             {
                 <input type="checkbox" class="checkBox" value="@item.ID" disabled="disabled"/>
-            }
+            }*@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Client.FullName)
@@ -80,6 +80,7 @@
             }
         </td>
         <td>
+            <a href="@Url.Action("Index", "OrderDetail", new { OrderID = item.ID })"><i class="fa fa-list"></i></a> |
             <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
             <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
             <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
@@ -114,20 +115,15 @@
                     }
                 });
 
-                var options = {};
-                options.url = "/home/delete";
-                options.type = "POST";
-                options.data = JSON.stringify(selectedIDs);
-                options.contentType = "application/json";
-                options.dataType = "json";
-                options.success = function (msg) {
-                    alert(msg);
-                };
-                options.error = function () {
-                  alert("Error while deleting the records!");
-                };
-                $.ajax(options);
+                $.ajax(
+                    {
+                        type: "POST",   
+                        url: "/Order/createTickets", 
+                        data: {
+                            tickets: selectedIDs
+                        }
 
+                    }); 
             });
 
             $("#bill").click(function () {
@@ -138,20 +134,15 @@
                     }
                 });
 
-                var options = {};
-                options.url = "/home/delete";
-                options.type = "POST";
-                options.data = JSON.stringify(selectedIDs);
-                options.contentType = "application/json";
-                options.dataType = "json";
-                options.success = function (msg) {
-                    alert(msg);
-                };
-                options.error = function () {
-                    alert("Error while deleting the records!");
-                };
-                $.ajax(options);
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Order/createBills",
+                        data: {
+                            bills: selectedIDs
+                        }
 
+                    });
             });
         });
     </script>
