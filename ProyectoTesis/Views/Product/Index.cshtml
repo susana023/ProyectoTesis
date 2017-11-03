@@ -1,4 +1,7 @@
-﻿@model IEnumerable<ProyectoTesis.Models.Product>
+﻿@model PagedList.IPagedList<ProyectoTesis.Models.Product>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Index";
@@ -9,19 +12,28 @@
 <p>
     @Html.ActionLink("Nuevo", "Create")
 </p>
+
+@using (Html.BeginForm("Index", "Product", FormMethod.Get))
+{
+    <p>
+        Buscar: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Buscar" />
+    </p>
+}
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.ActionLink("Descripción", "Index", new { sortOrder = ViewBag.DescriptionSortParam, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LogicalStock)
+            Stock Lógico
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.BoxPrice)
+            Precio de Caja
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FractionPrice)
+            Precio de Fracción
         </th>
         <th></th>
     </tr>
@@ -49,3 +61,9 @@
 }
 
 </table>
+
+<br/>
+Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

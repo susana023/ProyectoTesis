@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<ProyectoTesis.Models.PurchasePlan>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Plan de Compra";
 }
 
-<h2>Index</h2>
+<h2>Planes de Compra</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Nuevo", "Create")
 </p>
 <table class="table">
     <tr>
@@ -29,9 +29,9 @@
             @Html.DisplayFor(modelItem => item.Investment)
         </td>
         <td>
-            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
-            <a href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
-            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+            <a href="@Url.Action("Edit", "PurchaseOrderDetail", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder })"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", "PurchaseOrderDetail", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", "PurchaseOrderDetail", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-trash"></i></a>
         </td>
     </tr>
 }

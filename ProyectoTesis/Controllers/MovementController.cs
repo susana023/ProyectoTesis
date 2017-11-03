@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using ProyectoTesis.DAL;
 using ProyectoTesis.Models;
+using PagedList;
 
 namespace ProyectoTesis.Controllers
 {
@@ -16,10 +17,56 @@ namespace ProyectoTesis.Controllers
         private StoreContext db = new StoreContext();
 
         // GET: Movement
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.DescriptionSortParam = sortOrder == "Description" ? "description_desc" : "Description";
+            ViewBag.MovementDateSortParam = String.IsNullOrEmpty(sortOrder) ? "movementDate_desc" : "";
+            ViewBag.MovementDateSortParam = sortOrder == "Document" ? "document_desc" : "Document";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
             var movements = db.Movements.Include(m => m.Product).Include(m => m.Zone);
-            return View(movements.ToList());
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movements = movements.Where(m => m.Product.Description.Contains(searchString) || m.MovementType.ToString().Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "document_desc":
+                    movements = movements.OrderByDescending(m => m.DocumentID);
+                    break;
+                case "Document":
+                    movements = movements.OrderBy(m => m.DocumentID);
+                    break;
+                case "description_desc":
+                    movements = movements.OrderByDescending(m => m.Product.Description);
+                    break;
+                case "movementDate_desc":
+                    movements = movements.OrderByDescending(m => m.MovementDate);
+                    break;
+                case "Description":
+                    movements = movements.OrderBy(m => m.Product.Description);
+                    break;
+                default:
+                    movements = movements.OrderBy(m => m.MovementDate);
+                    break;
+            }
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+
+            return View(movements.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Movement/Details/5

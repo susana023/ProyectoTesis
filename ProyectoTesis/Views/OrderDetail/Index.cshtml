@@ -30,10 +30,16 @@
         <td>
             @Html.DisplayFor(modelItem => item.Subtotal)
         </td>
-        <td>            
-            <a href="@Url.Action("Edit", "OrderDetail", new { id = item.ID, OrderID = ViewBag.Order })"><i class="fa fa-pencil"></i></a> |
-            <a href="@Url.Action("Details", "OrderDetail", new { id = item.ID, OrderID = ViewBag.Order})"><i class="fa fa-eye"></i></a> |
-            <a href="@Url.Action("Delete", "OrderDetail", new { id = item.ID, OrderID = ViewBag.Order})"><i class="fa fa-trash"></i></a>
+        <td>
+            @if (item.Order.DeliveredFlag == false)
+            {
+                <a href="@Url.Action("Edit", "OrderDetail", new { id = item.ID, OrderID = ViewBag.Order })"><i class="fa fa-pencil"></i> | </a> 
+            } 
+            <a href="@Url.Action("Details", "OrderDetail", new { id = item.ID, OrderID = ViewBag.Order})"><i class="fa fa-eye"></i></a> 
+            @if (item.Order.DeliveredFlag == false)
+            {
+                <a href="@Url.Action("Delete", "OrderDetail", new { id = item.ID, OrderID = ViewBag.Order })"> | <i class="fa fa-trash"></i></a>
+            }
         </td>
     </tr>
 }

@@ -15,7 +15,7 @@
                     <a href="@Url.Action("Index", "Home")"><i class="fa-fw"></i> Inicio</a>
                 </li>
                 <li>
-                    <a data-toggle="collapse" data-target="#compras"><i class="fa fa-shopping-bag fa-fw" ></i> Compras <span class="fa arrow"></span></a>
+                    <a data-toggle="collapse" data-target="#compras" class="collapsable"><i class="fa fa-shopping-bag fa-fw" ></i> Compras <span class="fa open"></span></a>
                     <ul id="compras" class="nav nav-second-level collapse in">
                         <li>@Html.ActionLink("Mantenimiento de Proveedores", "Index", "Supplier")</li>
                         <li>@Html.ActionLink("Orden de Compra", "Index", "PurchaseOrder")</li>
@@ -23,7 +23,7 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a data-toggle="collapse" data-target="#gestioninterna"><i class="fa fa-gears fa-fw"></i> Gestión Interna<span class="fa arrow"></span></a>
+                    <a data-toggle="collapse" data-target="#gestioninterna" class="collapsable"><i class="fa fa-gears fa-fw"></i> Gestión Interna<span class="fa open"></span></a>
                     <ul id="gestioninterna" class="nav nav-second-level collapse in">
                         <li>@Html.ActionLink("Mantenimiento de Tiendas", "Index", "Store")</li>
                         <li>@Html.ActionLink("Mantenimiento de Almacenes", "Index", "Stockroom")</li>
@@ -35,12 +35,12 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a data-toggle="collapse" data-target="#ventas"><i class="fa fa-money fa-fw"></i> Ventas<span class="fa arrow"></span></a>
+                    <a data-toggle="collapse" data-target="#ventas" class="collapsable"><i class="fa fa-money fa-fw"></i> Ventas<span class="fa open"></span></a>
                     <ul id="ventas" class="nav nav-second-level collapse in">
                         <li>@Html.ActionLink("Mantenimiento de Clientes", "Index", "Client")</li>
                         <li>@Html.ActionLink("Pedidos", "Index", "Order")</li>
                         <li>
-                            <a data-toggle="collapse" data-target="#documentos">Documentos de Venta <span class="fa arrow"></span></a>
+                            <a data-toggle="collapse" data-target="#documentos" class="collapsable">Documentos de Venta <span class="fa open"></span></a>
                             <ul id="documentos" class="nav nav-third-level  collapse in">
                                 <li>@Html.ActionLink("Facturas", "Bill", "SaleDocument")</li>
                                 <li>@Html.ActionLink("Boletas", "Ticket", "SaleDocument")</li>
@@ -52,7 +52,7 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a data-toggle="collapse" data-target="#reportes"><i class="fa fa-line-chart fa-fw"></i> Reportes<span class="fa arrow"></span></a>
+                    <a data-toggle="collapse" data-target="#reportes" class="collapsable"><i class="fa fa-line-chart fa-fw"></i> Reportes<span class="fa open"></span></a>
                     <ul id="reportes" class="nav nav-second-level collapse in">
                         <li>
                             <a href="#">Kardex</a>
@@ -62,8 +62,8 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a data-toggle="collapse" data-target="#ajustes"><i class="fa fa-gears fa-fw"></i> Ajustes<span class="fa arrow"></span></a>
-                    <ul id="reportes" class="nav nav-second-level collapse in">
+                    <a data-toggle="collapse" data-target="#ajustes" class="collapsable"><i class="fa fa-gears fa-fw"></i> Ajustes<span class="fa open"></span></a>
+                    <ul id="ajustes" class="nav nav-second-level collapse in">
                         <li>@Html.ActionLink("Correlativos", "Index", "Correlative")</li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -73,14 +73,25 @@
         <!-- /.sidebar-collapse -->
     </div>
     <!-- /.navbar-static-side -->
-    <script>
-    $('#side-menu').click(function () {
-        $(this).next('ul').slideToggle('500');
-        $(this).find('span').toggleClass('fa-arrow-right fa-arrow-down')
-    });
-    </script>
 </body>
-
 </html>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @*<script type="text/javascript">
+        $(document).ready(function () {
+            $('.collapsable').click(function (e) {
+                $('#compras').collapse('hide');
+                $('#gestioninterna').collapse('hide');
+                $('#ventas').collapse('hide');
+                $('#documentos').collapse('hide');
+                $('#reportes').collapse('hide');
+                $('#ajustes').collapse('hide');
+                $('ul').next.collapse('show');            
+            });
+        });
+    </script>*@
+}
+
 
 

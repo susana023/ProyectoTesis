@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using ProyectoTesis.DAL;
 using ProyectoTesis.Models;
+using PagedList;
 
 namespace ProyectoTesis.Controllers
 {
@@ -20,9 +21,42 @@ namespace ProyectoTesis.Controllers
         string user = DAL.GlobalVariables.CurrentUser;
 
         // GET: Product
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(db.Products.Where(p => p.ActiveFlag == true).ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.DescriptionSortParam = String.IsNullOrEmpty(sortOrder) ? "description_desc" : "";
+
+            if(searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var products = db.Products.Where(p => p.ActiveFlag == true);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Description.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "description_desc":
+                    products = products.OrderByDescending(p => p.Description);
+                    break;
+                default:
+                    products = products.OrderBy(p => p.Description);
+                    break;
+            }
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+
+            return View(products.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Product/Details/5

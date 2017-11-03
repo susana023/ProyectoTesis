@@ -1,1 +1,1 @@
-﻿select * from ReferralGuide
+﻿select * from [inven05].[dbo].[arti12016]

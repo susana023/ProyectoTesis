@@ -1,4 +1,7 @@
-﻿@model IEnumerable<ProyectoTesis.Models.Movement>
+﻿@model PagedList.IPagedList<ProyectoTesis.Models.Movement>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Movimientos";
@@ -9,22 +12,35 @@
 <p>
     @Html.ActionLink("Nuevo", "Create")
 </p>
+
+@using (Html.BeginForm("Index", "Movement", FormMethod.Get))
+{
+    <p>
+        Buscar: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Buscar" />
+    </p>
+}
+
+
 <table class="table">
     <tr>
         <th>
-            Documento
+            @Html.ActionLink("Documento", "Index", new { sortOrder = ViewBag.DocumentSortParam, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Product.Description)
+            @Html.ActionLink("Descripción", "Index", new { sortOrder = ViewBag.DescriptionSortParam, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.MovementType)
+            Tipo de Movimiento
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.BoxUnits)
+            Cajas
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FractionUnits)
+            Fracciones
+        </th>
+        <th>
+            @Html.ActionLink("Fecha", "Index", new { sortOrder = ViewBag.MovementDateSortParam, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>
@@ -41,10 +57,21 @@
             @Html.DisplayFor(modelItem => item.MovementType)
         </td>
         <td>
+            @if (item.MovementType == ProyectoTesis.Models.MovementType.Despacho || item.MovementType == ProyectoTesis.Models.MovementType.Pérdida)
+            {
+                <span>-</span>
+            }
             @Html.DisplayFor(modelItem => item.BoxUnits)
         </td>
         <td>
+            @if (item.MovementType == ProyectoTesis.Models.MovementType.Despacho || item.MovementType == ProyectoTesis.Models.MovementType.Pérdida)
+            {
+                <span>-</span>
+            }
             @Html.DisplayFor(modelItem => item.FractionUnits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MovementDate)
         </td>
         <td>
             @if (item.MovementType == ProyectoTesis.Models.MovementType.Compra || item.MovementType == ProyectoTesis.Models.MovementType.Despacho)
@@ -62,3 +89,9 @@
 }
 
 </table>
+
+<br />
+Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

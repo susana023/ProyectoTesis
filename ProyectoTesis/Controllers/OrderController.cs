@@ -150,6 +150,7 @@ namespace ProyectoTesis.Controllers
                 {
                     subtotal += detalle.Subtotal;
                 }
+                order.Subtotal = subtotal;
                 order.Igv = subtotal * IGV;
                 db.SaveChanges();
             }
@@ -210,6 +211,8 @@ namespace ProyectoTesis.Controllers
                                     Subtotal = orderDetail.Subtotal
                                 };
                                 db.SaleDocumentDetails.Add(detail);
+                                MovementController movementController = new MovementController();
+                                movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, boxes, fractions, db.Zones.FirstOrDefault().ID, detail.ProductID);
                             }
                             order.DeliveredFlag = true;
                             db.SaveChanges();
@@ -266,6 +269,8 @@ namespace ProyectoTesis.Controllers
                                     Subtotal = orderDetail.Subtotal
                                 };
                                 db.SaleDocumentDetails.Add(detail);
+                                MovementController movementController = new MovementController();
+                                movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, boxes, fractions, db.Zones.FirstOrDefault().ID, detail.ProductID);
                             }
                             order.DeliveredFlag = true;
                             db.SaveChanges();
