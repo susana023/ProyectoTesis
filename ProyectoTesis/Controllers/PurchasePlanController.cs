@@ -34,6 +34,7 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Details = new SelectList(db.PurchasePlanDetails.Where(p => p.PurchasePlanID == id));
             return View(purchasePlan);
         }
 
@@ -49,13 +50,16 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Date,Investment")] PurchasePlan purchasePlan)
+        public ActionResult Create([Bind(Include = "ID,BeginDate, EndDate,Investment")] PurchasePlan purchasePlan)
         {
             if (ModelState.IsValid)
             {
                 db.PurchasePlans.Add(purchasePlan);
                 db.SaveChanges();
-                return RedirectToAction("Details");
+                int ID = db.PurchasePlans.OrderByDescending(p => p.ID).FirstOrDefault().ID;
+                
+                Algorithm(purchasePlan.BeginDate, purchasePlan.EndDate, purchasePlan.Investment, ID);
+                return RedirectToAction("Details", ID);
             }
             return View(purchasePlan);
         }
@@ -117,18 +121,27 @@ namespace ProyectoTesis.Controllers
             return RedirectToAction("Index");
         }
 
-        public void Algorithm(DateTime beginDate, DateTime endDate, double invesment)
+        public void Algorithm(DateTime beginDate, DateTime endDate, double invesment, int purchasePlanID)
         {
             List<Product> products = db.Products.ToList();
             List<Solution> bests = new List<Solution>();
             double bestValue = 0.0;
             Solution best = new Solution();
-            int k = 0;
+            int j = 0, k = 0;
             //falta calcular máxima cantidad por producto en ventas históricas
-            List<double> maxBoxes = new List<double>(products.Count);
+            List<double> maxBoxes = MaxBoxes(products, beginDate, endDate);
 
             List<Solution> Childs;
             double value;
+
+            foreach(double maxBox in maxBoxes)
+            {
+                best.MaxValue.Add(maxBox);
+                best.MinValue.Add(0.0);
+                j++;
+            }
+
+            bests.Add(best);
 
             while (bests.Count >= (k + 1))
             {
@@ -150,21 +163,83 @@ namespace ProyectoTesis.Controllers
                 }
                 k++;
             }
+            SaveResults(bests[k - 1], products, purchasePlanID);            
+        }
+
+        public void SaveResults(Solution best, List<Product> products, int purchasePlanID)
+        {
+            for (int i = 0; i < products.Count; i++)
+            {
+                double margin, mMargin = 0.0, sMargin = 0.0, dMargin = 0.0, units, benefit, quantity;
+                int fractionUnits, boxUnits;
+
+                List < SalesMargin > margins = db.SaleMargins.ToList();
+                SalesMargin productMargins = margins.Where(m => m.Product.ID == products[i].ID).FirstOrDefault();
+
+                if (productMargins != null)
+                {
+                    mMargin = productMargins.MarketMargin;
+                    sMargin = productMargins.StoreMargin;
+                    dMargin = productMargins.DistributionMargin;
+                }
+
+                margin = (mMargin + sMargin + dMargin) / 3;
+
+                quantity = (best.MinValue[i] + best.MaxValue[i]) / 2;
+
+                units = products[i].FractionUnits;
+
+                boxUnits = (int)(quantity / 1);
+                fractionUnits = (int)((quantity % 1) * units);
+
+                benefit = margin * quantity;
+
+                db.PurchasePlanDetails.Add(new PurchasePlanDetail
+                {
+                    ProductID = products[i].ID,
+                    PurchasePlanID = purchasePlanID,
+                    FractionUnits = fractionUnits,
+                    BoxUnits = boxUnits,
+                    Benefit = benefit
+                });
+            }
+            db.SaveChanges();
         }
 
         public List<double> MaxBoxes(List<Product> products, DateTime beginDate, DateTime endDate)
         {
-            int beginDay, beginMonth, endDay, endMonth;
+            int beginDay, beginMonth, endDay, endMonth, k = 0;
             beginDay = beginDate.Day;
             beginMonth = beginDate.Month;
             endDay = endDate.Day;
             endMonth = endDate.Month;
             List<double> maxBoxes = new List<double>(products.Count);
-            List<Movement> movements = db.Movements.Where(m => ((m.MovementDate.Value.Month == beginMonth && m.MovementDate.Value.Day >= beginDay) || 
-                                                                (m.MovementDate.Value.Month > beginMonth)) &&
-                                                               ((m.MovementDate.Value.Month < endMonth) || (m.MovementDate.Value.Day <= endDay && m.MovementDate.Value.Month == endMonth))).OrderBy(m => m.MovementDate).ToList();
-            int year;
-            List<double> aux = new List<double>(products.Count);
+
+            foreach (Product product in products)
+            {
+                List<Movement> movements = db.Movements.Where(m => m.ProductID == product.ID && ((m.MovementDate.Value.Month == beginMonth && m.MovementDate.Value.Day >= beginDay) ||
+                                                                    (m.MovementDate.Value.Month > beginMonth)) &&
+                                                                   ((m.MovementDate.Value.Month < endMonth) || (m.MovementDate.Value.Day <= endDay && m.MovementDate.Value.Month == endMonth))).OrderBy(m => m.MovementDate).ToList();
+                int year, units, i = 0;
+                double maxBoxesPerYear = 0.0, boxes = 0.0;
+
+                units = product.FractionUnits;
+
+                List<double> aux = new List<double>(products.Count);
+
+                while (i < movements.Count)
+                {
+                    year = movements[i].MovementDate.Value.Year;
+                    while (i < movements.Count && movements[i].MovementDate.Value.Year == year)
+                    {
+                        maxBoxesPerYear += movements[i].BoxUnits + (movements[i].FractionUnits/units);
+                        i++;
+                    }
+                    if (boxes > 0.0) boxes = (boxes + maxBoxesPerYear) / 2;
+                    else boxes = maxBoxesPerYear;
+                }
+                maxBoxes.Add(boxes);
+            }
             return maxBoxes;
         }
 

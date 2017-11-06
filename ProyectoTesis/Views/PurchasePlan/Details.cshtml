@@ -1,4 +1,5 @@
 ﻿@model ProyectoTesis.Models.PurchasePlan
+    @using ProyectoTesis.Models
 
 @{
     ViewBag.Title = "Plan de Compra - Detalle";
@@ -6,28 +7,43 @@
 
 <h2>Detalle de Plan de Compra</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
+<table class="table">
+    <tr>
+        <th>
+            Producto
+        </th>
+        <th>
+            Cajas
+        </th>
+        <th>
+            Fracciones
+        </th>
+        <th>
+            Beneficio
+        </th>
+        <th></th>
+    </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Date)
-        </dd>
+    @foreach (var item in (List<PurchasePlanDetail>)ViewBag.Details)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BoxUnits)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FractionUnits)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Benefit)
+            </td>
+        </tr>
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Investment)
-        </dt>
+</table>
 
-        <dd>
-            @Html.DisplayFor(model => model.Investment)
-        </dd>
-
-    </dl>
-</div>
 <p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Regresar", "Index")
 </p>

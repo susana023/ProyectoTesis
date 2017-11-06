@@ -328,7 +328,20 @@
     <Compile Include="Migrations\201710300023329_movement_day.Designer.cs">
       <DependentUpon>201710300023329_movement_day.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711052302080_dates.cs" />
+    <Compile Include="Migrations\201711052302080_dates.Designer.cs">
+      <DependentUpon>201711052302080_dates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711060119128_purchase plan.cs" />
+    <Compile Include="Migrations\201711060119128_purchase plan.Designer.cs">
+      <DependentUpon>201711060119128_purchase plan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711060123525_purchase plan2.cs" />
+    <Compile Include="Migrations\201711060123525_purchase plan2.Designer.cs">
+      <DependentUpon>201711060123525_purchase plan2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\IsDateAfterAttribute.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Correlative.cs" />
     <Compile Include="Models\Distributor.cs" />
@@ -697,6 +710,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710300023329_movement_day.resx">
       <DependentUpon>201710300023329_movement_day.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711052302080_dates.resx">
+      <DependentUpon>201711052302080_dates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711060119128_purchase plan.resx">
+      <DependentUpon>201711060119128_purchase plan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711060123525_purchase plan2.resx">
+      <DependentUpon>201711060123525_purchase plan2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

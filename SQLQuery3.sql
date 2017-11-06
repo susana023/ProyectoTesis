@@ -1,1 +1,1 @@
-Select * from Movement 
+select * from SalesMargin
