@@ -34,7 +34,7 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Details = new SelectList(db.PurchasePlanDetails.Where(p => p.PurchasePlanID == id));
+            ViewBag.Details = new List<PurchasePlanDetail>(db.PurchasePlanDetails.Where(p => p.PurchasePlanID == id));
             return View(purchasePlan);
         }
 
@@ -59,7 +59,7 @@ namespace ProyectoTesis.Controllers
                 int ID = db.PurchasePlans.OrderByDescending(p => p.ID).FirstOrDefault().ID;
                 
                 Algorithm(purchasePlan.BeginDate, purchasePlan.EndDate, purchasePlan.Investment, ID);
-                return RedirectToAction("Details", ID);
+                return RedirectToAction("Details", new { id = ID });
             }
             return View(purchasePlan);
         }
