@@ -10,8 +10,10 @@ namespace ProyectoTesis.Models
     {
         public int ID { get; set; }
         [Display(Name = "Fecha de Inicio")]
+        [DataType(DataType.Date)]
         public DateTime BeginDate { get; set; }
         [IsDateAfterAttribute("BeginDate", true, ErrorMessage = "La Fecha Fin debe ser mayor a la Fecha de Inicio")]
+        [DataType(DataType.Date)]
         [Display(Name = "Fecha de Fin")]
         public DateTime EndDate { get; set; }
         [Display(Name = "Inversión")]
