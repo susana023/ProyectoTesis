@@ -13,6 +13,8 @@ namespace ProyectoTesis.Models
         public int StockroomID { get; set; }
         [Display(Name = "Descripción")]
         public string Description { get; set; }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
 
         public virtual Stockroom Stockroom { get; set; }
         public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }

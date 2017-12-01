@@ -1,0 +1,65 @@
+﻿@model ProyectoTesis.Models.Return
+
+@{
+    ViewBag.Title = "Devolución Detalle";
+}
+
+<h2>Detalle de Devolución</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActiveFlag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ActiveFlag)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Reason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Reason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Subtotal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Subtotal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Igv)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Igv)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaleDocument.SerialNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaleDocument.SerialNumber)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Regresar", "Index")
+</p>

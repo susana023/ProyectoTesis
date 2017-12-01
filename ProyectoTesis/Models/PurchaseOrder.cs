@@ -16,10 +16,7 @@ namespace ProyectoTesis.Models
         [Display(Name = "Correlativo de la Factura")]
         public int BillCorrelative { get; set; }
         [Display(Name = "Número de serie de la Factura")]
-        public string BillSerialNumber { get; set; }       
-        [Display(Name = "IGV")]
-        public double Igv { get; set; }
-        public double Subtotal { get; set; }
+        public string BillSerialNumber { get; set; }
         [Display(Name = "Proveedor")]
         public virtual Supplier Supplier { get; set; }
         public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }

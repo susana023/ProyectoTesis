@@ -1,1 +1,1 @@
-select * from SalesMargin
+update Product set Weight = 0.0 

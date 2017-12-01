@@ -8,6 +8,11 @@ using System.Web;
 namespace ProyectoTesis.Models
 {
     //[Table("ReferralGuide")]
+
+    public enum Reason
+    {
+        Venta, Compra, Devolución, Consignación
+    }
     public class ReferralGuide: Document
     {
         [Display(Name = "Distribuidor")]
@@ -16,6 +21,7 @@ namespace ProyectoTesis.Models
         public int SaleDocumentID { get; set; }
         [Display(Name = "Cliente")]
         public int ClientID { get; set; }
+        public Reason Reason { get; set; }
 
         public virtual Distributor Distributor { get; set; }
         public virtual SaleDocument SaleDocument { get; set; }

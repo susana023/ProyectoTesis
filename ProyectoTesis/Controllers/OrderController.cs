@@ -210,9 +210,40 @@ namespace ProyectoTesis.Controllers
                                     ProductID = orderDetail.ProductID,
                                     Subtotal = orderDetail.Subtotal
                                 };
-                                db.SaleDocumentDetails.Add(detail);
+                                double rest = 0.0;
+                                int box = 0, fraction = 0; 
+                                Product product = db.Products.Where(p => p.ID == orderDetail.ProductID).FirstOrDefault();
+                                List<ProductInZone> productLots = db.ProductsInZone.Where(p => p.ProductID == orderDetail.ProductID && (p.BoxUnits > 0 || p.FractionUnits > 0)).OrderBy(p => p.ExpirationDate).ToList();
+                                int i = 0;
+                                db.SaleDocumentDetails.Add(detail);                                
                                 MovementController movementController = new MovementController();
-                                movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, boxes, fractions, db.Zones.FirstOrDefault().ID, detail.ProductID);
+                                while (boxes > 0  || fractions > 0)
+                                {
+                                    if ((productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits)) >= (boxes + (fractions / product.FractionUnits))){
+                                        rest = (productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits)) - (boxes + (fractions / product.FractionUnits));
+                                        box = (int)(rest / 1);
+                                        fraction = (int)((rest % 1) * product.FractionUnits);
+                                        productLots[i].BoxUnits = box;
+                                        productLots[i].FractionUnits = fraction;
+                                        db.SaveChanges();
+                                        movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, boxes, fractions, productLots[i].ZoneID, detail.ProductID);
+                                        boxes = 0;
+                                        fractions = 0;
+                                    }
+                                    else
+                                    {
+                                        rest = (boxes + (fractions / product.FractionUnits)) - (productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits));
+                                        box = (int)(rest / 1);
+                                        fraction = (int)((rest % 1) * product.FractionUnits);
+                                        movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, productLots[i].BoxUnits, productLots[i].FractionUnits, productLots[i].ZoneID, detail.ProductID);
+                                        productLots[i].BoxUnits = 0;
+                                        productLots[i].FractionUnits = 0;
+                                        db.SaveChanges();
+                                        boxes = box;
+                                        fractions = fraction;
+                                    }
+                                    i++;
+                                }
                             }
                             order.DeliveredFlag = true;
                             db.SaveChanges();
@@ -269,7 +300,40 @@ namespace ProyectoTesis.Controllers
                                     Subtotal = orderDetail.Subtotal
                                 };
                                 db.SaleDocumentDetails.Add(detail);
+                                double rest = 0.0;
+                                int box = 0, fraction = 0;
+                                Product product = db.Products.Where(p => p.ID == orderDetail.ProductID).FirstOrDefault();
+                                List<ProductInZone> productLots = db.ProductsInZone.Where(p => p.ProductID == orderDetail.ProductID && (p.BoxUnits > 0 || p.FractionUnits > 0)).OrderBy(p => p.ExpirationDate).ToList();
+                                int i = 0;
                                 MovementController movementController = new MovementController();
+                                while (boxes > 0 || fractions > 0)
+                                {
+                                    if ((productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits)) >= (boxes + (fractions / product.FractionUnits)))
+                                    {
+                                        rest = (productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits)) - (boxes + (fractions / product.FractionUnits));
+                                        box = (int)(rest / 1);
+                                        fraction = (int)((rest % 1) * product.FractionUnits);
+                                        productLots[i].BoxUnits = box;
+                                        productLots[i].FractionUnits = fraction;
+                                        db.SaveChanges();
+                                        movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, boxes, fractions, productLots[i].ZoneID, detail.ProductID);
+                                        boxes = 0;
+                                        fractions = 0;
+                                    }
+                                    else
+                                    {
+                                        rest = (boxes + (fractions / product.FractionUnits)) - (productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits));
+                                        box = (int)(rest / 1);
+                                        fraction = (int)((rest % 1) * product.FractionUnits);
+                                        movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, productLots[i].BoxUnits, productLots[i].FractionUnits, productLots[i].ZoneID, detail.ProductID);
+                                        productLots[i].BoxUnits = 0;
+                                        productLots[i].FractionUnits = 0;
+                                        db.SaveChanges();
+                                        boxes = box;
+                                        fractions = fraction;
+                                    }
+                                    i++;
+                                }
                                 movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, boxes, fractions, db.Zones.FirstOrDefault().ID, detail.ProductID);
                             }
                             order.DeliveredFlag = true;

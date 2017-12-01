@@ -17,6 +17,8 @@ namespace ProyectoTesis.Models
         public double BoxPrice { get; set; }
         [Display(Name = "Precio de Fracción")]
         public double? FractionPrice { get; set; }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
 
         public virtual Product Product { get; set; }
         public virtual Supplier Supplier { get; set; }

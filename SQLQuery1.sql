@@ -1,1 +1,5 @@
-﻿select * from [inven05].[dbo].[arti12016]
+select * from movement
+
+delete movement where MovementDate is not null
+
+select * FROM [inven05].[dbo].[im201010]

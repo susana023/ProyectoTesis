@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ProyectoTesis.Models.ReturnDetail>
+
+@{
+    ViewBag.Title = "Detalle de Devolución";
+}
+
+<h2>Detalle de Devolución</h2>
+
+<p>
+    @Html.ActionLink("Nuevo", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Return.ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BoxUnits)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FractionUnits)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subtotal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Reason)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Return.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BoxUnits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FractionUnits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Subtotal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Reason)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Detail", new { id = item.ID })"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", new { id = item.ID })"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+}
+
+</table>

@@ -16,7 +16,7 @@ namespace ProyectoTesis.Controllers
         // GET: DataHistorica
         public ActionResult Index()
         {
-            
+
             return View();
         }
 
@@ -34,7 +34,8 @@ namespace ProyectoTesis.Controllers
             {
                 double boxPrice, fractionPrice;
                 int fractionUnits;
-                if (double.TryParse(myReader["CostoAsumido"].ToString(), out boxPrice)) {
+                if (double.TryParse(myReader["CostoAsumido"].ToString(), out boxPrice))
+                {
                     if (int.TryParse(myReader["unifracc"].ToString(), out fractionUnits))
                     {
                         fractionPrice = boxPrice / fractionUnits;
@@ -55,10 +56,10 @@ namespace ProyectoTesis.Controllers
                             Codarti = codarti
                         };
                         db.Products.Add(product);
-                        db.SaveChanges();                        
+                        db.SaveChanges();
                         product = db.Products.Where(p => p.Codarti == codarti).FirstOrDefault();
                         double distribution, market, store;
-                        if(product != null && double.TryParse(myReader["Margen00"].ToString(), out distribution) && double.TryParse(myReader["Margen00E"].ToString(), out store) && double.TryParse(myReader["Margen00I"].ToString(), out market))
+                        if (product != null && double.TryParse(myReader["Margen00"].ToString(), out distribution) && double.TryParse(myReader["Margen00E"].ToString(), out store) && double.TryParse(myReader["Margen00I"].ToString(), out market))
                         {
                             SalesMargin saleMargin = new SalesMargin
                             {
@@ -75,7 +76,7 @@ namespace ProyectoTesis.Controllers
             }
             myReader.Close();
             conn.Close();
-            return View();
+            return RedirectToAction("Index");
         }
 
 
@@ -87,7 +88,7 @@ namespace ProyectoTesis.Controllers
                                        "Trusted_Connection=yes;" +
                                        "database=FACTU05");
             conn.Open();
-            for (int y = 2009; y <= 2017; y++)
+            for (int y = 2015; y <= 2017; y++)
             {
                 for (int m = 1; m <= 12; m++)
                 {
@@ -100,15 +101,16 @@ namespace ProyectoTesis.Controllers
                         int type, numBox, numFraction;
                         double boxes;
                         MovementType movType;
-                        if (int.TryParse(myReader["DetTipDoc"].ToString(), out type)){
+                        if (int.TryParse(myReader["DetTipDoc"].ToString(), out type))
+                        {
                             if (type == 1) movType = MovementType.Compra;
                             else movType = MovementType.Despacho;
                             string codart = myReader["Codart"].ToString();
-                            Product product = db.Products.Where(p => p.Codarti == codart).FirstOrDefault();
+                            Product product = db.Products.Where(p => p.Codarti == codart || p.PreviousCode == codart).FirstOrDefault();
                             DateTime movDate;
                             if (product != null && zone != null)
                             {
-                                if(double.TryParse(myReader["DetCanArt"].ToString(), out boxes) && DateTime.TryParse(myReader["DetFecDoc"].ToString(), out movDate))
+                                if (double.TryParse(myReader["DetCanArt"].ToString(), out boxes) && DateTime.TryParse(myReader["DetFecDoc"].ToString(), out movDate))
                                 {
                                     numBox = (int)(boxes / 1);
                                     numFraction = (int)((boxes % 1) * product.FractionUnits);
@@ -126,14 +128,65 @@ namespace ProyectoTesis.Controllers
                                     db.SaveChanges();
                                 }
                             }
-                        }                        
+                        }
                     }
                     myReader.Close();
+                    db.SaveChanges();
                 }
             }
             conn.Close();
             int Chocolate = 0;
-            return View();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult ChargeWeight()
+        {
+            SqlDataReader myReader = null
+                 ;
+            SqlConnection conn = new SqlConnection("server=RITA;" +
+                                       "Trusted_Connection=yes;" +
+                                       "database=FACTU05");
+            conn.Open();
+            SqlCommand myCommand = new SqlCommand("select * from [inven05].[dbo].[arti12017]", conn);
+            myReader = myCommand.ExecuteReader();
+            while (myReader.Read())
+            {
+                double weight = (double) 0.0;
+                if (double.TryParse(myReader["Peso"].ToString(), out weight))
+                {
+                    string codarti = myReader["codarti"].ToString();
+                    Product product = db.Products.Where(p => p.Codarti == codarti).FirstOrDefault();
+                    if (product != null) product.Weight = weight;
+                    db.SaveChanges();
+                }
+            }
+            myReader.Close();
+            conn.Close();
+            return RedirectToAction("Index");
+        }
+        public ActionResult ChargePreviousCode()
+        {
+            SqlDataReader myReader = null
+                 ;
+            SqlConnection conn = new SqlConnection("server=RITA;" +
+                                       "Trusted_Connection=yes;" +
+                                       "database=FACTU05");
+            conn.Open();
+            SqlCommand myCommand = new SqlCommand("select * from [inven05].[dbo].[arti12010]", conn);
+            myReader = myCommand.ExecuteReader();
+            while (myReader.Read())
+            { 
+                string previousCode = myReader["CodAnterior"].ToString();
+                if(previousCode != null) { 
+                    string codarti = myReader["codarti"].ToString();
+                    Product product= db.Products.Where(p => p.Codarti == codarti).FirstOrDefault();
+                    if(product != null) product.PreviousCode = previousCode;
+                    db.SaveChanges();                    
+                }
+            }
+            myReader.Close();
+            conn.Close();
+            return RedirectToAction("Index");
         }
     }
 }

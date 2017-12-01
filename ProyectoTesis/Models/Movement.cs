@@ -18,10 +18,10 @@ namespace ProyectoTesis.Models
         [Required(ErrorMessage = "Debe seleccionar un producto")]
         [Display(Name = "Producto")]
         public int ProductID { get; set; }
-        [DisplayFormat(DataFormatString = "{0: dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0: dd-mm-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de Vencimiento")]
         public DateTime? ExpirationDate { get; set; }
-        [DisplayFormat(DataFormatString = "{0: dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0: dd-mm-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha del Movimiento")]
         public DateTime? MovementDate { get; set; }
         [Display(Name = "Zona")]
@@ -39,6 +39,8 @@ namespace ProyectoTesis.Models
         public virtual Product Product { get; set; }
         [Display(Name = "Zona")]
         public virtual Zone Zone { get; set; }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
         [ForeignKey("DocumentID")]
         public virtual Document Document { get; set; }
     }

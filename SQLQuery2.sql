@@ -1,1 +1,3 @@
-select * from Movement
+select * from Document
+
+update Document set DeliveredFlag = 0

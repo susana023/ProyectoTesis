@@ -28,7 +28,8 @@ namespace ProyectoTesis.Models
         public string Address { get; set; }
         [Display(Name = "Contacto")]
         public string Contact { get; set; }
-
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
         public class MinValue : ValidationAttribute
         {
             private readonly long _minValue;

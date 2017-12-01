@@ -16,6 +16,10 @@ namespace ProyectoTesis.Models
         public DateTime Date { get; set; }
         [Display(Name = "Anulado?")]
         public bool ActiveFlag { get; set; }
+        public double Subtotal { get; set; }
+
+        [Display(Name = "IGV")]
+        public double Igv { get; set; }
         public ICollection<Movement> Movements { get; set; }
     }
 }

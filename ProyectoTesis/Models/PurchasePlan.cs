@@ -11,11 +11,15 @@ namespace ProyectoTesis.Models
         public int ID { get; set; }
         [Display(Name = "Fecha de Inicio")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime BeginDate { get; set; }
         [IsDateAfterAttribute("BeginDate", true, ErrorMessage = "La Fecha Fin debe ser mayor a la Fecha de Inicio")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de Fin")]
         public DateTime EndDate { get; set; }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
         [Display(Name = "Inversión")]
         public double Investment { get; set; }
 

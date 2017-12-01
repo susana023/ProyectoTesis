@@ -17,6 +17,8 @@ namespace ProyectoTesis.Models
         public double StoreMargin { get; set; }
         [Display(Name = "Margen en Distribución")]
         public double DistributionMargin { get; set; }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
 
         public virtual Product Product { get; set; }
     }

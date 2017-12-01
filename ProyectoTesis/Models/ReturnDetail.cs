@@ -17,6 +17,9 @@ namespace ProyectoTesis.Models
         public int BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
         public int FractionUnits { get; set; }
+        public double Subtotal { get; set; }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
         [Display(Name = "Motivo")]
         public string Reason { get; set; }
 

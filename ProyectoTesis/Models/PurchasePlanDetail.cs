@@ -19,6 +19,8 @@ namespace ProyectoTesis.Models
         public int? BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
         public int? FractionUnits { get; set; }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
 
         [Display(Name = "Producto")]
         public virtual Product Product { get; set; }

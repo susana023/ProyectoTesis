@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ProyectoTesis.DAL;
+using ProyectoTesis.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +10,8 @@ namespace ProyectoTesis.Controllers
 {
     public class HomeController : Controller
     {
+        private StoreContext db = new StoreContext();
+
         public ActionResult Index()
         {
             return View();
@@ -22,7 +26,25 @@ namespace ProyectoTesis.Controllers
 
         public ActionResult Login()
         {
+            ViewBag.Message = "";
             return View();
+        }
+
+        public ActionResult Loging(string userName, string password)
+        {
+            User user = db.Users.Where(u => u.Username == userName && u.Password == password).FirstOrDefault();
+            if(user != null)
+            {
+                ViewBag.Message = "";
+                DAL.GlobalVariables.CurrentUser = userName;
+                DAL.GlobalVariables.CurrentUserID = user.ID.ToString();
+                return RedirectToAction("Index", "HomeController");
+            }
+            else
+            {
+                ViewBag.Message = "Usuario o contraseña incorrectos";
+                return RedirectToAction("Login", "HomeController");
+            }
         }
     }
 }

@@ -24,5 +24,7 @@ namespace ProyectoTesis.Models
         public virtual Product Product { get; set; }
         [Display(Name = "Orden de Compra")]
         public virtual Order Order { get; set; }
-        }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
+    }
 }

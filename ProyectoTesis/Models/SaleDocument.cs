@@ -21,12 +21,10 @@ namespace ProyectoTesis.Models
         public string SerialNumber { get; set; }
         [Display(Name = "Pedido")]
         public int OrderID { get; set; }
-        [Display(Name = "IGV")]
-        public double Igv { get; set; }
-        [Display(Name = "Subtotal")]
-        public double Subtotal { get; set; }
         [Display(Name = "Tipo de Documento")]
         public DocumentType DocumentType { get; set; }
+        [Display(Name = "Entregado?")]
+        public bool DeliveredFlag { get; set; }
 
         public virtual Order Order { get; set; }
 

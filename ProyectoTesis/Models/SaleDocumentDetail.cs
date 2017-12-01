@@ -18,7 +18,8 @@ namespace ProyectoTesis.Models
         [Display(Name = "Cantidad de Fracciones")]
         public int FractionUnits { get; set; }
         public double Subtotal { get; set; }
-
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
         public virtual Product Product { get; set; }
         public virtual SaleDocument SaleDocument { get; set; }
     }

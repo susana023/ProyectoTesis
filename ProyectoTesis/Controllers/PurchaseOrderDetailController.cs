@@ -76,7 +76,21 @@ namespace ProyectoTesis.Controllers
 
                 MovementController movementController = new MovementController();
                 movementController.CrearMovimiento(MovementType.Compra, purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.BatchExpirationDay.Value, boxes, fractions, purchaseOrderDetail.ZoneID.Value, purchaseOrderDetail.productID);
-                
+                int zoneID = db.Zones.FirstOrDefault().ID, boxUnits = 0, fractionUnits = 0;
+                DateTime ExpirationDate = DateTime.Today;
+                if (purchaseOrderDetail.ZoneID.HasValue) zoneID = purchaseOrderDetail.ZoneID.Value;
+                if (purchaseOrderDetail.BoxUnits.HasValue) boxUnits = purchaseOrderDetail.BoxUnits.Value;
+                if (purchaseOrderDetail.FractionUnits.HasValue) fractionUnits = purchaseOrderDetail.FractionUnits.Value;
+                if (purchaseOrderDetail.BatchExpirationDay.HasValue) ExpirationDate = purchaseOrderDetail.BatchExpirationDay.Value;
+                ProductInZone productBatch = new ProductInZone()
+                {
+                    ProductID = purchaseOrderDetail.productID,
+                    ZoneID = zoneID,
+                    ExpirationDate = ExpirationDate,
+                    BoxUnits = boxUnits,
+                    FractionUnits = fractionUnits
+                };
+                db.ProductsInZone.Add(productBatch);
                 db.SaveChanges();
 
                 var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
@@ -132,6 +146,20 @@ namespace ProyectoTesis.Controllers
                 purchaseOrderDetail = db.PurchaseOrderDetails.Find(purchaseOrderDetail.ID);
                 movementController.EditarMovimiento(MovementType.Compra, purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.productID, boxes, fractions, purchaseOrderDetail.ZoneID.Value, purchaseOrderDetail.BatchExpirationDay.Value);
 
+                int zoneID = db.Zones.FirstOrDefault().ID, boxUnits = 0, fractionUnits = 0;
+                DateTime ExpirationDate = DateTime.Today;
+                if (purchaseOrderDetail.ZoneID.HasValue) zoneID = purchaseOrderDetail.ZoneID.Value;
+                if (purchaseOrderDetail.BoxUnits.HasValue) boxUnits = purchaseOrderDetail.BoxUnits.Value;
+                if (purchaseOrderDetail.FractionUnits.HasValue) fractionUnits = purchaseOrderDetail.FractionUnits.Value;
+                if (purchaseOrderDetail.BatchExpirationDay.HasValue) ExpirationDate = purchaseOrderDetail.BatchExpirationDay.Value;
+                ProductInZone productBatch = db.ProductsInZone.Where(p => p.ExpirationDate == ExpirationDate && p.ZoneID == zoneID && p.ProductID == purchaseOrderDetail.productID).FirstOrDefault();
+                if (productBatch != null)
+                {
+                    productBatch.ZoneID = zoneID;
+                    productBatch.ExpirationDate = ExpirationDate;
+                    productBatch.BoxUnits = boxUnits;
+                    productBatch.FractionUnits = fractionUnits;
+                }
                 db.SaveChanges();
 
                 var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
@@ -212,6 +240,15 @@ namespace ProyectoTesis.Controllers
             {
                 MovementController movementController = new MovementController();
                 movementController.EliminarMovimiento(purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.productID);
+
+                int zoneID = db.Zones.FirstOrDefault().ID, boxUnits = 0, fractionUnits = 0;
+                DateTime ExpirationDate = DateTime.Today;
+                if (purchaseOrderDetail.ZoneID.HasValue) zoneID = purchaseOrderDetail.ZoneID.Value;
+                if (purchaseOrderDetail.BoxUnits.HasValue) boxUnits = purchaseOrderDetail.BoxUnits.Value;
+                if (purchaseOrderDetail.FractionUnits.HasValue) fractionUnits = purchaseOrderDetail.FractionUnits.Value;
+                if (purchaseOrderDetail.BatchExpirationDay.HasValue) ExpirationDate = purchaseOrderDetail.BatchExpirationDay.Value;
+                ProductInZone productBatch = db.ProductsInZone.Where(p => p.ExpirationDate == ExpirationDate && p.ZoneID == zoneID && p.ProductID == purchaseOrderDetail.productID).FirstOrDefault();
+                if (productBatch != null) db.ProductsInZone.Remove(productBatch);
             }
             db.SaveChanges();
         }

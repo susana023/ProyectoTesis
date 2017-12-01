@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ProyectoTesis.Models.Return>
+
+@{
+    ViewBag.Title = "Devoluciones";
+}
+
+<h2>Devoluciones</h2>
+
+<table class="table">
+    <tr>
+        <th>Documento</th>
+        <th>TIpo de Documento</th>
+        <th>
+            @Html.DisplayNameFor(model => model.Reason)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subtotal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Igv)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SaleDocument.SerialNumber)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SaleDocument.SerialNumber) - @Html.DisplayFor(modelItem => item.SaleDocument.Correlative)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SaleDocument.DocumentType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Reason)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Subtotal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Igv)
+        </td>
+        
+        <td>
+            <a href="@Url.Action("Edit", "Return", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder })"><i class="fa fa-pencil"></i></a> |
+            <a href="@Url.Action("Details", "Return", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-eye"></i></a> |
+            <a href="@Url.Action("Delete", "Return", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+}
+
+</table>

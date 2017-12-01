@@ -1,0 +1,48 @@
+﻿@model IEnumerable<ProyectoTesis.Models.SaleDocument>
+
+@{
+    ViewBag.Title = "Despachos";
+}
+
+<h2>Despachos</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Documento
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DocumentType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SerialNumber) - @Html.DisplayFor(modelItem => item.CorrelativeToShow)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocumentType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                <a href="@Url.Action("Index", "DispatchDetail", new { dispatchID = item.ID })"><i class="fa fa-list"></i></a> |
+            </td>
+        </tr>
+    }
+
+</table>
+

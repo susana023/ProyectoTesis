@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ProyectoTesis.Models.Movement>
+
+@{
+    ViewBag.Title = "Detalle de Despacho";
+}
+
+<h2>Detalle de Despacho</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Producto
+        </th>
+        <th>
+            Tienda
+        </th>
+        <th>
+            Zona
+        </th>
+        <th>
+            Cantidad de Cajas
+        </th>
+        <th>
+            Cantidad de Fracciones
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Zone.Stockroom.Store.Description)
+            </td>
+            <td>
+                 @Html.DisplayFor(modelItem => item.Zone.Stockroom.Name) - @Html.DisplayFor(modelItem => item.Zone.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BoxUnits)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FractionUnits)
+            </td>
+        </tr>
+    }
+
+</table>
+
+

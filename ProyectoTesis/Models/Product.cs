@@ -8,7 +8,27 @@ namespace ProyectoTesis.Models
 {
     public enum ProductType
     {
-        Caramelo, Chupete, Chocolate, Galleta, Panetón, Chicle
+        Otros = 0,
+        Caramelo = 1,
+        Galleta = 2,
+        Chocolate = 3,        
+        Chicle = 4,
+        Snack = 5,
+        BarraEnergética = 6,
+        Goma = 7,
+        Gaseosa = 8,
+        Marshmallow = 9,
+        Wafer = 10,
+        Chupete = 11,
+        Panetón = 12,
+        Cereal = 13,
+        Yogurt = 14,
+        Fruna = 15,
+        Toffee = 16,
+        Bizcocho = 17,
+        Agua = 18,
+        Jugo = 19,
+        Gelatina = 20
     }
     public class Product
     {
@@ -45,8 +65,9 @@ namespace ProyectoTesis.Models
         [Display(Name = "Tipo de Producto")]
         public ProductType ProductType { get; set; }
         public string Codarti { get; set; }
-            
-        
+        public string PreviousCode { get; set; }
+        [Display(Name = "Peso")]
+        public double Weight { get; set; }
 
         public virtual ICollection<ReferralGuideDetail> ReferralGuideDetails { get; set; }
         public virtual ICollection<Movement> StockroomProducts { get; set; }

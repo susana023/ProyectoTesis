@@ -24,6 +24,8 @@ namespace ProyectoTesis.Models
         public DateTime? BatchExpirationDay { get; set; }
         [Display(Name = "Zona")]
         public int? ZoneID { get; set; }
+        [Display(Name = "Activo?")]
+        public bool ActiveFlag { get; set; }
 
         [Display(Name = "Producto")]
         public virtual Product Product { get; set; }
