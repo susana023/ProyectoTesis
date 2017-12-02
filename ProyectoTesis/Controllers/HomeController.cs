@@ -30,7 +30,7 @@ namespace ProyectoTesis.Controllers
             return View();
         }
 
-        public ActionResult Loging(string userName, string password)
+        public void Loging(string userName, string password)
         {
             User user = db.Users.Where(u => u.Username == userName && u.Password == password).FirstOrDefault();
             if(user != null)
@@ -38,12 +38,12 @@ namespace ProyectoTesis.Controllers
                 ViewBag.Message = "";
                 DAL.GlobalVariables.CurrentUser = userName;
                 DAL.GlobalVariables.CurrentUserID = user.ID.ToString();
-                return RedirectToAction("Index", "HomeController");
+                RedirectToAction("Index", "HomeController");
             }
             else
             {
                 ViewBag.Message = "Usuario o contraseña incorrectos";
-                return RedirectToAction("Login", "HomeController");
+                RedirectToAction("Login", "HomeController");
             }
         }
     }

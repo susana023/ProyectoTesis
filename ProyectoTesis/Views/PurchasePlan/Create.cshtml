@@ -37,6 +37,8 @@
                 @Html.ValidationMessageFor(model => model.Investment, "", new { @class = "text-danger" })
             </div>
         </div>
+               
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10 create">
@@ -84,6 +86,8 @@
     }
 </style>
 
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/jquery.validate.min.js")
@@ -111,11 +115,6 @@
                 loading.css({ top: top, left: left });
             }, 200);
         }
-        //$('.purchaseplan').on('submit', function (e) {
-        //    e.preventDefault();
-        //    ShowProgress();
-        //});
-
 
 </script>
     <script type="text/javascript">
