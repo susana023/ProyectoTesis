@@ -61,7 +61,19 @@
                     url: "/Home/Loging",
                     data: {
                         userName: user, password: password
-                    }
+                    },
+                    contentType: 'application/json; charset=utf-8',
+                        success: function(result) {
+                            if (result.success === 'true') {
+                                window.location.href = '/Home/Index';
+                            } else {
+                                @ViewBag.Message = 'Usuario o contraseña incorrectos'
+                                window.location.href = '/Home/Login';       
+                            }
+                        },
+                    failure: function () {
+                        //handle the failure of the request itself
+                        }
                 });
             });
         });
