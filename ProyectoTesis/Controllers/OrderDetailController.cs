@@ -23,7 +23,7 @@ namespace ProyectoTesis.Controllers
         public ActionResult Index(int OrderID)
         {
             var orderDetails = db.OrderDetails.Include(p => p.Product).Include(p => p.Order).Where(
-                                        p => p.OrderID == OrderID);
+                                        p => p.OrderID == OrderID && p.ActiveFlag == false);
             ViewBag.Order = OrderID;
             return View(orderDetails.ToList());
         }
@@ -54,7 +54,7 @@ namespace ProyectoTesis.Controllers
                 products.Add(p.ProductID);
             }
             ViewBag.productID = new SelectList(db.Products.Where(p => p.ActiveFlag == true && !products.Contains(p.ID)), "ID", "Description");
-            ViewBag.OrderID = new SelectList(db.Orders.Where(p => p.ID == OrderID), "ID", "BillSerialNumber");
+            ViewBag.OrderID = new SelectList(db.Orders.Where(p => p.ID == OrderID && p.ActiveFlag == false), "ID", "BillSerialNumber");
             ViewBag.Order = OrderID;
 
             return View();
@@ -89,7 +89,7 @@ namespace ProyectoTesis.Controllers
 
                 return RedirectToAction("Index", new { OrderID = orderDetail.OrderID });
             }
-            ViewBag.productID = new SelectList(db.Products, "ID", "Description", orderDetail.ProductID);
+            ViewBag.productID = new SelectList(db.Products.Where(s => s.ActiveFlag == true), "ID", "Description", orderDetail.ProductID);
             ViewBag.Order = orderDetail.OrderID;
             ViewBag.OrderID = orderDetail.OrderID;
             return View(orderDetail);
@@ -141,7 +141,7 @@ namespace ProyectoTesis.Controllers
                
                 return RedirectToAction("Index", new { OrderID = orderDetail.OrderID });
             }
-            ViewBag.productID = new SelectList(db.Products, "ID", "Description", orderDetail.ProductID);
+            ViewBag.productID = new SelectList(db.Products.Where(p => p.ActiveFlag == true), "ID", "Description", orderDetail.ProductID);
             ViewBag.OrderID = orderDetail.OrderID;
             ViewBag.Order = orderDetail.OrderID;
             return View(orderDetail);
@@ -177,7 +177,7 @@ namespace ProyectoTesis.Controllers
                 controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
                 controller.ActualizarTotal(orderID);
                 deleteOrderDetail(orderDetail.ID);
-                db.OrderDetails.Remove(orderDetail);
+                orderDetail.ActiveFlag = true;
                 db.SaveChanges();
                 
             }

@@ -8,13 +8,21 @@ using System.Web;
 using System.Web.Mvc;
 using ProyectoTesis.DAL;
 using ProyectoTesis.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoTesis.Controllers
 {
     public class PurchasePlanController : Controller
     {
         private StoreContext db = new StoreContext();
+
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         private double A = 0.1;
+
+        private int[] ProductsID;
 
         private List<double> CARAMELO = new List<double>(new double[] { 0.06, 0.05, 0.06, 0.12, 0.07, 0.1, 0.09, 0.1, 0.1, 0.13, 0.11, 0.15 });
         private List<double> GALLETA = new List<double>(new double[] {0.09, 0.07, 0.1, 0.12, 0.1, 0.08, 0.11, 0.11, 0.08, 0.1, 0.09, 0.09});
@@ -63,7 +71,7 @@ namespace ProyectoTesis.Controllers
         // GET: PurchasePlan/Create
         public ActionResult Create()
         {
-            ViewBag.Products = new SelectList(db.Products, "ID", "Description"); 
+            ViewBag.Products = db.Products.ToList(); 
             return View();
         }
 
@@ -71,19 +79,163 @@ namespace ProyectoTesis.Controllers
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,BeginDate, EndDate,Investment")] PurchasePlan purchasePlan)
+        public ActionResult Create(string button1, string button2, [Bind(Include = "ID,BeginDate, EndDate,Investment")] PurchasePlan purchasePlan)
         {
             if (ModelState.IsValid)
             {
                 db.PurchasePlans.Add(purchasePlan);
                 db.SaveChanges();
                 int ID = db.PurchasePlans.OrderByDescending(p => p.ID).FirstOrDefault().ID;
-                
-                Algorithm(purchasePlan.BeginDate, purchasePlan.EndDate, purchasePlan.Investment, ID);
-                return RedirectToAction("Details", new { id = ID });
+
+                if (button2 != null)
+                {
+                    return RedirectToAction("ChooseProducts", new { beginDate = purchasePlan.BeginDate, endDate = purchasePlan.EndDate, investment = purchasePlan.Investment, id = ID });
+                }
+                else
+                {
+                    List<Product> products = db.Products.Where(p => p.ActiveFlag).ToList();
+                    Algorithm(products, purchasePlan.BeginDate, purchasePlan.EndDate, purchasePlan.Investment, ID);
+                    return RedirectToAction("Details", new { id = ID });
+                }
+                log.Info("El usuario " + user + " ejecutó la simulación del plan de compra desde: " + purchasePlan.BeginDate + " hasta: " + purchasePlan.EndDate);
+
             }
             return View(purchasePlan);
+        }
+
+
+
+        public ActionResult Plan(int ID, int[] productID)
+        {
+            int i = 1;
+            if (productID != null)
+            {
+                List<Product> products = new List<Product>();
+
+                foreach (int product in productID)
+                {
+                    products.Add(db.Products.Where(p => p.ID == product).FirstOrDefault());
+                }
+                PurchasePlan purchasePlan = db.PurchasePlans.Where(p => p.ID == ID).FirstOrDefault();
+                Algorithm(products, purchasePlan.BeginDate, purchasePlan.EndDate, purchasePlan.Investment, ID);
+
+                return RedirectToAction("Details", new { id = ID });
+            }
+            return View();
+        }
+
+        public ActionResult ChooseProducts(DateTime beginDate, DateTime endDate, double investment, int ID, string currentFilter, string searchString)
+        {
+            List<double> MaxBox = MaxBoxes(db.Products.Where(p => p.ActiveFlag == true).ToList(), beginDate, endDate);
+            List<double> LastMonth = LastPeriod(db.Products.Where(p => p.ActiveFlag == true).ToList(), beginDate, endDate);
+            List<Product> Products = db.Products.Where(p => p.ActiveFlag == true).OrderBy(p => p.Description).ToList();
+
+            List<ProductPlan> ProductPlan = new List<ProductPlan>();
+
+            int i = 0;
+
+            foreach (Product product in Products)
+            {
+                ProductPlan.Add(new ProductPlan
+                {
+                    LastPeriod = LastMonth[i],
+                    MaxBoxes = MaxBox[i],
+                    Product = product
+                });
+                i++;
+            }
+
+            ViewBag.BeginDate = beginDate;
+            ViewBag.EndDate = endDate;
+            ViewBag.Investment = investment;
+
+            ViewBag.CurrentFilter = searchString;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ViewBag.ProductPlans = ProductPlan.Where(p => p.Product.Description.Contains(searchString.ToUpper())).ToList();
+            }
+            else
+            {
+                ViewBag.ProductPlans = ProductPlan;
+            }
+
+            ViewBag.ID = ID;
+
+            return View();
+        }
+
+        public List<double> MaximunBoxesQuantity(List<Product> products, DateTime beginDate)
+        {
+            List<double> maximunQuantity = new List<double>();
+            DateTime end;
+            
+            int i = 0;
+            int beginMonth = beginDate.Month, beginDay = beginDate.Day, endMonth, endDay;
+            int fractionUnits;
+            int productID;
+            int maxBoxes = 0, maxFractions = 0;
+            ProductType type;
+            int months = 0;
+
+            foreach (Product product in products)
+            {
+                months = 0;
+                fractionUnits = product.FractionUnits;
+                productID = product.ID;
+                type = product.ProductType;
+                var month = db.ExpirationTimes.Where(e => e.ProductType == type).FirstOrDefault().Months;
+                if (month != null) months = month;
+                end = beginDate;
+                endDay = end.Day;
+                endMonth = end.Month;
+
+                var boxes = db.Movements.Where(m => m.ProductID == productID && ((m.MovementDate.Value.Month == beginMonth && m.MovementDate.Value.Day >= beginDay) ||
+                                                                    (m.MovementDate.Value.Month > beginMonth)) &&
+                                                                    ((m.MovementDate.Value.Month < endMonth) || (m.MovementDate.Value.Day <= endDay && m.MovementDate.Value.Month == endMonth)) && m.MovementType == MovementType.Despacho).Select(m => m.BoxUnits).DefaultIfEmpty(0).Sum();
+
+                var fractions = db.Movements.Where(m => m.ProductID == productID && ((m.MovementDate.Value.Month == beginMonth && m.MovementDate.Value.Day >= beginDay) ||
+                                                                    (m.MovementDate.Value.Month > beginMonth)) &&
+                                                                   ((m.MovementDate.Value.Month < endMonth) || (m.MovementDate.Value.Day <= endDay && m.MovementDate.Value.Month == endMonth)) && m.MovementType == MovementType.Despacho).Select(m => m.FractionUnits).DefaultIfEmpty(0).Sum();
+                if (boxes != null) maxBoxes = boxes;
+                if (fractions != null) maxFractions = fractions;
+
+                if (fractionUnits == 0) fractionUnits = 1;
+                maximunQuantity.Add(maxBoxes + (maxFractions / fractionUnits));
+            }
+            return maximunQuantity;
+        }
+
+        public List<double> LastPeriod(List<Product> products, DateTime beginDate, DateTime endDate)
+        {
+            List<double> LastPeriod = new List<double>();
+
+            TimeSpan difference = endDate.Subtract(beginDate);
+            DateTime begin = beginDate - difference;
+            int i = 0;
+            int beginMonth = begin.Month, beginDay = begin.Day, endMonth = endDate.Month, endDay = endDate.Day;
+
+            foreach(Product product in products)
+            {
+                int fractionUnits = product.FractionUnits;
+                int productID = product.ID;
+                int maxBoxes = 0, maxFractions = 0;
+                var boxes = db.Movements.Where(m => m.ProductID == productID && ((m.MovementDate.Value.Month == beginMonth && m.MovementDate.Value.Day >= beginDay) ||
+                                                                    (m.MovementDate.Value.Month > beginMonth)) && m.MovementDate.Value.Year == DateTime.Today.Year &&
+                                                                    ((m.MovementDate.Value.Month < endMonth) || (m.MovementDate.Value.Day <= endDay && m.MovementDate.Value.Month == endMonth)) && m.MovementType == MovementType.Despacho).Select(m => m.BoxUnits).DefaultIfEmpty(0).Sum();
+                
+                var fractions = db.Movements.Where(m => m.ProductID == productID && ((m.MovementDate.Value.Month == beginMonth && m.MovementDate.Value.Day >= beginDay) ||
+                                                                    (m.MovementDate.Value.Month > beginMonth)) && m.MovementDate.Value.Year == DateTime.Today.Year &&
+                                                                   ((m.MovementDate.Value.Month < endMonth) || (m.MovementDate.Value.Day <= endDay && m.MovementDate.Value.Month == endMonth)) && m.MovementType == MovementType.Despacho).Select(m => m.FractionUnits).DefaultIfEmpty(0).Sum();
+                if (boxes != null) maxBoxes = boxes;
+                if (fractions != null) maxFractions = fractions;
+
+                if (fractionUnits == 0) fractionUnits = 1;
+                LastPeriod.Add(maxBoxes + (maxFractions/fractionUnits));
+                i++;
+            }
+
+            return LastPeriod;
         }
 
         // GET: PurchasePlan/Edit/5
@@ -143,13 +295,13 @@ namespace ProyectoTesis.Controllers
             return RedirectToAction("Index");
         }
 
-        public void Algorithm(DateTime beginDate, DateTime endDate, double invesment, int purchasePlanID)
+        public void Algorithm(List<Product> products, DateTime beginDate, DateTime endDate, double invesment, int purchasePlanID)
         {
-            List<Product> products = db.Products.Where(p => p.ActiveFlag == true && (p.ProductType != ProductType.Otros)).ToList();
+            //List<Product> products = db.Products.Where(p => p.ActiveFlag == true && (p.ProductType != ProductType.Otros)).ToList();
             List<Solution> bests = new List<Solution>();
-            double bestValue = 0.0;
+            double bestValue = double.MinValue, repeatedBest = 0;
             Solution best = new Solution(products.Count);
-            int j = 0, k = 0;
+            int j = 0, k = 0, repeatBest = 0;
             //falta calcular máxima cantidad por producto en ventas históricas
             List<double> maxBoxes = MaxBoxes(products, beginDate, endDate);
 
@@ -166,37 +318,54 @@ namespace ProyectoTesis.Controllers
 
             while (Cost(best, products) > (2 * invesment))  best = ReduceQuantities(best, products);
 
+            if(Cost(best,products) > (invesment))
+            {
+                List<double> MaxBoxes = MaximunBoxesQuantity(products, beginDate);
+
+                for(int i = 0; i < best.MaxValue.Count; i++)
+                {
+                    best.MaxValue[i] = MaxBoxes[i];
+                    i++;
+                }
+            }
+
             bests.Add(best);
 
             Solution least = new Solution(products.Count);
 
             double lessBad = double.MaxValue;
+            double cost = 0.0;
             while (bests.Count >= (k + 1))
             {
                 Childs = GenerateChilds(bests[k], products, maxBoxes, month, invesment);
                 for(int i = 0; i < Childs.Count; i++)
                 {
+                    cost = Cost(Childs[i], products);
                     value = WholeValue(Childs[i], products, maxBoxes, month);
                     if (Math.Abs(value - bestValue) > 0.01)
                     {
                         if (value > bestValue)
                         {
-                            if (Cost(Childs[i], products) <= invesment)
+                            if (cost <= invesment)
                             {
                                 bests.Add(Childs[i]);
                                 best = Childs[i].DeepCopy();
                                 bestValue = value;
+                                repeatBest = 0;
+                                repeatedBest = bestValue;
                             }
-                            else if (lessBad > Cost(Childs[i],products))
+                            else if (lessBad > cost)
                             {
                                 least = Childs[i].DeepCopy();
-                                lessBad = Cost(Childs[i], products);
+                                lessBad = cost;
                             }
                         }
                     }
-                }                
+                    
+                }
+                if (bestValue == repeatedBest) repeatBest++;
                 k++;
-                if (k == bests.Count && Cost(least,products) > invesment && bestValue > 0)
+                if (k == bests.Count && lessBad > invesment && bestValue <= 0 && repeatBest < 1000)
                 {
                     bests.Add(least);
                 }
@@ -217,6 +386,8 @@ namespace ProyectoTesis.Controllers
 
         public void SaveResults(Solution best, List<Product> products, int purchasePlanID)
         {
+            double wholeBenefit = 0;
+
             for (int i = 0; i < products.Count; i++)
             {
                 double margin, mMargin = 0.0, sMargin = 0.0, dMargin = 0.0, units, benefit, quantity;
@@ -245,6 +416,8 @@ namespace ProyectoTesis.Controllers
 
                     benefit = margin * quantity;
 
+                    wholeBenefit += benefit;
+
                     db.PurchasePlanDetails.Add(new PurchasePlanDetail
                     {
                         ProductID = products[i].ID,
@@ -255,6 +428,7 @@ namespace ProyectoTesis.Controllers
                     });
                 }
             }
+
             db.SaveChanges();
         }
 
@@ -311,7 +485,7 @@ namespace ProyectoTesis.Controllers
         {
             double wholeValue = 0.0;
             double quantity;
-            for(int i = 0; i < products.Count; i++)
+            for(int i = 0; i < solution.MaxValue.Count; i++)
             {
                 quantity = (solution.MinValue[i] + solution.MaxValue[i]) / 2;
                 wholeValue += Value(quantity, products[i], maxBoxes[i], month);
@@ -323,7 +497,7 @@ namespace ProyectoTesis.Controllers
         {
             double cost = 0.0;
             double quantity;
-            for (int i = 0; i < products.Count; i++)
+            for (int i = 0; i < solution.MaxValue.Count; i++)
             {
                 quantity = solution.MaxValue[i];
                 cost += quantity * products[i].BoxPrice;
@@ -334,7 +508,7 @@ namespace ProyectoTesis.Controllers
         {
             List<Solution> Childs = new List<Solution>();
             Solution child = new Solution(products.Count);
-            for (int i = 0; i < products.Count; i++)
+            for (int i = 0; i < solution.MaxValue.Count; i++)
             {
                 if (solution.MaxValue[i] == 0) child = null;
                 else child = SearchOptimum(solution, products, maxBoxes, i, month, investment);
@@ -362,8 +536,12 @@ namespace ProyectoTesis.Controllers
                 midValue = 0;
             }
 
+            double lowerMidValue = Value(lowerMid, products[i], maxBoxes[i], month);
+            double upperMidValue = Value(upperMid, products[i], maxBoxes[i], month);
+
             if (Cost(child, products) > investment) child.MaxValue[i] = upperMid;
-            else if (Value(lowerMid, products[i], maxBoxes[i], month) > Value(upperMid, products[i], maxBoxes[i], month)) child.MaxValue[i] = midValue;
+            else if (Math.Abs(lowerMidValue - upperMidValue) < 0.001) return null;
+            else if (lowerMidValue > upperMidValue) child.MaxValue[i] = midValue;
             else child.MinValue[i] = midValue;
             //if (Cost(child, products) < (investment - 100)) return null;
             return child;
@@ -462,6 +640,16 @@ namespace ProyectoTesis.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public class ProductPlan
+        {
+            public Product Product { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:n2}")]
+            public double MaxBoxes { get; set; }
+            [DisplayFormat(DataFormatString = "{0:n2}")]
+            public double LastPeriod { get; set; }
         }
 
         public class Solution

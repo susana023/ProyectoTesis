@@ -24,7 +24,7 @@ namespace ProyectoTesis.Controllers
         // GET: Order
         public ActionResult Index()
         {
-            var orders = db.Orders.Include(o => o.Client).Include(o => o.User);
+            var orders = db.Orders.Include(o => o.Client).Include(o => o.User).Where(o => o.ActiveFlag == false);
             return View(orders.ToList());
         }
 
@@ -46,8 +46,8 @@ namespace ProyectoTesis.Controllers
         // GET: Order/Create
         public ActionResult Create()
         {
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "FullName");
-            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName");
+            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == false), "ID", "FullName");
+            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName");
             return View();
         }
 
@@ -66,8 +66,8 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("Index", "OrderDetail", new { OrderID = order.ID });
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "FullName", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == false), "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName", order.UserID);
             return View(order);
         }
 
@@ -83,8 +83,8 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "FullName", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == false), "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName", order.UserID);
             return View(order);
         }
 
@@ -102,8 +102,8 @@ namespace ProyectoTesis.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "FullName", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users, "ID", "FullName", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == false), "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName", order.UserID);
             return View(order);
         }
 

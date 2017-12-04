@@ -15,10 +15,14 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: Supplier
         public ActionResult Index()
         {
-            return View(db.Suppliers.ToList());
+            return View(db.Suppliers.Where(s => s.ActiveFlag == false).ToList());
         }
 
         // GET: Supplier/Details/5
@@ -53,6 +57,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Suppliers.Add(supplier);
                 db.SaveChanges();
+                log.Info("El usuario " + user + " creó al proveedor: " + supplier.BusinessName);
                 return RedirectToAction("Index");
             }
 
@@ -85,6 +90,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(supplier).State = EntityState.Modified;
                 db.SaveChanges();
+                log.Info("El usuario " + user + " editó al proveedor: " + supplier.BusinessName);
                 return RedirectToAction("Index");
             }
             return View(supplier);
@@ -111,7 +117,8 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Supplier supplier = db.Suppliers.Find(id);
-            db.Suppliers.Remove(supplier);
+            supplier.ActiveFlag = true;
+            log.Info("El usuario " + user + " eliminó al proveedor: " + supplier.BusinessName);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

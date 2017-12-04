@@ -15,10 +15,14 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: Store
         public ActionResult Index()
         {
-            return View(db.Stores.ToList());
+            return View(db.Stores.Where(s => s.ActiveFlag == false).ToList());
         }
 
         // GET: Store/Details/5
@@ -53,6 +57,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Stores.Add(store);
                 db.SaveChanges();
+                log.Info("El usuario " + user + " creó la tienda: " + store.Description);
                 return RedirectToAction("Index");
             }
 
@@ -85,6 +90,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(store).State = EntityState.Modified;
                 db.SaveChanges();
+                log.Info("El usuario " + user + " editó la tienda: " + store.Description);
                 return RedirectToAction("Index");
             }
             return View(store);
@@ -111,7 +117,8 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Store store = db.Stores.Find(id);
-            db.Stores.Remove(store);
+            store.ActiveFlag = true;
+            log.Info("El usuario " + user + " eliminó la tienda: " + store.Description);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

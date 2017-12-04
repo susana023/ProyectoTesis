@@ -11,115 +11,112 @@ using ProyectoTesis.Models;
 
 namespace ProyectoTesis.Controllers
 {
-    public class ClientController : Controller
+    public class SalesMarginsController : Controller
     {
         private StoreContext db = new StoreContext();
 
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        string user = DAL.GlobalVariables.CurrentUser;
-
-        // GET: Client
+        // GET: SalesMargins
         public ActionResult Index()
         {
-            return View(db.Clients.Where(s => s.ActiveFlag == false).ToList());
+            var saleMargins = db.SaleMargins.Include(s => s.Product).Where(s => s.Product.ActiveFlag == true);
+            return View(saleMargins.ToList());
         }
 
-        // GET: Client/Details/5
+        // GET: SalesMargins/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = db.Clients.Find(id);
-            if (client == null)
+            SalesMargin salesMargin = db.SaleMargins.Find(id);
+            if (salesMargin == null)
             {
                 return HttpNotFound();
             }
-            return View(client);
+            return View(salesMargin);
         }
 
-        // GET: Client/Create
+        // GET: SalesMargins/Create
         public ActionResult Create()
         {
+            ViewBag.ID = new SelectList(db.Products, "ID", "Description");
             return View();
         }
 
-        // POST: Client/Create
+        // POST: SalesMargins/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Dni,Ruc,Name,LastName,Phone,Address,Email,ActiveFlag,ClientType")] Client client)
+        public ActionResult Create([Bind(Include = "ID,MarketMargin,StoreMargin,DistributionMargin,ActiveFlag")] SalesMargin salesMargin)
         {
             if (ModelState.IsValid)
             {
-                client.ActiveFlag = true;
-                db.Clients.Add(client);
-                log.Info("El usuario " + user + " creó al usuario : " + client.FullName);
+                db.SaleMargins.Add(salesMargin);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(client);
+            ViewBag.ID = new SelectList(db.Products.Where(s => s.ActiveFlag == true), "ID", "Description", salesMargin.ID);
+            return View(salesMargin);
         }
 
-        // GET: Client/Edit/5
+        // GET: SalesMargins/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = db.Clients.Find(id);
-            if (client == null)
+            SalesMargin salesMargin = db.SaleMargins.Find(id);
+            if (salesMargin == null)
             {
                 return HttpNotFound();
             }
-            return View(client);
+            ViewBag.ID = new SelectList(db.Products.Where(s => s.ActiveFlag == true), "ID", "Description", salesMargin.ID);
+            return View(salesMargin);
         }
 
-        // POST: Client/Edit/5
+        // POST: SalesMargins/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Dni,Ruc,Name,LastName,Phone,Address,Email,ActiveFlag,ClientType")] Client client)
+        public ActionResult Edit([Bind(Include = "ID,MarketMargin,StoreMargin,DistributionMargin,ActiveFlag")] SalesMargin salesMargin)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(client).State = EntityState.Modified;
-                log.Info("El usuario " + user + " editó los datos del cliente: " + client.FullName);
+                db.Entry(salesMargin).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(client);
+            ViewBag.ID = new SelectList(db.Products.Where(s => s.ActiveFlag == true), "ID", "Description", salesMargin.ID);
+            return View(salesMargin);
         }
 
-        // GET: Client/Delete/5
+        // GET: SalesMargins/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = db.Clients.Find(id);
-            if (client == null)
+            SalesMargin salesMargin = db.SaleMargins.Find(id);
+            if (salesMargin == null)
             {
                 return HttpNotFound();
             }
-            return View(client);
+            return View(salesMargin);
         }
 
-        // POST: Client/Delete/5
+        // POST: SalesMargins/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Client client = db.Clients.Find(id);
-            log.Info("El usuario " + user + " eliminó al cliente: " + db.Clients.Find(id).FullName);
-            client.ActiveFlag = false;
+            SalesMargin salesMargin = db.SaleMargins.Find(id);
+            db.SaleMargins.Remove(salesMargin);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

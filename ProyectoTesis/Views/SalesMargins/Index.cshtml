@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ProyectoTesis.Models.SalesMargin>
+
+@{
+    ViewBag.Title = "Márgenes de Venta";
+}
+
+<h2>Márgenes de Venta</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MarketMargin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StoreMargin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DistributionMargin)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MarketMargin)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StoreMargin)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DistributionMargin)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", new { id = item.ID })"><i class="fa fa-pencil"></i></a>
+        </td>
+    </tr>
+}
+
+</table>

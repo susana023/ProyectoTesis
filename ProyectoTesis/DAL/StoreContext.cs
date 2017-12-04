@@ -40,6 +40,8 @@ namespace ProyectoTesis.DAL
         public DbSet<SalesMargin> SaleMargins { get; set; }
         public DbSet<ProductInZone> ProductsInZone { get; set; }
 
+        public DbSet<ExpirationTime> ExpirationTimes { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

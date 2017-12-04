@@ -1,0 +1,104 @@
+﻿@model IEnumerable<ProyectoTesis.Controllers.PurchasePlanController.ProductPlan>
+
+<br />
+@using (Html.BeginForm("ChooseProducts", "PurchasePlan", FormMethod.Get))
+{
+    <p>
+        @Html.Hidden("BeginDate")
+        @Html.Hidden("EndDate")
+        @Html.Hidden("Investment")
+        Buscar: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        
+        <input type="submit" value="Buscar" />
+    </p>
+}
+
+<br />
+<table class="table">
+    <tr>
+        <th><input type="checkbox" id="checkAll" /></th>
+        <th>
+            Producto
+        </th>
+        <th>
+            Stock Actual
+        </th>
+        <th>
+            Cajas Vendidas el Período Anterior
+        </th>
+        <th>
+            Cajas Vendidas Años Anteriores
+        </th>
+    </tr>
+
+@foreach (var item in (IEnumerable<ProyectoTesis.Controllers.PurchasePlanController.ProductPlan>)ViewBag.ProductPlans) {
+    <tr>
+        <td>
+            <input type="checkbox" class="checkBox" value="@item.Product.ID" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.LogicalStock)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastPeriod)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MaxBoxes)
+        </td>
+    </tr>
+}
+
+</table>
+
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10 create">
+        <input value="Crear" class="btn btn-default" id="plan"/>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval");
+
+    
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#checkAll").click(function () {
+                $(".checkBox").prop('checked',
+                    $(this).prop('checked'));
+            });
+
+            $("#plan").click(function () {
+                var selectedIDs = new Array();
+                $('input:checkbox.checkBox').each(function () {
+                    if ($(this).prop('checked')) {
+                        selectedIDs.push($(this).val());
+                    }
+                });
+
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/PurchasePlan/Plan",
+                        data: {
+                            ID: @ViewBag.ID, productID: selectedIDs
+                        },
+                        function (result) {
+                            window.location.href = "/PurchasePlan/Index";
+                        }
+                    });
+                //window.location.href = "/PurchasePlan/Index";
+            });
+
+        });
+    </script>
+}

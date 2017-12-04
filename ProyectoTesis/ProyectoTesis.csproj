@@ -166,6 +166,7 @@
     <Compile Include="Controllers\DataHistoricaController.cs" />
     <Compile Include="Controllers\DispatchController.cs" />
     <Compile Include="Controllers\DispatchDetailController.cs" />
+    <Compile Include="Controllers\ExpirationTimeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MovementController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Controllers\ReturnController.cs" />
     <Compile Include="Controllers\ReturnDetailController.cs" />
     <Compile Include="Controllers\SaleDocumentController.cs" />
+    <Compile Include="Controllers\SalesMarginsController.cs" />
     <Compile Include="Controllers\StockroomController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
@@ -399,7 +401,12 @@
     <Compile Include="Migrations\201711140637580_product in zone int.Designer.cs">
       <DependentUpon>201711140637580_product in zone int.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712030603214_expiration time.cs" />
+    <Compile Include="Migrations\201712030603214_expiration time.Designer.cs">
+      <DependentUpon>201712030603214_expiration time.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ExpirationTime.cs" />
     <Compile Include="Models\IsDateAfterAttribute.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Correlative.cs" />
@@ -712,6 +719,17 @@
     <Content Include="Views\ReturnDetail\Index.cshtml" />
     <Content Include="Views\Dispatch\Index.cshtml" />
     <Content Include="Views\DispatchDetail\Index.cshtml" />
+    <Content Include="Views\PurchasePlan\ChooseProducts.cshtml" />
+    <Content Include="Views\ExpirationTime\Create.cshtml" />
+    <Content Include="Views\ExpirationTime\Delete.cshtml" />
+    <Content Include="Views\ExpirationTime\Details.cshtml" />
+    <Content Include="Views\ExpirationTime\Edit.cshtml" />
+    <Content Include="Views\ExpirationTime\Index.cshtml" />
+    <Content Include="Views\SalesMargins\Create.cshtml" />
+    <Content Include="Views\SalesMargins\Delete.cshtml" />
+    <Content Include="Views\SalesMargins\Details.cshtml" />
+    <Content Include="Views\SalesMargins\Edit.cshtml" />
+    <Content Include="Views\SalesMargins\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -878,6 +896,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711140637580_product in zone int.resx">
       <DependentUpon>201711140637580_product in zone int.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712030603214_expiration time.resx">
+      <DependentUpon>201712030603214_expiration time.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

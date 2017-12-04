@@ -15,10 +15,14 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: User
         public ActionResult Index()
         {
-            var users = db.Users.Include(u => u.Store);
+            var users = db.Users.Where(u => u.ActiveFlag == false).Include(u => u.Store);
             return View(users.ToList());
         }
 
@@ -40,8 +44,8 @@ namespace ProyectoTesis.Controllers
         // GET: User/Create
         public ActionResult Create()
         {
-            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Name");
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
+            ViewBag.ID = new SelectList(db.Stockrooms.Where(s => s.ActiveFlag == false), "ID", "Name");
+            ViewBag.StoreID = new SelectList(db.Stores.Where(s => s.ActiveFlag == false), "ID", "Description");
             return View();
         }
 
@@ -56,11 +60,12 @@ namespace ProyectoTesis.Controllers
             {
                 db.Users.Add(user);
                 db.SaveChanges();
+                log.Info("El usuario " + user + " creó al usuario: " + user.FullName);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Name");
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
+            ViewBag.ID = new SelectList(db.Stockrooms.Where(s => s.ActiveFlag == false), "ID", "Name");
+            ViewBag.StoreID = new SelectList(db.Stores.Where(s => s.ActiveFlag == false), "ID", "Description");
             return View(user);
         }
 
@@ -76,8 +81,8 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Name");
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
+            ViewBag.ID = new SelectList(db.Stockrooms.Where(s => s.ActiveFlag == false), "ID", "Name");
+            ViewBag.StoreID = new SelectList(db.Stores.Where(s => s.ActiveFlag == false), "ID", "Description");
             return View(user);
         }
 
@@ -92,10 +97,11 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
+                log.Info("El usuario " + user + " editó al usuario: " + user.FullName);
                 return RedirectToAction("Index");
             }
-            ViewBag.ID = new SelectList(db.Stockrooms, "ID", "Name");
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
+            ViewBag.ID = new SelectList(db.Stockrooms.Where(s => s.ActiveFlag == false), "ID", "Name");
+            ViewBag.StoreID = new SelectList(db.Stores.Where(s => s.ActiveFlag == false), "ID", "Description");
             return View(user);
         }
 
@@ -120,7 +126,8 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             User user = db.Users.Find(id);
-            db.Users.Remove(user);
+            user.ActiveFlag = true;
+            log.Info("El usuario " + user + " eliminó al usuario: " + user.FullName);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

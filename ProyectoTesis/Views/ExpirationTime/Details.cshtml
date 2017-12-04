@@ -1,0 +1,33 @@
+﻿@model ProyectoTesis.Models.ExpirationTime
+
+@{
+    ViewBag.Title = "Tiempo de Expiración - Detalle";
+}
+
+<h2>Detalle de Tiempo de Expiración</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Months)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Months)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Regresar", "Index")
+</p>

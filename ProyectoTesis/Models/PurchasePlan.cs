@@ -21,8 +21,11 @@ namespace ProyectoTesis.Models
         [Display(Name = "Activo?")]
         public bool ActiveFlag { get; set; }
         [Display(Name = "Inversión")]
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Investment { get; set; }
 
+        [Display(Name = "Beneficio Total")]
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double TotalBenefit
         {
             get

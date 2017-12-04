@@ -15,10 +15,14 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: Zone
         public ActionResult Index(int StockroomID)
         {
-            var zones = db.Zones.Include(z => z.Stockroom);
+            var zones = db.Zones.Where(z => z.ActiveFlag == false).Include(z => z.Stockroom);
             //var zones = db.Zones;
             ViewBag.Stockroom = StockroomID;
             return View(zones.ToList());
@@ -59,6 +63,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Zones.Add(zone);
                 db.SaveChanges();
+                log.Info("El usuario " + user + " creó la zona de almacén: " + zone.Description);
                 return RedirectToAction("Index", new { StockroomID = zone.StockroomID });
             }
 
@@ -94,6 +99,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(zone).State = EntityState.Modified;
                 db.SaveChanges();
+                log.Info("El usuario " + user + " editó la zona de almacén: " + zone.Description);
                 return RedirectToAction("Index", new { StockroomID = zone.StockroomID });
             }
             ViewBag.StockroomID = new SelectList(db.Stockrooms, "ID", "Name", zone.StockroomID);
@@ -122,7 +128,8 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Zone zone = db.Zones.Find(id);
-            db.Zones.Remove(zone);
+            zone.ActiveFlag = false;
+            log.Info("El usuario " + user + " eliminó la zona de almacén: " + zone.Description);
             db.SaveChanges();
             return RedirectToAction("Index", new { StockroomID = zone.StockroomID });
         }

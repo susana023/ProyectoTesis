@@ -15,11 +15,15 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: PurchaseOrderDetail
         public ActionResult Index(int PurchaseOrderID)
         {
             var purchaseOrderDetails = db.PurchaseOrderDetails.Include(p => p.Product).Include(p => p.PurchaseOrder).Where(
-                                        p => p.PurchaseOrderID == PurchaseOrderID);
+                                        p => p.PurchaseOrderID == PurchaseOrderID && p.ActiveFlag == false);
             ViewBag.PurchaseOrder = PurchaseOrderID;
 
             return View(purchaseOrderDetails.ToList());
@@ -96,6 +100,7 @@ namespace ProyectoTesis.Controllers
                 var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
                 controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
                 controller.ActualizarTotal(purchaseOrderDetail.PurchaseOrderID);
+                log.Info("El usuario " + user + " agregó el producto: " + db.Products.Find(purchaseOrderDetail.productID).Description + " a la orden de compra con ID: " + purchaseOrderDetail.PurchaseOrderID);
 
                 return RedirectToAction("Index", new { PurchaseOrderID = purchaseOrderDetail.PurchaseOrderID });
             }
@@ -160,6 +165,8 @@ namespace ProyectoTesis.Controllers
                     productBatch.BoxUnits = boxUnits;
                     productBatch.FractionUnits = fractionUnits;
                 }
+                log.Info("El usuario " + user + " editó el producto: " + db.Products.Find(purchaseOrderDetail.productID).Description + " de la orden de compra con ID: " + purchaseOrderDetail.PurchaseOrderID);
+
                 db.SaveChanges();
 
                 var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
@@ -202,10 +209,12 @@ namespace ProyectoTesis.Controllers
 
                 deletePurchaseOrderDetail(id);
 
-                db.PurchaseOrderDetails.Remove(purchaseOrderDetail);
+                purchaseOrderDetail.ActiveFlag = true;
                 
                 db.SaveChanges();
-            
+                log.Info("El usuario " + user + " eliminó el producto: " + db.Products.Find(purchaseOrderDetail.productID).Description + " de la orden de compra con ID: " + purchaseOrderDetail.PurchaseOrderID);
+
+
                 var controller = DependencyResolver.Current.GetService<PurchaseOrderController>();
                 controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
                 controller.ActualizarTotal(purchaseOrderID);

@@ -15,10 +15,14 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: Stockroom
         public ActionResult Index()
         {
-            var stockrooms = db.Stockrooms;
+            var stockrooms = db.Stockrooms.Where(s => s.ActiveFlag == false);
             return View(stockrooms.ToList());
         }
 
@@ -40,8 +44,8 @@ namespace ProyectoTesis.Controllers
         // GET: Stockroom/Create
         public ActionResult Create()
         {
-            ViewBag.ManagerID = new SelectList(db.Users, "ID", "FullName");
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
+            ViewBag.ManagerID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName");
+            ViewBag.StoreID = new SelectList(db.Stores.Where(s => s.ActiveFlag == false), "ID", "Description");
             return View();
         }
 
@@ -56,11 +60,12 @@ namespace ProyectoTesis.Controllers
             {
                 db.Stockrooms.Add(stockroom);
                 db.SaveChanges();
+                log.Info("El usuario " + user + " creó el almacén: " + stockroom.Name);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ManagerID = new SelectList(db.Users, "ID", "FullName");
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
+            ViewBag.ManagerID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName");
+            ViewBag.StoreID = new SelectList(db.Stores.Where(s => s.ActiveFlag == false), "ID", "Description");
             return View(stockroom);
         }
 
@@ -92,10 +97,11 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(stockroom).State = EntityState.Modified;
                 db.SaveChanges();
+                log.Info("El usuario " + user + " editó el almacén: " + stockroom.Name);
                 return RedirectToAction("Index");
             }
-            ViewBag.ManagerID = new SelectList(db.Users, "ID", "FullName");
-            ViewBag.StoreID = new SelectList(db.Stores, "ID", "Description");
+            ViewBag.ManagerID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName");
+            ViewBag.StoreID = new SelectList(db.Stores.Where(s => s.ActiveFlag == false), "ID", "Description");
             return View(stockroom);
         }
 
@@ -120,8 +126,9 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Stockroom stockroom = db.Stockrooms.Find(id);
-            db.Stockrooms.Remove(stockroom);
+            stockroom.ActiveFlag = true;
             db.SaveChanges();
+            log.Info("El usuario " + user + " eliminó el almacén: " + stockroom.Name);
             return RedirectToAction("Index");
         }
 

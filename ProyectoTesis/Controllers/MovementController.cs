@@ -16,6 +16,10 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: Movement
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -39,7 +43,7 @@ namespace ProyectoTesis.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                movements = movements.Where(m => m.Product.Description.Contains(searchString) || m.MovementType.ToString().Contains(searchString));
+                movements = movements.Where(m => (m.Product.Description.Contains(searchString) || m.MovementType.ToString().Contains(searchString)) && m.ActiveFlag == false);
             }
 
             switch (sortOrder)
@@ -87,9 +91,9 @@ namespace ProyectoTesis.Controllers
         // GET: Movement/Create
         public ActionResult Create()
         {
-            ViewBag.DocumentID = new SelectList(db.Documents, "ID", "ID");
-            ViewBag.ProductID = new SelectList(db.Products, "ID", "Description");
-            ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description");
+            ViewBag.DocumentID = new SelectList(db.Documents.Where(s => s.ActiveFlag == false), "ID", "ID");
+            ViewBag.ProductID = new SelectList(db.Products.Where(s => s.ActiveFlag == true), "ID", "Description");
+            ViewBag.ZoneID = new SelectList(db.Zones.Where(s => s.ActiveFlag == false), "ID", "Description");
             return View();
         }
 
@@ -114,12 +118,12 @@ namespace ProyectoTesis.Controllers
                     product.LogicalStock -= quantity;
                 }
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                log.Info("El usuario " + user + " creó un movimiento con ID: " + movement.ID + " para el producto: " + db.Products.Find(movement.ProductID).Description + " de tipo: " + movement.MovementType.ToString()); return RedirectToAction("Index");
             }
 
-            ViewBag.DocumentID = new SelectList(db.Documents, "ID", "ID", movement.DocumentID);
-            ViewBag.ProductID = new SelectList(db.Products, "ID", "Description", movement.ProductID);
-            ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description", movement.ZoneID);
+            ViewBag.DocumentID = new SelectList(db.Documents.Where(s => s.ActiveFlag == false), "ID", "ID", movement.DocumentID);
+            ViewBag.ProductID = new SelectList(db.Products.Where(s => s.ActiveFlag == true), "ID", "Description", movement.ProductID);
+            ViewBag.ZoneID = new SelectList(db.Zones.Where(s => s.ActiveFlag == false), "ID", "Description", movement.ZoneID);
             return View(movement);
         }
 
@@ -135,9 +139,9 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DocumentID = new SelectList(db.Documents, "ID", "ID", movement.DocumentID);
-            ViewBag.ProductID = new SelectList(db.Products, "ID", "Description", movement.ProductID);
-            ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description", movement.ZoneID);
+            ViewBag.DocumentID = new SelectList(db.Documents.Where(s => s.ActiveFlag == false), "ID", "ID", movement.DocumentID);
+            ViewBag.ProductID = new SelectList(db.Products.Where(s => s.ActiveFlag == true), "ID", "Description", movement.ProductID);
+            ViewBag.ZoneID = new SelectList(db.Zones.Where(s => s.ActiveFlag == false), "ID", "Description", movement.ZoneID);
             return View(movement);
         }
 
@@ -152,11 +156,11 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(movement).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                log.Info("El usuario " + user + " editó un movimiento con ID: " + movement.ID + " para el producto: " + db.Products.Find(movement.ProductID).Description + " de tipo: " + movement.MovementType.ToString()); return RedirectToAction("Index");
             }
-            ViewBag.DocumentID = new SelectList(db.Documents, "ID", "ID", movement.DocumentID);
-            ViewBag.ProductID = new SelectList(db.Products, "ID", "Description", movement.ProductID);
-            ViewBag.ZoneID = new SelectList(db.Zones, "ID", "Description", movement.ZoneID);
+            ViewBag.DocumentID = new SelectList(db.Documents.Where(s => s.ActiveFlag == false), "ID", "ID", movement.DocumentID);
+            ViewBag.ProductID = new SelectList(db.Products.Where(s => s.ActiveFlag == true), "ID", "Description", movement.ProductID);
+            ViewBag.ZoneID = new SelectList(db.Zones.Where(s => s.ActiveFlag == false), "ID", "Description", movement.ZoneID);
             return View(movement);
         }
 
@@ -181,8 +185,9 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Movement movement = db.Movements.Find(id);
-            db.Movements.Remove(movement);
+            log.Info("El usuario " + user + " eliminó un movimiento con ID: " + movement.ID + " para el producto: " + db.Products.Find(movement.ProductID).Description + " de tipo: " + movement.MovementType.ToString()); movement.ActiveFlag = true;
             db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
@@ -221,6 +226,7 @@ namespace ProyectoTesis.Controllers
                 product.PhysicalStock -= quantity;
                 product.LogicalStock -= quantity;
             }
+            log.Info("El usuario " + user + " creó un movimiento para el producto: " + db.Products.Find(productID).Description + " de tipo: " + type.ToString());
             db.SaveChanges();
         }
         public void EditarMovimiento(MovementType type, int documentID, int productID, int boxes, int fractions, int zoneID, DateTime expirationDate)
@@ -250,6 +256,7 @@ namespace ProyectoTesis.Controllers
                     product.PhysicalStock -= quantity;
                     product.LogicalStock -= quantity;
                 }
+                log.Info("El usuario " + user + " editó un movimiento con ID: " + movement.ID + " para el producto: " + db.Products.Find(movement.ProductID).Description + " de tipo: " + movement.MovementType.ToString());
                 db.SaveChanges();
             }
         }
@@ -274,6 +281,7 @@ namespace ProyectoTesis.Controllers
                     product.PhysicalStock += quantity;
                     product.LogicalStock += quantity;
                 }
+                log.Info("El usuario " + user + " eliminó un movimiento con ID: " + movement.ID + " para el producto: " + db.Products.Find(movement.ProductID).Description + " de tipo: " + movement.MovementType.ToString());
                 db.SaveChanges();
             }
         }

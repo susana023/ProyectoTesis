@@ -15,6 +15,10 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         public ActionResult Ticket()
         {
             var tickets = db.SaleDocuments.Where(s => s.DocumentType == DocumentType.Boleta);

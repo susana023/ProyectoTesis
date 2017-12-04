@@ -16,6 +16,10 @@ namespace ProyectoTesis.Controllers
         private double IGV = DAL.GlobalVariables.Igv;
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: PurchaseOrder
         public ActionResult Index()
         {
@@ -57,6 +61,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.PurchaseOrders.Add(purchaseOrder);
                 db.SaveChanges();
+                log.Info("El usuario " + user + " creó una orden de compra con ID: " + purchaseOrder.ID + " para el proveedor: " + db.Suppliers.Find(purchaseOrder.SupplierID).BusinessName);
                 return RedirectToAction("Index", "PurchaseOrderDetail", new { PurchaseOrderID = purchaseOrder.ID });
             }
 
@@ -91,6 +96,7 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(purchaseOrder).State = EntityState.Modified;
                 db.SaveChanges();
+                log.Info("El usuario " + user + " editó una orden de compra con ID: " + purchaseOrder.ID + " para el proveedor: " + db.Suppliers.Find(purchaseOrder.SupplierID).BusinessName);
                 return RedirectToAction("Index");
             }
             ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "BusinessName", purchaseOrder.SupplierID);
@@ -130,6 +136,7 @@ namespace ProyectoTesis.Controllers
             }
             db.PurchaseOrders.Remove(purchaseOrder);
             db.SaveChanges();
+            log.Info("El usuario " + user + " elimi´nó una orden de compra con ID: " + purchaseOrder.ID + " para el proveedor: " + db.Suppliers.Find(purchaseOrder.SupplierID).BusinessName);
             return RedirectToAction("Index");
         }
 

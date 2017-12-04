@@ -15,6 +15,10 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: Return
         public ActionResult Index()
         {
@@ -40,7 +44,7 @@ namespace ProyectoTesis.Controllers
         // GET: Return/Create
         public ActionResult Create()
         {
-            ViewBag.SaleDocumentID = new SelectList(db.Documents, "ID", "SerialNumber");
+            ViewBag.SaleDocumentID = new SelectList(db.Documents.Where(s => s.ActiveFlag == false), "ID", "SerialNumber");
             return View();
         }
 
@@ -56,11 +60,13 @@ namespace ProyectoTesis.Controllers
                 db.Documents.Add(@return);
                 Return ret = db.Returns.Where(r => r.Date == @return.Date && r.SaleDocumentID == @return.SaleDocumentID && r.Reason == @return.Reason).FirstOrDefault();
                 db.SaveChanges();
+                log.Info("El usuario " + user + " creó la devolución para el pedido con ID: " + @return.SaleDocumentID);
+
                 int returnID = 0;
                 if(ret != null) returnID = ret.ID;
                 return RedirectToAction("Index", "OrderDetail", new { ReturnID = returnID});
             }
-            ViewBag.SaleDocumentID = new SelectList(db.Documents, "ID", "SerialNumber", @return.SaleDocumentID);
+            ViewBag.SaleDocumentID = new SelectList(db.Documents.Where(s => s.ActiveFlag == false), "ID", "SerialNumber", @return.SaleDocumentID);
             return View(@return);
         }
 
@@ -76,7 +82,7 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.SaleDocumentID = new SelectList(db.Documents, "ID", "SerialNumber", @return.SaleDocumentID);
+            ViewBag.SaleDocumentID = new SelectList(db.Documents.Where(s => s.ActiveFlag == false), "ID", "SerialNumber", @return.SaleDocumentID);
             return View(@return);
         }
 
@@ -91,9 +97,10 @@ namespace ProyectoTesis.Controllers
             {
                 db.Entry(@return).State = EntityState.Modified;
                 db.SaveChanges();
+                log.Info("El usuario " + user + " editó la devolución con ID: " + @return.ID + " para el pedido con ID: " + @return.SaleDocumentID);
                 return RedirectToAction("Index");
             }
-            ViewBag.SaleDocumentID = new SelectList(db.Documents, "ID", "SerialNumber", @return.SaleDocumentID);
+            ViewBag.SaleDocumentID = new SelectList(db.Documents.Where(s => s.ActiveFlag == false), "ID", "SerialNumber", @return.SaleDocumentID);
             return View(@return);
         }
 

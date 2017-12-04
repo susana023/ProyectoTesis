@@ -13,6 +13,11 @@ namespace ProyectoTesis.Controllers
     public class DataHistoricaController : Controller
     {
         private StoreContext db = new StoreContext();
+
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: DataHistorica
         public ActionResult Index()
         {
@@ -76,6 +81,7 @@ namespace ProyectoTesis.Controllers
             }
             myReader.Close();
             conn.Close();
+            log.Info("El usuario " + user + " cargó productos");
             return RedirectToAction("Index");
         }
 
@@ -135,7 +141,7 @@ namespace ProyectoTesis.Controllers
                 }
             }
             conn.Close();
-            int Chocolate = 0;
+            log.Info("El usuario " + user + " cargó movimientos históricos");
             return RedirectToAction("Index");
         }
 
@@ -162,6 +168,7 @@ namespace ProyectoTesis.Controllers
             }
             myReader.Close();
             conn.Close();
+            log.Info("El usuario " + user + " cargó los pesos de los productos");
             return RedirectToAction("Index");
         }
         public ActionResult ChargePreviousCode()
@@ -186,6 +193,7 @@ namespace ProyectoTesis.Controllers
             }
             myReader.Close();
             conn.Close();
+            log.Info("El usuario " + user + " cargó los anteriores códigos de los productos");
             return RedirectToAction("Index");
         }
     }

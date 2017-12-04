@@ -14,10 +14,13 @@ namespace ProyectoTesis.Models
         [Display(Name = "Producto")]
         public int ProductID { get; set; }
         [Display(Name = "Beneficio")]
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Benefit { get; set; }
         [Display(Name = "Cantidad de Cajas")]
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public int? BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public int? FractionUnits { get; set; }
         [Display(Name = "Activo?")]
         public bool ActiveFlag { get; set; }

@@ -11,7 +11,7 @@ using ProyectoTesis.Models;
 
 namespace ProyectoTesis.Controllers
 {
-    public class ClientController : Controller
+    public class ExpirationTimeController : Controller
     {
         private StoreContext db = new StoreContext();
 
@@ -19,107 +19,116 @@ namespace ProyectoTesis.Controllers
 
         string user = DAL.GlobalVariables.CurrentUser;
 
-        // GET: Client
+        // GET: ExpirationTime
         public ActionResult Index()
         {
-            return View(db.Clients.Where(s => s.ActiveFlag == false).ToList());
+            return View(db.ExpirationTimes.ToList());
         }
 
-        // GET: Client/Details/5
+        // GET: ExpirationTime/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = db.Clients.Find(id);
-            if (client == null)
+            ExpirationTime expirationTime = db.ExpirationTimes.Find(id);
+            if (expirationTime == null)
             {
                 return HttpNotFound();
             }
-            return View(client);
+            return View(expirationTime);
         }
 
-        // GET: Client/Create
+        // GET: ExpirationTime/Create
         public ActionResult Create()
         {
+            List<ProductType> productType = new List<ProductType>();
+            for(int i = 0; i <= 20; i++)
+            {
+                if(db.ExpirationTimes.Where(e => e.ProductType == (ProductType)i).Count() <= 0)
+                {
+                    productType.Add((ProductType)i);
+                }
+            }
+            var itemTypes = (from ProductType i in productType
+                             select new SelectListItem { Text = i.ToString(), Value = i.ToString() }).ToList();
+            ViewBag.ProductTypes = itemTypes;
             return View();
         }
 
-        // POST: Client/Create
+        // POST: ExpirationTime/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Dni,Ruc,Name,LastName,Phone,Address,Email,ActiveFlag,ClientType")] Client client)
+        public ActionResult Create([Bind(Include = "ID,ProductType,Months")] ExpirationTime expirationTime)
         {
             if (ModelState.IsValid)
             {
-                client.ActiveFlag = true;
-                db.Clients.Add(client);
-                log.Info("El usuario " + user + " creó al usuario : " + client.FullName);
+                db.ExpirationTimes.Add(expirationTime);
+                log.Info("El usuario " + user + " creó en tiempo de expiración para los productos de tipo: " + expirationTime.ProductType.ToString());
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(client);
+            return View(expirationTime);
         }
 
-        // GET: Client/Edit/5
+        // GET: ExpirationTime/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = db.Clients.Find(id);
-            if (client == null)
+            ExpirationTime expirationTime = db.ExpirationTimes.Find(id);
+            if (expirationTime == null)
             {
                 return HttpNotFound();
             }
-            return View(client);
+            return View(expirationTime);
         }
 
-        // POST: Client/Edit/5
+        // POST: ExpirationTime/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Dni,Ruc,Name,LastName,Phone,Address,Email,ActiveFlag,ClientType")] Client client)
+        public ActionResult Edit([Bind(Include = "ID,ProductType,Months")] ExpirationTime expirationTime)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(client).State = EntityState.Modified;
-                log.Info("El usuario " + user + " editó los datos del cliente: " + client.FullName);
+                db.Entry(expirationTime).State = EntityState.Modified;
+                log.Info("El usuario " + user + " editó el tiempo de expiración para el tipo de producto: " + expirationTime.ProductType.ToString());
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(client);
+            return View(expirationTime);
         }
 
-        // GET: Client/Delete/5
+        // GET: ExpirationTime/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = db.Clients.Find(id);
-            if (client == null)
+            ExpirationTime expirationTime = db.ExpirationTimes.Find(id);
+            if (expirationTime == null)
             {
                 return HttpNotFound();
             }
-            return View(client);
+            return View(expirationTime);
         }
 
-        // POST: Client/Delete/5
+        // POST: ExpirationTime/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Client client = db.Clients.Find(id);
-            log.Info("El usuario " + user + " eliminó al cliente: " + db.Clients.Find(id).FullName);
-            client.ActiveFlag = false;
+            ExpirationTime expirationTime = db.ExpirationTimes.Find(id);
+            db.ExpirationTimes.Remove(expirationTime);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

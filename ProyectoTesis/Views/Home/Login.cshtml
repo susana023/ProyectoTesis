@@ -7,14 +7,14 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content")
     @Styles.Render("~/Content/fontawesome")
-    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery-3.2.1.min.js"></script>
+    <script src="~/Scripts/jquery-3.2.1.js"></script>
 </head>
 <body>
     @{
         ViewBag.Title = "Inicio de Sesión";
         Layout = null;
     }
-
     <link href="~/Content/bootstrap_simplex.css" rel="stylesheet" />
     <br />
     <br />
@@ -32,13 +32,19 @@
                         <form role="form">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Usuario" id="user" name="user" autofocus>
+                                    <input class="form-control" placeholder="Usuario" id="user" name="userName" autofocus>
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Contraseña" id="password" name="password" type="password" value="">
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <button class="btn btn-lg btn-success btn-block" id="button">Iniciar Sesión</button>
+                                <button type ="submit" class="btn btn-lg btn-success btn-block" id="button">Iniciar Sesión</button>
+                                @*@Html.ActionLink(
+                                "Iniciar Sesión",
+                                "Loging",
+                                "Home",
+                                new { userName = , password = "password"},
+                                new { @type ="submit", @class = "btn btn-lg btn-success btn-block" })*@
                             </fieldset>
                         </form>
                     </div>
@@ -56,25 +62,25 @@
             $(".btn").click(function () {
                 var user = $("#user").val();
                 var password = $("#password").val();
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/Loging",
-                    data: {
-                        userName: user, password: password
-                    },
-                    contentType: 'application/json; charset=utf-8',
-                        success: function(result) {
-                            if (result.success === 'true') {
-                                window.location.href = '/Home/Index';
-                            } else {
-                                @ViewBag.Message = 'Usuario o contraseña incorrectos'
-                                window.location.href = '/Home/Login';       
-                            }
-                        },
-                    failure: function () {
-                        //handle the failure of the request itself
-                        }
-                });
+                var result = "/Home/Index"
+                //$.ajax({
+                //    type: "POST",
+                //    url: "/Home/Loging",
+                //    data: {
+                //        userName: user, password: password
+                //    },
+                //    success: function (result) {
+                //        window.location.assign(result);
+                //    },
+                //    failure: function () {
+                //        //handle the failure of the request itself
+                //        }
+                //});
+                $.post("/Home/Loging", { userName: user, password: password }, function (result) {
+                    window.location.assign(result);
+                    location.reload();
+                });  
+                window.location.assign(result);
             });
         });
     </script>

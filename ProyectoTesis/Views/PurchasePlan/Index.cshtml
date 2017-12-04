@@ -20,6 +20,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Investment)
         </th>
+        <th>
+            Beneficio Total
+        </th>
         <th></th>
     </tr>
 
@@ -35,7 +38,9 @@
             @Html.DisplayFor(modelItem => item.Investment)
         </td>
         <td>
-            <a href="@Url.Action("Edit", "PurchasePlan", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder })"><i class="fa fa-pencil"></i></a> |
+            @Html.DisplayFor(modelItem => item.TotalBenefit)
+        </td>
+        <td>
             <a href="@Url.Action("Details", "PurchasePlan", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-eye"></i></a> |
             <a href="@Url.Action("Delete", "PurchasePlan", new { id = item.ID, PurchaseOrderID = ViewBag.PurchaseOrder})"><i class="fa fa-trash"></i></a>
         </td>

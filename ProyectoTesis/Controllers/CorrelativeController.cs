@@ -15,6 +15,10 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         // GET: Correlative
         public ActionResult Index()
         {
@@ -56,6 +60,7 @@ namespace ProyectoTesis.Controllers
                 correlative.CorrelativeNumber = 0;
                 correlative.ActiveFlag = true;
                 db.Correlatives.Add(correlative);
+                log.Info("El usuario " + user + " creó el correlativo para el documento: " + correlative.DocumentType.ToString() + " de la tienda: " + db.Stores.Find(correlative.StoreID).Description);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -90,6 +95,7 @@ namespace ProyectoTesis.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(correlative).State = EntityState.Modified;
+                log.Info("El usuario " + user + " editó el correlativo para el documento: " + correlative.DocumentType.ToString() + " de la tienda: " + db.Stores.Find(correlative.StoreID).Description);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -118,7 +124,8 @@ namespace ProyectoTesis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Correlative correlative = db.Correlatives.Find(id);
-            db.Correlatives.Remove(correlative);
+            log.Info("El usuario " + user + " eliminó el correlativo para el documento: " + correlative.DocumentType.ToString() + " de la tienda: " + db.Stores.Find(correlative.StoreID).Description);
+            correlative.ActiveFlag = false;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

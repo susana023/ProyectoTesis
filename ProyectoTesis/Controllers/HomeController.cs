@@ -12,6 +12,10 @@ namespace ProyectoTesis.Controllers
     {
         private StoreContext db = new StoreContext();
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        string user = DAL.GlobalVariables.CurrentUser;
+
         public ActionResult Index()
         {
             return View();
@@ -24,26 +28,41 @@ namespace ProyectoTesis.Controllers
             return View();
         }
 
-        public ActionResult Login()
-        {
-            ViewBag.Message = "";
-            return View();
-        }
+        //[HttpGet]
+        //public ActionResult Login()
+        //{
+        //    ViewBag.Message = "";
+        //    return View();
+        //}
 
-        public void Loging(string userName, string password)
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[ActionName("Login")]
+        public ActionResult Login([Bind(Include = "userName")] string userName, [Bind(Include = "password")] string password)
         {
-            User user = db.Users.Where(u => u.Username == userName && u.Password == password).FirstOrDefault();
-            if(user != null)
+            if (userName == null || password == null)
             {
                 ViewBag.Message = "";
-                DAL.GlobalVariables.CurrentUser = userName;
-                DAL.GlobalVariables.CurrentUserID = user.ID.ToString();
-                RedirectToAction("Index", "HomeController");
+                return View();
             }
             else
             {
-                ViewBag.Message = "Usuario o contraseña incorrectos";
-                RedirectToAction("Login", "HomeController");
+                User user = db.Users.Where(u => u.Username == userName && u.Password == password).FirstOrDefault();
+                if (user != null)
+                {
+                    ViewBag.Message = "";
+                    DAL.GlobalVariables.CurrentUser = userName;
+                    DAL.GlobalVariables.CurrentUserID = user.ID.ToString();
+                    log.Info("El usuario " + userName + " se logueó");
+                    return RedirectToAction("Index");
+
+                }
+                else
+                {
+                    ViewBag.Message = "Usuario o contraseña incorrectos";
+                    log.Info("Hubo un intento fallido de logueo con el usuario: " + userName);
+                    return RedirectToAction("Login");
+                }
             }
         }
     }
