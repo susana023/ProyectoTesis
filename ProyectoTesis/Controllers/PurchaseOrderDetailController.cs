@@ -51,7 +51,7 @@ namespace ProyectoTesis.Controllers
             
             List<int> products = new List<int>();
             
-            foreach (PurchaseOrderDetail p in db.PurchaseOrders.Find(PurchaseOrderID).PurchaseOrderDetails)
+            foreach (PurchaseOrderDetail p in db.PurchaseOrders.Find(PurchaseOrderID).PurchaseOrderDetails.Where(p => p.ActiveFlag == false))
             {
                 products.Add(p.productID);
             }
@@ -68,7 +68,7 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,PurchaseOrderID,productID,BoxUnits,FractionUnits,ZoneID,Subtotal,BatchExpirationDay")] PurchaseOrderDetail purchaseOrderDetail)
+        public ActionResult Create([Bind(Include = "ID,PurchaseOrderID,productID,BoxUnits,FractionUnits,ZoneID,BatchExpirationDay")] PurchaseOrderDetail purchaseOrderDetail, double BoxPrice)
         {
             if (ModelState.IsValid)
             {
@@ -77,6 +77,26 @@ namespace ProyectoTesis.Controllers
                 if (purchaseOrderDetail.BatchExpirationDay == null) purchaseOrderDetail.BatchExpirationDay = DateTime.Today;
                 if (purchaseOrderDetail.BoxUnits != null) boxes = purchaseOrderDetail.BoxUnits.Value;
                 if (purchaseOrderDetail.FractionUnits != null) fractions = purchaseOrderDetail.FractionUnits.Value;
+
+                Product product = db.Products.Find(purchaseOrderDetail.productID);
+
+                int units = product.FractionUnits;
+                double subtotal;
+
+                if (BoxPrice != 0)
+                {
+                    subtotal = (((double)fractions /units) + boxes) * BoxPrice;
+                    if (BoxPrice > product.BoxPrice)
+                    {
+                        product.BoxPrice = (BoxPrice + product.BoxPrice) / 2;
+                        product.FractionPrice = product.BoxPrice / units;
+                    }
+                }
+                else subtotal = (((double)fractions/units) + boxes) * product.BoxPrice;
+
+                purchaseOrderDetail.Subtotal = subtotal;
+
+                db.SaveChanges();
 
                 MovementController movementController = new MovementController();
                 movementController.CrearMovimiento(MovementType.Compra, purchaseOrderDetail.PurchaseOrderID, purchaseOrderDetail.BatchExpirationDay.Value, boxes, fractions, purchaseOrderDetail.ZoneID.Value, purchaseOrderDetail.productID);
@@ -136,7 +156,7 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,PurchaseOrderID,productID,BoxUnits,FractionUnits,ZoneID,Subtotal,BatchExpirationDay")] PurchaseOrderDetail purchaseOrderDetail)
+        public ActionResult Edit([Bind(Include = "ID,PurchaseOrderID,productID,BoxUnits,FractionUnits,ZoneID,Subtotal,BatchExpirationDay")] PurchaseOrderDetail purchaseOrderDetail, double BoxPrice)
         {
             if (ModelState.IsValid)
             {                
@@ -146,6 +166,26 @@ namespace ProyectoTesis.Controllers
                 int boxes = 0, fractions = 0;
                 if (purchaseOrderDetail.BoxUnits != null) boxes = purchaseOrderDetail.BoxUnits.Value;
                 if (purchaseOrderDetail.FractionUnits != null) fractions = purchaseOrderDetail.FractionUnits.Value;
+
+                Product product = db.Products.Find(purchaseOrderDetail.productID);
+
+                int units = product.FractionUnits;
+                double subtotal;
+
+                if (BoxPrice != 0)
+                {
+                    subtotal = (((double)fractions / units) + boxes) * BoxPrice;
+                    if (BoxPrice > product.BoxPrice)
+                    {
+                        product.BoxPrice = (BoxPrice + product.BoxPrice) / 2;
+                        product.FractionPrice = product.BoxPrice / units;
+                    }
+                }
+                else subtotal = (((double)fractions / units) + boxes) * product.BoxPrice;
+
+                purchaseOrderDetail.Subtotal = subtotal;
+
+                db.SaveChanges();
 
                 MovementController movementController = new MovementController();
                 purchaseOrderDetail = db.PurchaseOrderDetails.Find(purchaseOrderDetail.ID);

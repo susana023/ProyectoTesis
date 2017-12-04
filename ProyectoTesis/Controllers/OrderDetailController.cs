@@ -49,7 +49,7 @@ namespace ProyectoTesis.Controllers
         {
             List<int> products = new List<int>();
 
-            foreach (OrderDetail p in db.Orders.Find(OrderID).OrderDetails)
+            foreach (OrderDetail p in db.Orders.Find(OrderID).OrderDetails.Where(o => o.ActiveFlag == false))
             {
                 products.Add(p.ProductID);
             }

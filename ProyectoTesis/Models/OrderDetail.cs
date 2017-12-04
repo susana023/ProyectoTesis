@@ -14,8 +14,10 @@ namespace ProyectoTesis.Models
         [Display(Name = "Producto")]
         public int ProductID { get; set; }
         [Display(Name = "Subtotal")]
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Subtotal { get; set; }
         [Display(Name = "Cantidad de Cajas")]
+
         public int? BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
         public int? FractionUnits { get; set; }

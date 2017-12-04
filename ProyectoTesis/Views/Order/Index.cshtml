@@ -131,8 +131,10 @@
                         url: "/Order/createTickets", 
                         data: {
                             tickets: selectedIDs
-                        }
-
+                        }, function (result) {
+                        window.location.href = "/Order/Index";
+                    }
+                        
                     }); 
             });
 
@@ -150,9 +152,12 @@
                         url: "/Order/createBills",
                         data: {
                             bills: selectedIDs
+                        }, function(result) {
+                            window.location.href = "/Order/Index";
                         }
 
                     });
+                
             });
         });
     </script>

@@ -17,6 +17,7 @@ namespace ProyectoTesis.Models
         public int? BoxUnits { get; set; }
         [Display(Name = "Cantidad de Fracciones")]
         public int? FractionUnits { get; set; }
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Subtotal { get; set; }    
         [DataType(DataType.Date)]
         [Display(Name = "Fecha de vencimiento del lote")]

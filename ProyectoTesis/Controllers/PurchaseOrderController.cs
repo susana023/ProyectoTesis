@@ -144,15 +144,16 @@ namespace ProyectoTesis.Controllers
         {
             PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(id);
             double subtotal = 0;
-            List<PurchaseOrderDetail> detalles = db.PurchaseOrderDetails.Where(p => p.PurchaseOrderID == id).ToList();
+            List<PurchaseOrderDetail> detalles = db.PurchaseOrderDetails.Where(p => p.PurchaseOrderID == id && p.ActiveFlag == false).ToList();
             if(detalles != null)
             {
                 foreach (PurchaseOrderDetail detalle in detalles)
                 {
                     subtotal += detalle.Subtotal;
                 }
-                purchaseOrder.Subtotal = subtotal;
-                purchaseOrder.Igv = subtotal * IGV;
+                purchaseOrder.Subtotal = subtotal / (1 + IGV);
+                purchaseOrder.Igv = purchaseOrder.Subtotal * IGV;
+                
                 db.SaveChanges();
             }            
         }

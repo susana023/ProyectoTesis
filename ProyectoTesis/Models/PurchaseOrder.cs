@@ -20,7 +20,7 @@ namespace ProyectoTesis.Models
         [Display(Name = "Proveedor")]
         public virtual Supplier Supplier { get; set; }
         public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
-
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Total
         {
             get

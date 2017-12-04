@@ -46,8 +46,8 @@ namespace ProyectoTesis.Controllers
         // GET: Order/Create
         public ActionResult Create()
         {
-            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == false), "ID", "FullName");
-            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName");
+            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == true), "ID", "FullName");
+            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == true), "ID", "FullName");
             return View();
         }
 
@@ -66,8 +66,8 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("Index", "OrderDetail", new { OrderID = order.ID });
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == false), "ID", "FullName", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == true), "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == true), "ID", "FullName", order.UserID);
             return View(order);
         }
 
@@ -83,8 +83,8 @@ namespace ProyectoTesis.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == false), "ID", "FullName", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == true), "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == true), "ID", "FullName", order.UserID);
             return View(order);
         }
 
@@ -102,8 +102,8 @@ namespace ProyectoTesis.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == false), "ID", "FullName", order.ClientID);
-            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == false), "ID", "FullName", order.UserID);
+            ViewBag.ClientID = new SelectList(db.Clients.Where(s => s.ActiveFlag == true), "ID", "FullName", order.ClientID);
+            ViewBag.UserID = new SelectList(db.Users.Where(s => s.ActiveFlag == true), "ID", "FullName", order.UserID);
             return View(order);
         }
 
@@ -143,15 +143,15 @@ namespace ProyectoTesis.Controllers
         {
             Order order = db.Orders.Find(id);
             double subtotal = 0;
-            List<OrderDetail> detalles = db.OrderDetails.Where(p => p.OrderID == id).ToList();
+            List<OrderDetail> detalles = db.OrderDetails.Where(p => p.OrderID == id && p.ActiveFlag == false).ToList();
             if (detalles != null)
             {
                 foreach (OrderDetail detalle in detalles)
                 {
                     subtotal += detalle.Subtotal;
                 }
-                order.Subtotal = subtotal;
-                order.Igv = subtotal * IGV;
+                order.Subtotal = subtotal/(1+IGV);
+                order.Igv = order.Subtotal * IGV;
                 db.SaveChanges();
             }
         }
@@ -220,9 +220,9 @@ namespace ProyectoTesis.Controllers
                                 while (boxes > 0  || fractions > 0)
                                 {
                                     if ((productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits)) >= (boxes + (fractions / product.FractionUnits))){
-                                        rest = (productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits)) - (boxes + (fractions / product.FractionUnits));
+                                        rest = (productLots[i].BoxUnits + ((double)productLots[i].FractionUnits / product.FractionUnits)) - (boxes + ((double)fractions / product.FractionUnits));
                                         box = (int)(rest / 1);
-                                        fraction = (int)((rest % 1) * product.FractionUnits);
+                                        fraction = (int)Math.Round(((rest % 1) * product.FractionUnits));
                                         productLots[i].BoxUnits = box;
                                         productLots[i].FractionUnits = fraction;
                                         db.SaveChanges();
@@ -232,9 +232,9 @@ namespace ProyectoTesis.Controllers
                                     }
                                     else
                                     {
-                                        rest = (boxes + (fractions / product.FractionUnits)) - (productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits));
+                                        rest = (boxes + ((double)fractions / product.FractionUnits)) - (productLots[i].BoxUnits + ((double)productLots[i].FractionUnits / product.FractionUnits));
                                         box = (int)(rest / 1);
-                                        fraction = (int)((rest % 1) * product.FractionUnits);
+                                        fraction = (int)Math.Round(((rest % 1) * product.FractionUnits));
                                         movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, productLots[i].BoxUnits, productLots[i].FractionUnits, productLots[i].ZoneID, detail.ProductID);
                                         productLots[i].BoxUnits = 0;
                                         productLots[i].FractionUnits = 0;
@@ -310,9 +310,9 @@ namespace ProyectoTesis.Controllers
                                 {
                                     if ((productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits)) >= (boxes + (fractions / product.FractionUnits)))
                                     {
-                                        rest = (productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits)) - (boxes + (fractions / product.FractionUnits));
+                                        rest = (productLots[i].BoxUnits + ((double)productLots[i].FractionUnits / product.FractionUnits)) - (boxes + ((double)fractions / product.FractionUnits));
                                         box = (int)(rest / 1);
-                                        fraction = (int)((rest % 1) * product.FractionUnits);
+                                        fraction = (int)Math.Round(((rest % 1) * product.FractionUnits));
                                         productLots[i].BoxUnits = box;
                                         productLots[i].FractionUnits = fraction;
                                         db.SaveChanges();
@@ -322,9 +322,9 @@ namespace ProyectoTesis.Controllers
                                     }
                                     else
                                     {
-                                        rest = (boxes + (fractions / product.FractionUnits)) - (productLots[i].BoxUnits + (productLots[i].FractionUnits / product.FractionUnits));
+                                        rest = (boxes + ((double)fractions / product.FractionUnits)) - (productLots[i].BoxUnits + ((double)productLots[i].FractionUnits / product.FractionUnits));
                                         box = (int)(rest / 1);
-                                        fraction = (int)((rest % 1) * product.FractionUnits);
+                                        fraction = (int)Math.Round(((rest % 1) * product.FractionUnits));
                                         movementController.CrearMovimiento(MovementType.Despacho, saleDocumentID, DateTime.Today, productLots[i].BoxUnits, productLots[i].FractionUnits, productLots[i].ZoneID, detail.ProductID);
                                         productLots[i].BoxUnits = 0;
                                         productLots[i].FractionUnits = 0;

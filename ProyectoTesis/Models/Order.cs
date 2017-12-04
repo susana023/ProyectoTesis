@@ -14,11 +14,13 @@ namespace ProyectoTesis.Models
         [Display(Name = "Usuario")]
         public int UserID { get; set; }
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0: dd/mm/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha")]
         public DateTime Date { get; set; }
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Subtotal { get; set; }
         [Display(Name = "IGV")]
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Igv { get; set; }
         [Display(Name = "Entregado?")]
         public bool? DeliveredFlag { get; set; }
@@ -31,6 +33,7 @@ namespace ProyectoTesis.Models
         public virtual Client Client { get; set; }
         public virtual User User { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Total
         {
             get

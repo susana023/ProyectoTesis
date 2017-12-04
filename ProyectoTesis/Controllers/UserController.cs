@@ -22,7 +22,7 @@ namespace ProyectoTesis.Controllers
         // GET: User
         public ActionResult Index()
         {
-            var users = db.Users.Where(u => u.ActiveFlag == false).Include(u => u.Store);
+            var users = db.Users.Where(u => u.ActiveFlag == true).Include(u => u.Store);
             return View(users.ToList());
         }
 
@@ -54,10 +54,11 @@ namespace ProyectoTesis.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Dni,Name,LastName,Phone,Username,Email,Password,ActiveFlag,StoreID,Type")] User user)
+        public ActionResult Create([Bind(Include = "ID,Dni,Name,LastName,Phone,Username,Email,Password,StoreID,Type")] User user)
         {
             if (ModelState.IsValid)
             {
+                user.ActiveFlag = false;
                 db.Users.Add(user);
                 db.SaveChanges();
                 log.Info("El usuario " + user + " creó al usuario: " + user.FullName);

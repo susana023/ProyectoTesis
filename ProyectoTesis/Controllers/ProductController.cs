@@ -92,6 +92,18 @@ namespace ProyectoTesis.Controllers
                 product.ActiveFlag = true;
                 db.Products.Add(product);
                 db.SaveChanges();
+                Product producto = db.Products.Where(p => p.Description == product.Description).FirstOrDefault();
+                if (producto != null)
+                {
+                    db.SaleMargins.Add(new SalesMargin
+                    {
+                        Product = producto,
+                        MarketMargin = 0,
+                        StoreMargin = 0.1,
+                        DistributionMargin = 0.3
+                    });
+                    db.SaveChanges();
+                }
                 log.Info("El usuario " + user + " creó un producto con la descripción: " + product.Description);
                 return RedirectToAction("Index");
             }
