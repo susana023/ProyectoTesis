@@ -10,7 +10,6 @@ namespace ProyectoTesis.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "ProyectoTesis.DAL.StoreContext";
         }
 
         protected override void Seed(ProyectoTesis.DAL.StoreContext context)

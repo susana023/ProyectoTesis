@@ -22,7 +22,7 @@ namespace ProyectoTesis.Controllers
         // GET: Client
         public ActionResult Index()
         {
-            return View(db.Clients.Where(s => s.ActiveFlag == false).ToList());
+            return View(db.Clients.Where(s => s.ActiveFlag == true).ToList());
         }
 
         // GET: Client/Details/5

@@ -26,7 +26,9 @@
                         <li>@Html.ActionLink("Mantenimiento de Tiendas", "Index", "Store")</li>
                         <li>@Html.ActionLink("Mantenimiento de Almacenes", "Index", "Stockroom")</li>
                         <li>@Html.ActionLink("Mantenimiento de Productos", "Index", "Product")</li>
+                        <li>@Html.ActionLink("Márgenes de Venta", "Index", "SalesMargins")</li>
                         <li>@Html.ActionLink("Movimientos de Almacén", "Index", "Movement")</li>
+                        <li>@Html.ActionLink("Tiempo de duración", "Index", "ExpirationTime")</li>
                         <li>@Html.ActionLink("Despachos", "Index", "Dispatch")</li>
                         <li>@Html.ActionLink("Planeamiento de Compra", "Index", "PurchasePlan")</li>
                         <li>@Html.ActionLink("Mantenimiento de Usuarios", "Index", "User")</li>
@@ -54,10 +56,10 @@
                 <li>
                     <a data-toggle="collapse" data-target="#reportes" class="collapsable"><i class="fa fa-line-chart fa-fw"></i> Reportes<span class="fa open"></span></a>
                     <ul id="reportes" class="nav nav-second-level collapse in">
-                        <li>
+                        @*<li>
                             <a href="#">Kardex</a>
                         </li>
-                        <li>@Html.ActionLink("Guía de Remisión", "Index", "ReferralGuide")</li>
+                        <li>@Html.ActionLink("Guía de Remisión", "Index", "ReferralGuide")</li>*@
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>

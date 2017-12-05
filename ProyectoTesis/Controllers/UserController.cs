@@ -22,7 +22,7 @@ namespace ProyectoTesis.Controllers
         // GET: User
         public ActionResult Index()
         {
-            var users = db.Users.Where(u => u.ActiveFlag == true).Include(u => u.Store);
+            var users = db.Users.Where(u => u.ActiveFlag == false).Include(u => u.Store);
             return View(users.ToList());
         }
 

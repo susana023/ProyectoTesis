@@ -299,7 +299,7 @@ namespace ProyectoTesis.Controllers
         {
             //List<Product> products = db.Products.Where(p => p.ActiveFlag == true && (p.ProductType != ProductType.Otros)).ToList();
             List<Solution> bests = new List<Solution>();
-            double bestValue = double.MinValue, repeatedBest = 0;
+            double bestValue = double.MinValue, repeatedBest = double.MinValue;
             Solution best = new Solution(products.Count);
             int j = 0, k = 0, repeatBest = 0;
             //falta calcular máxima cantidad por producto en ventas históricas
@@ -468,7 +468,7 @@ namespace ProyectoTesis.Controllers
 
                         if (boxesPerYear > 0)
                         {
-                            maxBoxesPerYear = boxesPerYear + (fractionsPerYear / units);
+                            maxBoxesPerYear = boxesPerYear + ((double)fractionsPerYear / units);
 
                             if (boxes > 0.0) boxes = (boxes + maxBoxesPerYear) / 2;
                             else boxes = maxBoxesPerYear;
